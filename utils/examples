@@ -38,13 +38,13 @@ while [ "$1" != "" ] ; do
 done 
 
 for path in examples/*/ ; do 
-    product=$(basename $path)
+    target=$(basename $path)
     check   "error: swift build failed" \
-            swift build -c $build_configuration --product $product
+            swift build -c $build_configuration --target $target
             
     binaries=".build/$build_configuration"
-    if ! [ -f $binaries/$product ]; then
-        error "error: missing '$product' product"
+    if ! [ -f $binaries/$target ]; then
+        error "error: missing '$target' target"
     fi
 done 
 

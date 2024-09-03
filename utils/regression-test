@@ -51,7 +51,7 @@ while [ "$1" != "" ] ; do
 done 
 
 check   "error: swift build failed" \
-        swift build -c $build_configuration --product $TOOL_NAME
+        swift build -c $build_configuration --target $TOOL_NAME
 
 binaries=".build/$build_configuration"
 if ! [ -f $binaries/$TOOL_NAME ]; then

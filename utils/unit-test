@@ -15,7 +15,7 @@ check()
 }
 
 check   "error: swift build failed" \
-        swift build -c debug --product $TOOL_NAME 
+        swift build -c debug --target $TOOL_NAME 
 
 binaries=".build/debug"
 if ! [ -f $binaries/$TOOL_NAME ]; then
