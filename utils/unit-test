@@ -14,13 +14,5 @@ check()
     "$@" || error "$message"
 }
 
-check   "error: swift build failed" \
-        swift build -c debug --product $TOOL_NAME 
-
-binaries=".build/debug"
-if ! [ -f $binaries/$TOOL_NAME ]; then
-    error "error: missing $TOOL_NAME tool"
-fi
-
 check   "error: test failures" \
-        $binaries/$TOOL_NAME
+        swift run -c debug $TOOL_NAME 

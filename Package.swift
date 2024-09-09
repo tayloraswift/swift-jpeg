@@ -5,41 +5,26 @@ let package = Package(
     name: "jpeg",
     products: 
     [
-        .library(   name: "JPEG",               targets: ["JPEG"]), 
-        .executable(name: "fuzzer",             targets: ["JPEGFuzzer"]),
-        .executable(name: "comparator",         targets: ["JPEGComparator"]),
-        .executable(name: "unit-test",          targets: ["JPEGUnitTests"]),
-        .executable(name: "regression-test",    targets: ["JPEGRegressionTests"]),
-        .executable(name: "integration-test",   targets: ["JPEGIntegrationTests"]),
-        
-        .executable(name: "decode-basic",       targets: ["JPEGDecodeBasic"]),
-        .executable(name: "encode-basic",       targets: ["JPEGEncodeBasic"]),
-        .executable(name: "decode-advanced",    targets: ["JPEGDecodeAdvanced"]),
-        .executable(name: "encode-advanced",    targets: ["JPEGEncodeAdvanced"]),
-        .executable(name: "in-memory",          targets: ["JPEGInMemory"]),
-        .executable(name: "decode-online",      targets: ["JPEGDecodeOnline"]),
-        .executable(name: "recompress",         targets: ["JPEGRecompress"]),
-        .executable(name: "rotate",             targets: ["JPEGRotate"]),
-        .executable(name: "custom-color",       targets: ["JPEGCustomColor"]),
+        .library(name: "JPEG",    targets: ["JPEG"])
     ],
     targets: 
     [
         .target(          name: "JPEG",                                           path: "sources/jpeg"),
-        .executableTarget(name: "JPEGFuzzer",             dependencies: ["JPEG"], path: "tests/fuzz",
+        .executableTarget(name: "fuzzer",              dependencies: ["JPEG"], path: "tests/fuzz",
             exclude:
             [
                 "data/",
             ]
         ),
-        .executableTarget(name: "JPEGComparator",         dependencies: ["JPEG"], path: "tests/compare"),
-        .executableTarget(name: "JPEGUnitTests",          dependencies: ["JPEG"], path: "tests/unit"),
-        .executableTarget(name: "JPEGRegressionTests",    dependencies: ["JPEG"], path: "tests/regression",
+        .executableTarget(name: "comparator",          dependencies: ["JPEG"], path: "tests/compare"),
+        .executableTarget(name: "unit-test",           dependencies: ["JPEG"], path: "tests/unit"),
+        .executableTarget(name: "regression-test",     dependencies: ["JPEG"], path: "tests/regression",
             exclude:
             [
                 "gold/",
             ]
         ),
-        .executableTarget(name: "JPEGIntegrationTests",   dependencies: ["JPEG"], path: "tests/integration",
+        .executableTarget(name: "integration-test",    dependencies: ["JPEG"], path: "tests/integration",
             exclude:
             [
                 "decode/",
@@ -47,7 +32,7 @@ let package = Package(
             ]
         ),
         
-        .executableTarget(name: "JPEGDecodeBasic",        dependencies: ["JPEG"], path: "examples/decode-basic",
+        .executableTarget(name: "decode-basic",        dependencies: ["JPEG"], path: "examples/decode-basic",
             exclude:
             [
                 "karlie-kwk-2019.jpg.rgb",
@@ -55,7 +40,7 @@ let package = Package(
                 "karlie-kwk-2019.jpg.rgb.png",
             ]
         ),
-        .executableTarget(name: "JPEGEncodeBasic",        dependencies: ["JPEG"], path: "examples/encode-basic",
+        .executableTarget(name: "encode-basic",        dependencies: ["JPEG"], path: "examples/encode-basic",
             exclude:
             [
                 "karlie-milan-sp12-2011-4-4-0-4.0.jpg",
@@ -94,7 +79,7 @@ let package = Package(
                 "karlie-milan-sp12-2011-4-4-4-0.125.jpg",
             ]
         ),
-        .executableTarget(name: "JPEGDecodeAdvanced",     dependencies: ["JPEG"], path: "examples/decode-advanced",
+        .executableTarget(name: "decode-advanced",     dependencies: ["JPEG"], path: "examples/decode-advanced",
             exclude:
             [
                 "karlie-2019.jpg-0.640x432.gray",
@@ -108,7 +93,7 @@ let package = Package(
                 "karlie-2019.jpg-0.640x432.gray.png",
             ]
         ),
-        .executableTarget(name: "JPEGEncodeAdvanced",     dependencies: ["JPEG"], path: "examples/encode-advanced",
+        .executableTarget(name: "encode-advanced",     dependencies: ["JPEG"], path: "examples/encode-advanced",
             exclude:
             [
                 "karlie-cfdas-2011.png.rgb",
@@ -116,7 +101,7 @@ let package = Package(
                 "karlie-cfdas-2011.png.rgb.jpg",
             ]
         ),
-        .executableTarget(name: "JPEGInMemory",           dependencies: ["JPEG"], path: "examples/in-memory",
+        .executableTarget(name: "in-memory",           dependencies: ["JPEG"], path: "examples/in-memory",
             exclude:
             [
                 "karlie-2011.jpg.rgb.png",
@@ -125,7 +110,7 @@ let package = Package(
                 "karlie-2011.jpg.jpg",
             ]
         ),
-        .executableTarget(name: "JPEGDecodeOnline",       dependencies: ["JPEG"], path: "examples/decode-online",
+        .executableTarget(name: "decode-online",       dependencies: ["JPEG"], path: "examples/decode-online",
             exclude:
             [
                 "karlie-oscars-2017.jpg-9.rgb.png",
@@ -171,7 +156,7 @@ let package = Package(
                 "karlie-oscars-2017.jpg-difference-1.rgb",
             ]
         ),
-        .executableTarget(name: "JPEGRecompress",         dependencies: ["JPEG"], path: "examples/recompress",
+        .executableTarget(name: "recompress",          dependencies: ["JPEG"], path: "examples/recompress",
             exclude:
             [
                 "recompressed-requantized.jpg",
@@ -179,7 +164,7 @@ let package = Package(
                 "recompressed-full-cycle.jpg",
             ]
         ),
-        .executableTarget(name: "JPEGRotate",             dependencies: ["JPEG"], path: "examples/rotate",
+        .executableTarget(name: "rotate",              dependencies: ["JPEG"], path: "examples/rotate",
             exclude:
             [
                 "karlie-kwk-wwdc-2017.jpg",
@@ -188,7 +173,7 @@ let package = Package(
                 "karlie-kwk-wwdc-2017-iv.jpg",
             ]
         ),
-        .executableTarget(name: "JPEGCustomColor",        dependencies: ["JPEG"], path: "examples/custom-color",
+        .executableTarget(name: "custom-color",        dependencies: ["JPEG"], path: "examples/custom-color",
             exclude:
             [
                 "output.jpg",
