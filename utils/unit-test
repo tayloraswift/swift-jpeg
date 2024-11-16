@@ -1,5 +1,5 @@
 #!/bin/bash
-TOOL_NAME="unit-test"
+TOOL_NAME="JPEGUnitTests"
 error()
 {
     echo $1
@@ -15,9 +15,9 @@ check()
 }
 
 check   "error: swift build failed" \
-        swift build -c debug --product $TOOL_NAME
+        swift build -c release --product $TOOL_NAME
 
-binaries=".build/debug"
+binaries=".build/release"
 if ! [ -f $binaries/$TOOL_NAME ]; then
     error "error: missing $TOOL_NAME tool"
 fi

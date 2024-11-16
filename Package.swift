@@ -7,11 +7,6 @@ let package = Package(
     [
         .library(name: "JPEG", targets: ["JPEG"]),
         .library(name: "JPEGSystem", targets: ["JPEGSystem"]),
-        .executable(name: "fuzzer", targets: ["JPEGFuzzer"]),
-        .executable(name: "comparator", targets: ["JPEGComparator"]),
-        .executable(name: "unit-test", targets: ["JPEGUnitTests"]),
-        .executable(name: "regression-test", targets: ["JPEGRegressionTests"]),
-        .executable(name: "integration-test", targets: ["JPEGIntegrationTests"]),
 
         .executable(name: "decode-basic", targets: ["JPEGDecodeBasic"]),
         .executable(name: "encode-basic", targets: ["JPEGEncodeBasic"]),
