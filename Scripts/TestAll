@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+swift --version
+
+utils/tests
+utils/examples -c release

@@ -2,35 +2,35 @@
 License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-// literal forms 
-extension JPEG.Component.Key:ExpressibleByIntegerLiteral 
+// literal forms
+extension JPEG.Component.Key:ExpressibleByIntegerLiteral
 {
     /// init JPEG.Component.Key.init(integerLiteral:)
-    /// ?:  Swift.ExpressibleByIntegerLiteral 
+    /// ?:  Swift.ExpressibleByIntegerLiteral
     /// - integerLiteral    : Swift.UInt8
-    public 
-    init(integerLiteral:UInt8) 
+    public
+    init(integerLiteral:UInt8)
     {
         self.init(integerLiteral)
     }
 }
-extension JPEG.Table.Quantization.Key:ExpressibleByIntegerLiteral 
+extension JPEG.Table.Quantization.Key:ExpressibleByIntegerLiteral
 {
     /// init JPEG.Table.Quantization.Key.init(integerLiteral:)
-    /// ?:  Swift.ExpressibleByIntegerLiteral 
+    /// ?:  Swift.ExpressibleByIntegerLiteral
     /// - integerLiteral    : Swift.Int
-    public 
-    init(integerLiteral:Int) 
+    public
+    init(integerLiteral:Int)
     {
         self.init(integerLiteral)
     }
 }
 
 // print descriptions
-extension String 
+extension String
 {
-    public 
-    init<Delegate>(selector:WritableKeyPath<(Delegate?, Delegate?, Delegate?, Delegate?), Delegate?>)  
+    public
+    init<Delegate>(selector:WritableKeyPath<(Delegate?, Delegate?, Delegate?, Delegate?), Delegate?>)
     {
         switch selector
         {
@@ -42,7 +42,7 @@ extension String
             self = "2"
         case \.3:
             self = "3"
-        
+
         default:
             self = "<unavailable>"
         }
@@ -51,10 +51,10 @@ extension String
 
 extension JPEG.Process:CustomStringConvertible
 {
-    public 
-    var description:String 
+    public
+    var description:String
     {
-        switch self 
+        switch self
         {
         case .baseline:
             return "baseline sequential DCT"
@@ -68,51 +68,51 @@ extension JPEG.Process:CustomStringConvertible
     }
 }
 
-extension JPEG.Component:CustomStringConvertible 
+extension JPEG.Component:CustomStringConvertible
 {
-    public 
-    var description:String 
+    public
+    var description:String
     {
         return "{quantization table: \(String.init(selector: self.selector)), sample factors: (\(self.factor.x), \(self.factor.y))}"
     }
 }
-extension JPEG.Scan.Component:CustomStringConvertible 
+extension JPEG.Scan.Component:CustomStringConvertible
 {
-    public 
-    var description:String 
+    public
+    var description:String
     {
         "{dc huffman table: \(String.init(selector: self.selector.dc)), ac huffman table: \(String.init(selector: self.selector.ac))}"
     }
 }
-extension JPEG.Component.Key:CustomStringConvertible 
+extension JPEG.Component.Key:CustomStringConvertible
 {
-    public 
-    var description:String 
+    public
+    var description:String
     {
         "[\(self.value)]"
     }
 }
-extension JPEG.Table.Quantization.Key:CustomStringConvertible 
+extension JPEG.Table.Quantization.Key:CustomStringConvertible
 {
-    public 
-    var description:String 
+    public
+    var description:String
     {
         "[\(self.value)]"
     }
 }
 
-extension JPEG.Header.Frame:CustomStringConvertible 
+extension JPEG.Header.Frame:CustomStringConvertible
 {
-    public 
-    var description:String 
+    public
+    var description:String
     {
         """
-        frame header: 
+        frame header:
         {
-            mode            : \(self.process), 
-            precision       : \(self.precision), 
-            initial size    : (\(self.size.x), \(self.size.y)), 
-            components      : 
+            mode            : \(self.process),
+            precision       : \(self.precision),
+            initial size    : (\(self.size.x), \(self.size.y)),
+            components      :
             [
                 \(self.components.sorted(by: { $0.key < $1.key }).map
                 {
@@ -126,19 +126,19 @@ extension JPEG.Header.Frame:CustomStringConvertible
 
 extension JPEG.Header.Scan:CustomStringConvertible
 {
-    public 
-    var description:String 
+    public
+    var description:String
     {
         """
         scan header (\(Self.self)):
         {
-            band            : \(self.band.lowerBound) ..< \(self.band.upperBound), 
-            bits            : \(self.bits.lowerBound) ..< \(self.bits.upperBound), 
-            components      : 
+            band            : \(self.band.lowerBound) ..< \(self.band.upperBound),
+            bits            : \(self.bits.lowerBound) ..< \(self.bits.upperBound),
+            components      :
             [
                 \(self.components.map
-                { 
-                    "[\($0.ci)]: \($0)" 
+                {
+                    "[\($0.ci)]: \($0)"
                 }.joined(separator: ", \n        "))
             ]
         }
@@ -148,8 +148,8 @@ extension JPEG.Header.Scan:CustomStringConvertible
 
 extension JPEG.Table.Huffman:CustomStringConvertible
 {
-    public 
-    var description:String 
+    public
+    var description:String
     {
         """
         huffman table (\(Self.self))
@@ -162,8 +162,8 @@ extension JPEG.Table.Huffman:CustomStringConvertible
 
 extension JPEG.Table.Quantization:CustomStringConvertible
 {
-    public 
-    var description:String 
+    public
+    var description:String
     {
         """
         quantization table (\(Self.self))
@@ -176,8 +176,8 @@ extension JPEG.Table.Quantization:CustomStringConvertible
 
 extension JPEG.JFIF:CustomStringConvertible
 {
-    public 
-    var description:String 
+    public
+    var description:String
     {
         """
         metadata (\(Self.self))
@@ -191,14 +191,14 @@ extension JPEG.JFIF:CustomStringConvertible
 }
 extension JPEG.EXIF:CustomStringConvertible
 {
-    public 
-    var description:String 
+    public
+    var description:String
     {
         """
         metadata (\(Self.self))
         {
             endianness  : \(self.endianness)
-            storage     : \(self.storage.count) bytes 
+            storage     : \(self.storage.count) bytes
         }
         """
     }
