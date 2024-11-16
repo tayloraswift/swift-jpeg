@@ -1,4 +1,5 @@
 import JPEG
+import JPEGSystem
 
 extension JPEG
 {

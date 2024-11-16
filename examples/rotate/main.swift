@@ -1,4 +1,5 @@
 import JPEG
+import JPEGSystem
 
 enum Parameter:String
 {

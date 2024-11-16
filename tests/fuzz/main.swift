@@ -1,5 +1,6 @@
 import JPEG
 import JPEGInspection
+import JPEGSystem
 
 func fuzz<RNG>(rng:inout RNG, path:String) throws where RNG:RandomNumberGenerator
 {

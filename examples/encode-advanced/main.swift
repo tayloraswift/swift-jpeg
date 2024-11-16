@@ -1,4 +1,5 @@
 import JPEG
+import JPEGSystem
 
 let path:String          = "examples/encode-advanced/karlie-cfdas-2011.png.rgb",
     size:(x:Int, y:Int)  = (600, 900)

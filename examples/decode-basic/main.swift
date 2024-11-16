@@ -1,4 +1,5 @@
 import JPEG
+import JPEGSystem
 
 let path:String = "examples/decode-basic/karlie-kwk-2019.jpg"
 
