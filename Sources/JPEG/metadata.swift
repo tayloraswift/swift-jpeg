@@ -6,8 +6,6 @@ extension JPEG
 {
     /// struct JPEG.JFIF
     ///     A JFIF metadata record.
-    /// #  [See also](metadata-types)
-    /// ## (metadata-types)
     public
     struct JFIF
     {
@@ -78,8 +76,6 @@ extension JPEG
     ///     relies extensively on internal file pointers, it is easy to accidentally
     ///     corrupt an EXIF segment. To perform more sophisticated operations,
     ///     use a dedicated library, such as [Carpaccio](https://github.com/mz2/Carpaccio).
-    /// #  [See also](metadata-types)
-    /// ## (metadata-types)
     public
     struct EXIF
     {

@@ -5,8 +5,6 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 /// protocol JPEG.Error
 /// :   Swift.Error
 ///     Functionality common to all library error types.
-/// #  [See also](error-types)
-/// ## (error-handling)
 public
 protocol _JPEGError:Swift.Error
 {
@@ -40,9 +38,6 @@ extension JPEG
     /// enum JPEG.LexingError
     /// :   JPEG.Error
     ///     A lexing error.
-    /// #  [See also](error-types)
-    /// ## (error-types)
-    /// ## (error-handling)
     public
     enum LexingError:JPEG.Error
     {
@@ -144,9 +139,6 @@ extension JPEG
     /// enum JPEG.ParsingError
     /// :   JPEG.Error
     ///     A parsing error.
-    /// #  [See also](error-types)
-    /// ## (error-types)
-    /// ## (error-handling)
     public
     enum ParsingError:JPEG.Error
     {
@@ -488,9 +480,6 @@ extension JPEG
     /// enum JPEG.DecodingError
     /// :   JPEG.Error
     ///     A decoding error.
-    /// #  [See also](error-types)
-    /// ## (error-types)
-    /// ## (error-handling)
     public
     enum DecodingError:JPEG.Error
     {
@@ -808,9 +797,6 @@ extension JPEG
     /// enum JPEG.FormattingError
     /// :   JPEG.Error
     ///     A formatting error.
-    /// #  [See also](error-types)
-    /// ## (error-types)
-    /// ## (error-handling)
     public
     enum FormattingError:JPEG.Error
     {
@@ -855,9 +841,6 @@ extension JPEG
     ///     A serializing error.
     ///
     ///     This enumeration currently has no cases.
-    /// #  [See also](error-types)
-    /// ## (error-types)
-    /// ## (error-handling)
     public
     enum SerializingError:JPEG.Error
     {
@@ -895,9 +878,6 @@ extension JPEG
     ///     An encoding error.
     ///
     ///     This enumeration currently has no cases.
-    /// #  [See also](error-types)
-    /// ## (error-types)
-    /// ## (error-handling)
     public
     enum EncodingError:JPEG.Error
     {

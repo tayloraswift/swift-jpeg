@@ -2,21 +2,12 @@
 License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-/// module JPEG
-///     Decode, inspect, edit, and encode JPEG images.
-///
-///     See example programs and library tutorials [here](https://github.com/kelvin13/jpeg/tree/master/examples).
-/// #  [Top level namespaces](top-level-namespaces)
-
 /// protocol JPEG.Format
 ///     A color format, determined by the bit depth and set of component keys in
 ///     a frame header.
 ///
 ///     The coding [`(JPEG).Process`] of an image may place restrictions on which
 ///     combinations of component sets and bit precisions are valid.
-/// # [See also](color-protocols)
-/// ## (color-protocols)
-/// ## (0:color-space-apis)
 public
 protocol _JPEGFormat
 {
@@ -58,7 +49,6 @@ protocol _JPEGFormat
 ///     A color target.
 /// # [See also](color-protocols)
 /// ## (color-protocols)
-/// ## (0:color-space-apis)
 public
 protocol _JPEGColor
 {
@@ -96,19 +86,6 @@ protocol _JPEGColor
 
 /// enum JPEG
 ///     A namespace for JPEG-related functionality.
-/// #  [Color spaces](color-space-apis)
-/// #  [Image metadata](metadata-types)
-/// #  [Image headers](header-types-and-namespace)
-/// #  [Image tables](table-types-and-protocols)
-/// #  [Entropy coding](entropy-coding)
-/// #  [Image representations](image-data-types-and-namespace)
-/// #  [Data IO and file structure](lexing-and-formatting)
-/// #  [Image layout and decomposition](image-structure-and-decomposition)
-/// #  [Image quality](image-quality)
-/// #  [Manual decoding](manual-decoding)
-/// #  [Error handling](error-handling)
-/// #  [See also](top-level-namespaces)
-/// ## (0:top-level-namespaces)
 public
 enum JPEG
 {
@@ -119,8 +96,6 @@ enum JPEG
 
     /// enum JPEG.Metadata
     ///     A metadata record.
-    /// #  [Metadata types](metadata-types)
-    /// ## (metadata-types)
     public
     enum Metadata
     {
@@ -157,7 +132,6 @@ enum JPEG
     /// # [Color channels](JPEG-YCbCr-color-channels)
     /// # [See also](builtin-color-targets)
     /// ## (builtin-color-targets)
-    /// ## (2:color-space-apis)
     @frozen
     public
     struct YCbCr:Hashable
@@ -217,7 +191,6 @@ enum JPEG
     /// # [Color channels](JPEG-RGB-color-channels)
     /// # [See also](builtin-color-targets)
     /// ## (builtin-color-targets)
-    /// ## (2:color-space-apis)
     @frozen
     public
     struct RGB:Hashable
@@ -286,7 +259,6 @@ extension JPEG
     /// # [Compatibility formats](common-nonstandard-formats)
     /// # [See also](color-protocols)
     /// ## (color-protocols)
-    /// ## (1:color-space-apis)
     public
     enum Common
     {
@@ -614,7 +586,6 @@ extension JPEG
     ///     [`(Process.Coding).huffman`] entropy coding and the `differential` flag
     ///     set to `false`.
     /// # [Coding processes](coding-processes)
-    /// ## (4:lexing-and-formatting)
     public
     enum Process:Sendable
     {
@@ -679,7 +650,6 @@ extension JPEG
 
     /// enum JPEG.Marker
     ///     A marker type indicator.
-    /// ## (3:lexing-and-formatting)
     public
     enum Marker:Sendable
     {
@@ -812,8 +782,6 @@ extension JPEG
 
 /// protocol JPEG.AnyTable
 ///     Functionality common to all table types.
-/// #  [See also](table-types-and-protocols)
-/// ## (table-types-and-protocols)
 public
 protocol _JPEGAnyTable
 {
@@ -839,8 +807,6 @@ extension JPEG
     ///     In general, the fields in these types can be assumed to be valid with
     ///     respect to the other fields in the structure, but not necessarily with
     ///     respect to the JPEG file as a whole.
-    /// #  [Header types](header-types-and-namespace)
-    /// ## (0:header-types-and-namespace)
     public
     enum Header
     {
@@ -849,7 +815,6 @@ extension JPEG
         ///
         ///     This structure is the parsed form of a [`(JPEG.Marker).height`]
         ///     marker segment.
-        /// ## (header-types-and-namespace)
         public
         struct HeightRedefinition
         {
@@ -877,7 +842,6 @@ extension JPEG
         ///     This structure is the parsed form of an [`(JPEG.Marker).interval`]
         ///     marker segment. It can modify or clear the restart interval of an
         ///     image.
-        /// ## (header-types-and-namespace)
         public
         struct RestartInterval
         {
@@ -908,7 +872,6 @@ extension JPEG
         ///     marker segment. In non-hierarchical mode images, it defines global
         ///     image parameters. It contains some of the information needed to
         ///     fully-define an image [`(JPEG).Layout`].
-        /// ## (1:header-types-and-namespace)
         public
         struct Frame
         {
@@ -942,7 +905,6 @@ extension JPEG
         ///     create the [`JPEG.Scan`] structures elsewhere in the library API.
         /// # [Creating sequential scans](scan-header-creation-sequential)
         /// # [Creating progressive scans](scan-header-creation-progressive)
-        /// ## (1:header-types-and-namespace)
         public
         struct Scan
         {
@@ -971,8 +933,6 @@ extension JPEG
     typealias AnyTable = _JPEGAnyTable
     /// enum JPEG.Table
     ///     A namespace for table types.
-    /// #  [Table types](table-types-and-protocols)
-    /// ## (0:table-types-and-protocols)
     public
     enum Table
     {
@@ -992,8 +952,6 @@ extension JPEG
         /// :   JPEG.AnyTable
         /// where Symbol:JPEG.Bitstream.AnySymbol
         ///     A huffman table.
-        /// #  [See also](huffman-table-types)
-        /// ## (1:table-types-and-protocols)
         public
         struct Huffman<Symbol>:AnyTable where Symbol:Bitstream.AnySymbol
         {
@@ -1017,7 +975,6 @@ extension JPEG
         ///     Quantization tables store 64 coefficient quanta. The quantum values
         ///     can be accessed using either a zigzag index with the [`(Quantization).[z:]`]
         ///     subscript, or grid indices with the [`(Quantization).[k:h:]`] subscript.
-        /// ## (1:table-types-and-protocols)
         public
         struct Quantization:AnyTable
         {
@@ -1032,7 +989,6 @@ extension JPEG
             ///     in their numerical representation are written in **boldface**.
             /// #  [See also](key-types)
             /// ## (key-types)
-            /// ## (0:image-quality)
             public
             struct Key:Hashable, Comparable, Sendable
             {
@@ -1079,7 +1035,6 @@ extension JPEG
 {
     /// struct JPEG.Component
     ///     A color channel in an image.
-    /// ## (1:image-structure-and-decomposition)
     public
     struct Component
     {
@@ -1102,7 +1057,6 @@ extension JPEG
         ///     representation are written in **boldface**.
         /// #  [See also](key-types)
         /// ## (key-types)
-        /// ## (2:image-structure-and-decomposition)
         public
         struct Key:Hashable, Comparable, Sendable
         {
@@ -1130,13 +1084,11 @@ extension JPEG
     ///     This type contains essentially the same information as [`(JPEG).Header.Scan`],
     ///     but has been validated against the global image parameters and has its
     ///     component keys pre-resolved to integer indices.
-    /// ## (4:image-structure-and-decomposition)
     public
     struct Scan
     {
         /// struct JPEG.Scan.Component
         ///     A descriptor for a component encoded within a scan.
-        /// ## (5:image-structure-and-decomposition)
         public
         struct Component
         {
@@ -1217,7 +1169,6 @@ extension JPEG
     /// # [Image modes](layout-image-format)
     /// # [Component membership](layout-component-membership)
     /// # [Image structure](layout-image-structure)
-    /// ## (0:image-structure-and-decomposition)
     public
     struct Layout<Format> where Format:JPEG.Format
     {
@@ -1857,8 +1808,6 @@ extension JPEG
     /// struct JPEG.Bitstream
     /// :   Swift.ExpressibleByArrayLiteral
     ///     A padded bitstream.
-    /// #  [Symbol types](entropy-coding-symbols)
-    /// ## (0:entropy-coding)
     public
     struct Bitstream
     {
