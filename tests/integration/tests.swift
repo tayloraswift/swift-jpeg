@@ -1,5 +1,6 @@
 import JPEG
 import JPEGInspection
+import JPEGSystem
 
 extension Test
 {
