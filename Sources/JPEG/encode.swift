@@ -775,13 +775,18 @@ extension JPEG.Table.Huffman
 // inverse huffman tables
 extension JPEG.Table.Huffman
 {
+    @_spi(_Testable) public
     struct Encoder
     {
+        @_spi(_Testable) public
         struct Codeword
         {
             // the inhabited bits are in the most significant end of the `UInt16`
+            @_spi(_Testable) public
             let bits:UInt16
+
             @General.Storage<UInt16>
+            @_spi(_Testable) public
             var length:Int
         }
 
@@ -796,6 +801,7 @@ extension JPEG.Table.Huffman
 }
 extension JPEG.Table.Huffman
 {
+    @_spi(_Testable) public
     func encoder() -> Encoder
     {
         var storage:[Encoder.Codeword] =
@@ -822,6 +828,7 @@ extension JPEG.Table.Huffman
 // table accessors
 extension JPEG.Table.Huffman.Encoder
 {
+    @_spi(_Testable) public
     subscript(symbol:Symbol) -> Codeword
     {
         self.storage[.init(symbol.value)]
@@ -902,8 +909,8 @@ extension JPEG.Bitstream
 }
 extension JPEG.Bitstream.AnySymbol
 {
-    static
-    func frequencies<S>(of path:KeyPath<S.Element, Self>, in sequence:S) -> [Int]
+    @_spi(_Testable) public
+    static func frequencies<S>(of path:KeyPath<S.Element, Self>, in sequence:S) -> [Int]
         where S:Sequence
     {
         var frequencies:[Int] = .init(repeating: 0, count: 256)

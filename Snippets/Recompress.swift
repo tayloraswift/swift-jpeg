@@ -1,4 +1,5 @@
 import JPEG
+import JPEGSystem
 
 let path:String = "examples/recompress/original.jpg"
 guard let original:JPEG.Data.Spectral<JPEG.Common> = try .decompress(path: path)

@@ -37,33 +37,24 @@ while [ "$1" != "" ] ; do
     shift
 done
 
-for path in examples/*/ ; do
-    product=$(basename $path)
-    check   "error: swift build failed" \
-            swift build -c $build_configuration --product $product
+swift build -c $build_configuration
 
-    binaries=".build/$build_configuration"
-    if ! [ -f $binaries/$product ]; then
-        error "error: missing '$product' product"
-    fi
-done
-
-# run `decode-basic` example
+# run `DecodeBasic` example
 check   "error: runtime error" \
-        .build/$build_configuration/decode-basic
+        .build/$build_configuration/DecodeBasic
 
 for file in examples/decode-basic/*.jpg ; do
     size=$(identify -format "%wx%h" jpg:$file)
     convert -depth 8 -size $size "rgb:$file.rgb" "png:$file.rgb.png"
 done
 
-# run `encode-basic` example
+# run `EncodeBasic` example
 check   "error: runtime error" \
-        .build/$build_configuration/encode-basic
+        .build/$build_configuration/EncodeBasic
 
-# run `decode-advanced` example
+# run `DecodeAdvanced` example
 check   "error: runtime error" \
-        .build/$build_configuration/decode-advanced
+        .build/$build_configuration/DecodeAdvanced
 
 for file in examples/decode-advanced/*.gray ; do
     size=$(echo $file | sed -r 's/.*\.([0-9]+)x([0-9]+)\.gray/\1x\2/')
@@ -74,13 +65,13 @@ for file in examples/decode-advanced/*.jpg ; do
     convert -depth 8 -size $size "rgb:$file.rgb" "png:$file.rgb.png"
 done
 
-# run `encode-advanced` example
+# run `EncodeAdvanced` example
 check   "error: runtime error" \
-        .build/$build_configuration/encode-advanced
+        .build/$build_configuration/EncodeAdvanced
 
-# run `in-memory` example
+# run `InMemory` example
 check   "error: runtime error" \
-        .build/$build_configuration/in-memory
+        .build/$build_configuration/InMemory
 for file in examples/in-memory/*.jpg ; do
     if [ -f $file.rgb ]; then
         size=$(identify -format "%wx%h" jpg:$file)
@@ -88,9 +79,9 @@ for file in examples/in-memory/*.jpg ; do
     fi
 done
 
-# run `decode-online` example
+# run `DecodeOnline` example
 check   "error: runtime error" \
-        .build/$build_configuration/decode-online
+        .build/$build_configuration/DecodeOnline
 for file in examples/decode-online/*.jpg ; do
     size=$(identify -format "%wx%h" jpg:$file)
 done
@@ -98,21 +89,21 @@ for file in examples/decode-online/*.rgb ; do
     convert -depth 8 -size $size "rgb:$file" "png:$file.png"
 done
 
-# run `recompress` example
+# run `Recompress` example
 check   "error: runtime error" \
-        .build/$build_configuration/recompress
+        .build/$build_configuration/Recompress
 
-# run `rotate` example
+# run `Rotate` example
 check   "error: runtime error" \
-        .build/$build_configuration/rotate examples/rotate/karlie-kwk-wwdc-2017.jpg examples/rotate/karlie-kwk-wwdc-2017-ii.jpg --rotation ii
+        .build/$build_configuration/Rotate examples/rotate/karlie-kwk-wwdc-2017.jpg examples/rotate/karlie-kwk-wwdc-2017-ii.jpg --rotation ii
 check   "error: runtime error" \
-        .build/$build_configuration/rotate examples/rotate/karlie-kwk-wwdc-2017.jpg examples/rotate/karlie-kwk-wwdc-2017-iii.jpg --rotation iii
+        .build/$build_configuration/Rotate examples/rotate/karlie-kwk-wwdc-2017.jpg examples/rotate/karlie-kwk-wwdc-2017-iii.jpg --rotation iii
 check   "error: runtime error" \
-        .build/$build_configuration/rotate examples/rotate/karlie-kwk-wwdc-2017.jpg examples/rotate/karlie-kwk-wwdc-2017-iv.jpg --rotation iv
+        .build/$build_configuration/Rotate examples/rotate/karlie-kwk-wwdc-2017.jpg examples/rotate/karlie-kwk-wwdc-2017-iv.jpg --rotation iv
 
-# run `custom-color` example
+# run `CustomColor` example
 check   "error: runtime error" \
-        .build/$build_configuration/custom-color
+        .build/$build_configuration/CustomColor
 for file in examples/custom-color/*.rgb ; do
     convert -depth 16 -endian msb -size 1000x200 rgb:$file -depth 16 png:$file-16.png
     convert -depth 16 -endian msb -size 1000x200 rgb:$file -depth 8  png:$file-8.png
