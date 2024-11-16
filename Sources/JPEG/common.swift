@@ -2,12 +2,7 @@
 License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-/// enum General
-///     A namespace for general functionality.
-/// #  [Range types](general-range-types)
-/// #  [Integer storage](general-storage-types)
-/// #  [See also](top-level-namespaces)
-/// ## (1:top-level-namespaces)
+/// A namespace for general functionality.
 public
 enum General
 {
@@ -15,54 +10,43 @@ enum General
 
 extension General
 {
-    /// struct General.Storage<I>
-    /// where I:Swift.FixedWidthInteger & Swift.BinaryInteger
-    /// @propertyWrapper
-    ///     A property wrapper providing an immutable [`Swift.Int`] interface backed
-    ///     by a different integer type.
-    /// #  [See also](general-storage-types)
-    /// ## (general-storage-types)
+    /// A property wrapper providing an immutable [`Swift.Int`] interface backed
+    /// by a different integer type.
     @propertyWrapper
     public
     struct Storage<I> where I:FixedWidthInteger & BinaryInteger
     {
         private
         var storage:I
-        /// init General.Storage.init(wrappedValue:)
-        ///     Creates an instance of this property wrapper, with the given value
-        ///     truncated to the width of the storage type [`I`].
-        /// - wrappedValue : Swift.Int
+        /// Creates an instance of this property wrapper, with the given value
+        /// truncated to the width of the storage type [`I`].
+        ///
+        /// -   Parameter wrappedValue:
         ///     The value to wrap.
         public
         init(wrappedValue:Int)
         {
             self.storage = .init(truncatingIfNeeded: wrappedValue)
         }
-        /// var General.Storage.wrappedValue : Swift.Int { get }
-        ///     The value wrapped by this property wrapper, expanded to an [`Swift.Int`].
+        /// The value wrapped by this property wrapper, expanded to an [`Swift.Int`].
         public
         var wrappedValue:Int
         {
             .init(self.storage)
         }
     }
-    /// struct General.Storage2<I>
-    /// where I:Swift.FixedWidthInteger & Swift.BinaryInteger
-    /// @propertyWrapper
-    ///     A property wrapper providing an immutable `(`[`Swift.Int`]`, `[`Swift.Int`]`)`
-    ///     interface backed by a different integer type.
-    /// #  [See also](general-storage-types)
-    /// ## (general-storage-types)
+    /// A property wrapper providing an immutable `(`[`Swift.Int`]`, `[`Swift.Int`]`)`
+    /// interface backed by a different integer type.
     @propertyWrapper
     public
     struct Storage2<I> where I:FixedWidthInteger & BinaryInteger
     {
         private
         var storage:(x:I, y:I)
-        /// init General.Storage2.init(wrappedValue:)
-        ///     Creates an instance of this property wrapper, with the given values
-        ///     truncated to the width of the storage type [`I`].
-        /// - wrappedValue : (x:Swift.Int, y:Swift.Int)
+        /// Creates an instance of this property wrapper, with the given values
+        /// truncated to the width of the storage type [`I`].
+        ///
+        /// -   Parameter wrappedValue:
         ///     The values to wrap.
         public
         init(wrappedValue:(x:Int, y:Int))
@@ -73,40 +57,33 @@ extension General
                 .init(truncatingIfNeeded: wrappedValue.y)
             )
         }
-        /// var General.Storage2.wrappedValue : Swift.Int { get }
-        ///     The values wrapped by this property wrapper, expanded to an
-        ///     `(`[`Swift.Int`]`, `[`Swift.Int`]`)` tuple.
+        /// The values wrapped by this property wrapper, expanded to an
+        /// `(`[`Swift.Int`]`, `[`Swift.Int`]`)` tuple.
         public
         var wrappedValue:(x:Int, y:Int)
         {
             (.init(self.storage.x), .init(self.storage.y))
         }
     }
-    /// struct General.MutableStorage<I>
-    /// where I:Swift.FixedWidthInteger & Swift.BinaryInteger
-    /// @propertyWrapper
-    ///     A property wrapper providing a mutable [`Swift.Int`] interface backed
-    ///     by a different integer type.
-    /// #  [See also](general-storage-types)
-    /// ## (general-storage-types)
+    /// A property wrapper providing a mutable [`Swift.Int`] interface backed
+    /// by a different integer type.
     @propertyWrapper
     public
     struct MutableStorage<I> where I:FixedWidthInteger & BinaryInteger
     {
         private
         var storage:I
-        /// init General.MutableStorage.init(wrappedValue:)
-        ///     Creates an instance of this property wrapper, with the given value
-        ///     truncated to the width of the storage type [`I`].
-        /// - wrappedValue : Swift.Int
+        /// Creates an instance of this property wrapper, with the given value
+        /// truncated to the width of the storage type [`I`].
+        ///
+        /// -   Parameter wrappedValue:
         ///     The value to wrap.
         public
         init(wrappedValue:Int)
         {
             self.storage = .init(truncatingIfNeeded: wrappedValue)
         }
-        /// var General.MutableStorage.wrappedValue : Swift.Int { get set }
-        ///     The value wrapped by this property wrapper, expanded to an [`Swift.Int`].
+        /// The value wrapped by this property wrapper, expanded to an [`Swift.Int`].
         public
         var wrappedValue:Int
         {
@@ -305,11 +282,7 @@ extension General.Heap:ExpressibleByArrayLiteral
 // 2d iterators
 extension General
 {
-    /// struct General.Range2<Bound>
-    /// where Bound:Swift.Comparable
-    /// :   Swift.Sequence where Bound:Swift.Strideable, Bound.Stride:Swift.SignedInteger
-    ///     A two-dimensional open range.
-    /// ## (general-range-types)
+    /// A two-dimensional open range.
     public
     struct Range2<Bound> where Bound:Comparable
     {
@@ -335,16 +308,10 @@ func ..< <Bound>(lhs:(x:Bound, y:Bound), rhs:(x:Bound, y:Bound)) -> General.Rang
 
 extension General.Range2:Sequence where Bound:Strideable, Bound.Stride:SignedInteger
 {
-    /// typealias General.Range2.Element = (x:Bound, y:Bound)
-    /// ?:  Swift.Sequence where Bound:Swift.Strideable, Bound.Stride:Swift.SignedInteger
     public
     typealias Element = (x:Bound, y:Bound)
 
-    /// struct General.Range2.Iterator
-    /// ?:  Swift.Sequence where Bound:Swift.Strideable, Bound.Stride:Swift.SignedInteger
-    /// :   Swift.IteratorProtocol
-    ///     A two-dimensional range iterator.
-    /// ## (general-range-types)
+    /// A two-dimensional range iterator.
     public
     struct Iterator
     {
@@ -353,16 +320,12 @@ extension General.Range2:Sequence where Bound:Strideable, Bound.Stride:SignedInt
         let bound:(x:(Bound, Bound), y:Bound)
     }
 
-    /// func General.Range2.makeIterator()
-    /// ?:  Swift.Sequence where Bound:Swift.Strideable, Bound.Stride:Swift.SignedInteger
-    ///     Creates an iterator for this range instance.
+    /// Creates an iterator for this range instance.
     ///
-    ///     This iterator will traverse the range space in row-major order. For
-    ///     example, if the bounds are `(x: 0, y: 0)` and `(x: 2, y: 2)`, the iterator
-    ///     will yield the elements `(x: 0, y: 0)`, `(x: 1, y: 0)`, `(x: 0, y: 1)`,
-    ///     and `(x: 1, y: 1)`, in that order.
-    /// - -> : Iterator
-    ///     An iterator.
+    /// This iterator will traverse the range space in row-major order. For
+    /// example, if the bounds are `(x: 0, y: 0)` and `(x: 2, y: 2)`, the iterator
+    /// will yield the elements `(x: 0, y: 0)`, `(x: 1, y: 0)`, `(x: 0, y: 1)`,
+    /// and `(x: 1, y: 1)`, in that order.
     public
     func makeIterator() -> Iterator
     {
@@ -372,10 +335,9 @@ extension General.Range2:Sequence where Bound:Strideable, Bound.Stride:SignedInt
 }
 extension General.Range2.Iterator:IteratorProtocol
 {
-    /// mutating func General.Range2.Iterator.next()
-    /// ?:  Swift.IteratorProtocol
-    ///     Advances to the next element and returns it, or `nil` if no next element exists.
-    /// - -> : (x:Bound, y:Bound)?
+    /// Advances to the next element and returns it, or `nil` if no next element exists.
+    ///
+    /// -   Returns:
     ///     The next element in the two-dimensional range sequence, if it exists,
     ///     otherwise `nil`. If advancing the `x` index would cause it to reach its
     ///     upper bound, this iterator will advance to the next `y` index and reset
@@ -412,12 +374,12 @@ extension General.Range2.Iterator:IteratorProtocol
 // raw buffer utilities
 extension ArraySlice where Element == UInt8
 {
-    //  Loads this array slice as a misaligned big-endian integer value,
-    //  and casts it to a desired format.
-    //  - Parameters:
-    //      - bigEndian: The size and type to interpret this array slice as.
-    //      - type: The type to cast the read integer value to.
-    //  - Returns: The read integer value, cast to `U`.
+    /// Loads this array slice as a misaligned big-endian integer value,
+    /// and casts it to a desired format.
+    /// - Parameters:
+    ///     - bigEndian: The size and type to interpret this array slice as.
+    ///     - type: The type to cast the read integer value to.
+    /// - Returns: The read integer value, cast to `U`.
     func load<T, U>(bigEndian:T.Type, as type:U.Type) -> U
         where T:FixedWidthInteger, U:BinaryInteger
     {
@@ -447,13 +409,13 @@ extension ArraySlice where Element == UInt8
 }
 extension Array where Element == UInt8
 {
-    //  Loads a misaligned big-endian integer value from the given byte offset
-    //  and casts it to a desired format.
-    //  - Parameters:
-    //      - bigEndian: The size and type to interpret the data to load as.
-    //      - type: The type to cast the read integer value to.
-    //      - byte: The byte offset to load the big-endian integer from.
-    //  - Returns: The read integer value, cast to `U`.
+    /// Loads a misaligned big-endian integer value from the given byte offset
+    /// and casts it to a desired format.
+    /// - Parameters:
+    ///     - bigEndian: The size and type to interpret the data to load as.
+    ///     - type: The type to cast the read integer value to.
+    ///     - byte: The byte offset to load the big-endian integer from.
+    /// - Returns: The read integer value, cast to `U`.
     func load<T, U>(bigEndian:T.Type, as type:U.Type, at byte:Int) -> U
         where T:FixedWidthInteger, U:BinaryInteger
     {
@@ -463,12 +425,12 @@ extension Array where Element == UInt8
 
 extension Array where Element == UInt8
 {
-    //  Decomposes the given integer value into its constituent bytes, in big-endian order.
-    //  - Parameters:
-    //      - value: The integer value to decompose.
-    //      - type: The big-endian format `T` to store the given `value` as. The given
-    //              `value` is truncated to fit in a `T`.
-    //  - Returns: An array containing the bytes of the given `value`, in big-endian order.
+    /// Decomposes the given integer value into its constituent bytes, in big-endian order.
+    /// - Parameters:
+    ///     - value: The integer value to decompose.
+    ///     - type: The big-endian format `T` to store the given `value` as. The given
+    ///             `value` is truncated to fit in a `T`.
+    /// - Returns: An array containing the bytes of the given `value`, in big-endian order.
     static
     func store<U, T>(_ value:U, asBigEndian type:T.Type) -> [UInt8]
         where U:BinaryInteger, T:FixedWidthInteger
