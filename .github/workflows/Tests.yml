@@ -20,6 +20,9 @@ jobs:
             -   name: Checkout repository
                 uses: actions/checkout@v3
 
+            -   name: Install imagemagick
+                run: apt install imagemagick
+
             -   name: Run tests
                 run: Scripts/TestAll
 
