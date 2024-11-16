@@ -1,4 +1,5 @@
 import JPEG
+import JPEGInspection
 
 extension Test 
 {

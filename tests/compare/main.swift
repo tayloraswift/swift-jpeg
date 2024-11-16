@@ -1,4 +1,5 @@
 import JPEG 
+import JPEGInspection
 
 func discrepancy(jpeg:String, reference:String) 
     throws -> (average:Double, max:Double)

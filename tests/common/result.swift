@@ -1,3 +1,5 @@
+import JPEGInspection
+
 enum Test 
 {
     struct Failure:Swift.Error 
