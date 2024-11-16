@@ -365,6 +365,7 @@ extension JPEG.Table.Huffman
         self.size    = size
     }
 
+    @_spi(_Testable) public
     init?<RAC>(counts:[Int], values:RAC, target:Selector)
         where RAC:RandomAccessCollection, RAC.Element == UInt8, RAC.Index == Int
     {
@@ -1007,12 +1008,16 @@ extension JPEG.Header.Scan
 // huffman decoder
 extension JPEG.Table.Huffman
 {
+    @_spi(_Testable) public
     struct Decoder
     {
+        @_spi(_Testable) public
         struct Entry
         {
+            @_spi(_Testable) public
             let symbol:Symbol
             @General.Storage<UInt8>
+            @_spi(_Testable) public
             var length:Int
         }
 
@@ -1034,6 +1039,7 @@ extension JPEG.Table.Huffman
     // this is a (relatively) expensive function. however most jpegs define a
     // fresh set of huffman tables for each scan, so it is very unlikely that
     // this function will get called redundantly.
+    @_spi(_Testable) public
     func decoder() -> Decoder
     {
         /*
@@ -1243,6 +1249,7 @@ extension JPEG.Table.Huffman
 extension JPEG.Table.Huffman.Decoder
 {
     // codeword is big-endian
+    @_spi(_Testable) public
     subscript(codeword:UInt16) -> Entry
     {
         // [ level 0 index  |    offset    ]
@@ -2738,8 +2745,8 @@ extension JPEG.Bitstream
         }
     }
 
-    static
-    func extend<I>(binade:Int, _ tail:UInt16, as _:I.Type) -> I
+    @_spi(_Testable) public
+    static func extend<I>(binade:Int, _ tail:UInt16, as _:I.Type) -> I
         where I:FixedWidthInteger & SignedInteger
     {
         assert(binade > 0)
@@ -2753,8 +2760,8 @@ extension JPEG.Bitstream
         return .init(combined)
     }
 
-    static
-    func compact<I>(_ x:I) -> (binade:Int, tail:UInt16)
+    @_spi(_Testable) public
+    static func compact<I>(_ x:I) -> (binade:Int, tail:UInt16)
         where I:FixedWidthInteger & SignedInteger
     {
         let x:Int16         = .init(x)

@@ -1,4 +1,4 @@
-@testable import JPEG
+@_spi(_Testable) import JPEG
 
 extension JPEG.Bitstream.Symbol.DC:ExpressibleByIntegerLiteral
 {
