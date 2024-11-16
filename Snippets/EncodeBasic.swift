@@ -1,4 +1,5 @@
 import JPEG
+import JPEGSystem
 
 let path:String          = "examples/encode-basic/karlie-milan-sp12-2011",
     size:(x:Int, y:Int)  = (400, 665)

@@ -1864,7 +1864,7 @@ extension JPEG
     {
         private
         var atoms:[UInt16]
-        private(set)
+        @_spi(_Testable) public private(set)
         var count:Int
     }
 }
@@ -1900,6 +1900,7 @@ extension JPEG.Bitstream
         return .init(single)
     }
 
+    @_spi(_Testable) public
     subscript(i:Int, count c:Int) -> UInt16
     {
         let a:Int = i >> 4,
@@ -1938,7 +1939,7 @@ extension JPEG.Bitstream
         self.count         += 1
     }
     // relevant bits in the least significant positions
-    mutating
+    @_spi(_Testable) public mutating
     func append(_ bits:UInt16, count:Int)
     {
         let a:Int           = self.count >> 4,
