@@ -21,7 +21,7 @@ jobs:
                 uses: actions/checkout@v3
 
             -   name: Install imagemagick
-                run: apt install imagemagick
+                run: sudo apt install -y imagemagick
 
             -   name: Run tests
                 run: Scripts/TestAll
