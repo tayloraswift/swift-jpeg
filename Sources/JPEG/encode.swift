@@ -249,25 +249,24 @@ extension JPEG.Data.Spectral.Plane
 }
 extension JPEG
 {
-    /// enum JPEG.CompressionLevel
-    ///     A basic image quality parameter.
+    /// A basic image quality parameter.
     ///
-    ///     This is a toy API which generates acceptable defaults for a range of
-    ///     quality settings. For finer-grained control, specify coefficient-wise
-    ///     quantum values manually.
+    /// This is a toy API which generates acceptable defaults for a range of
+    /// quality settings. For finer-grained control, specify coefficient-wise
+    /// quantum values manually.
     public
     enum CompressionLevel
     {
-        /// case JPEG.CompressionLevel.luminance(_:)
-        ///     A quality level for a luminance component.
-        /// - _ : Swift.Double
+        /// A quality level for a luminance component.
+        ///
+        /// -   Parameter _:
         ///     The quality parameter. A value of `0.0` represents the highest
         ///     possible image quality. A value of `1.0` represents a “medium”
         ///     compression level. This value can be greater than `1.0`.
         case luminance(Double)
-        /// case JPEG.CompressionLevel.chrominance(_:)
-        ///     A quality level for a chrominance component.
-        /// - _ : Swift.Double
+        /// A quality level for a chrominance component.
+        ///
+        /// -   Parameter _:
         ///     The quality parameter. A value of `0.0` represents the highest
         ///     possible image quality. A value of `1.0` represents a “medium”
         ///     compression level. This value can be greater than `1.0`.
@@ -278,9 +277,8 @@ extension JPEG.CompressionLevel
 {
     // taken from the T-81 recommendations
 
-    /// var JPEG.CompressionLevel.quanta : [Swift.UInt16] { get }
-    ///     A 64-component array containing quantum values determined by this
-    ///     quality parameter, in zigzag order.
+    /// A 64-component array containing quantum values determined by this
+    /// quality parameter, in zigzag order.
     public
     var quanta:[UInt16]
     {
@@ -333,18 +331,19 @@ extension JPEG.CompressionLevel
 }
 extension JPEG.Data.Planar
 {
-    /// func JPEG.Data.Planar.fdct(quanta:)
-    ///     Converts this planar image into its spectral representation.
+    /// Converts this planar image into its spectral representation.
     ///
-    ///     This method is the inverse of [`Spectral.idct()`]
-    /// - quanta: [JPEG.Table.Quantization.Key: [Swift.UInt16]]
+    /// This method is the inverse of [`Spectral.idct()`]
+    ///
+    /// -   Parameter quanta:
     ///     The quantum values for each quanta key used by this image’s [`layout`],
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
     ///     determined by this image’s [`layout``(Layout).format``(JPEG.Format).precision`],
     ///     and all the values must be in the correct range for that bit width.
-    /// - ->    : JPEG.Data.Spectral<Format>
+    ///
+    /// -   Returns:
     ///     The output of a forward discrete cosine transform performed on this image.
     public
     func fdct(quanta:[JPEG.Table.Quantization.Key: [UInt16]])
@@ -368,16 +367,16 @@ extension JPEG.Data.Planar
 }
 extension JPEG.Data.Rectangular
 {
-    /// func JPEG.Data.Rectangular.decomposed()
-    ///     Converts this rectangular image into its planar representation.
+    /// Converts this rectangular image into its planar representation.
     ///
-    ///     This method uses a basic box-filter to perform downsampling. A box-filter
-    ///     is a relatively poor low-pass filter, so it may be worthwhile to
-    ///     perform component resampling manually and construct a planar image
-    ///     directly using [`(Planar).init(size:layout:metadata:initializingWith:)`].
+    /// This method uses a basic box-filter to perform downsampling. A box-filter
+    /// is a relatively poor low-pass filter, so it may be worthwhile to
+    /// perform component resampling manually and construct a planar image
+    /// directly using [`(Planar).init(size:layout:metadata:initializingWith:)`].
     ///
-    ///     This method is the inverse of [`Planar.interleaved(cosite:)`].
-    /// - ->    : JPEG.Data.Planar<Format>
+    /// This method is the inverse of [`Planar.interleaved(cosite:)`].
+    ///
+    /// -   Returns:
     ///     A planar image created by resampling all components in the input
     ///     according to their sampling factors in the image [`layout`].
     public
@@ -421,27 +420,28 @@ extension JPEG.Data.Rectangular
 }
 extension JPEG.Data.Rectangular
 {
-    /// static func JPEG.Data.Rectangular.pack<Color>(size:layout:metadata:pixels:)
-    /// where Color:JPEG.Color, Color.Format == Format
-    /// @ specialized where Color == JPEG.YCbCr
-    /// @ specialized where Color == JPEG.RGB
-    ///     Packs the given row-major pixels into rectangular image data and creates
-    ///     a rectangular image with the given image parameters and layout.
+    /// Packs the given row-major pixels into rectangular image data and creates
+    /// a rectangular image with the given image parameters and layout.
     ///
-    ///     Passing an invalid `size`, or a pixel array of the wrong `count` will
-    ///     result in a precondition failure.
+    /// Passing an invalid `size`, or a pixel array of the wrong `count` will
+    /// result in a precondition failure.
     ///
-    ///     This function is the inverse of [`unpack(as:)`].
-    /// - size      : (x:Swift.Int, y:Swift.Int)
+    /// This function is the inverse of [`unpack(as:)`].
+    ///
+    /// -   Parameter size:
     ///     The size of the image, in pixels. Both dimensions must be positive.
-    /// - layout    : JPEG.Layout<Format>
+    ///
+    /// -   Parameter layout:
     ///     The layout of the image.
-    /// - metadata  : [JPEG.Metadata]
+    ///
+    /// -   Parameter metadata:
     ///     The metadata records in the image.
-    /// - pixels    : [Swift.UInt16]
+    ///
+    /// -   Parameter pixels:
     ///     An array of pixels, in row major order, and without
     ///     padding. The array must have exactly [`size`x`]\ ×\ [`size`y`] pixels.
-    /// - ->        : Self
+    ///
+    /// -   Returns:
     ///     A rectangular image.
     @_specialize(where Color == JPEG.YCbCr, Format == JPEG.Common)
     @_specialize(where Color == JPEG.RGB, Format == JPEG.Common)
@@ -467,13 +467,13 @@ extension JPEG.Data.Spectral
     // this property is not to be used within the library, it is used for encoding
     // to obtain a valid frame header from a `Spectral` struct
 
-    /// func JPEG.Data.Spectral.encode()
-    ///     Creates a frame header for this image.
+    /// Creates a frame header for this image.
     ///
-    ///     The encoded frame header contains only the recognized components in
-    ///     this image. It encodes the image height eagerly (as opposed to lazily,
-    ///     with a [`(JPEG.Header).HeightRedefinition`] header).
-    /// - -> : JPEG.Header.Frame
+    /// The encoded frame header contains only the recognized components in
+    /// this image. It encodes the image height eagerly (as opposed to lazily,
+    /// with a [`(JPEG.Header).HeightRedefinition`] header).
+    ///
+    /// -   Returns:
     ///     The encoded frame header.
     public
     func encode() -> JPEG.Header.Frame
@@ -501,13 +501,12 @@ extension JPEG.Layout
     // note: all components referenced by the scan headers in `self.scans`
     // must be recognized components.
 
-    /// var JPEG.Layout.scans : [JPEG.Header.Scan] { get }
-    ///     The scan decomposition of this image layout, filtered to include only
-    ///     recognized components.
+    /// The scan decomposition of this image layout, filtered to include only
+    /// recognized components.
     ///
-    ///     This property is derived from the this layout’s [`definitions`].
-    ///     Scans containing only non-recognized components are omitted from this
-    ///     array.
+    /// This property is derived from the this layout’s [`definitions`].
+    /// Scans containing only non-recognized components are omitted from this
+    /// array.
     public
     var scans:[JPEG.Header.Scan]
     {
@@ -671,14 +670,15 @@ extension JPEG.Table.Huffman
     }
 
     // `frequencies` must always contain 256 entries
-    /// init JPEG.Table.Huffman.init(frequencies:target:)
-    ///     Creates a huffman table containing a near-optimal huffman tree from
-    ///     the given symbol frequencies and table selector.
+
+    /// Creates a huffman table containing a near-optimal huffman tree from
+    /// the given symbol frequencies and table selector.
     ///
-    ///     This initializer uses the standard huffman tree construction algorithm
-    ///     to determine optimal codeword assignments. These assignments are modified
-    ///     slightly to fit codeword length constraints imposed by the JPEG specification.
-    /// - frequencies   : [Swift.Int]
+    /// This initializer uses the standard huffman tree construction algorithm
+    /// to determine optimal codeword assignments. These assignments are modified
+    /// slightly to fit codeword length constraints imposed by the JPEG specification.
+    ///
+    /// -   Parameter frequencies:
     ///     An array of symbol frequencies. This array must contain exactly 256
     ///     elements, corresponding to the 256 possible 8-bit symbols. The *i*th
     ///     array element specifies the frequency of the symbol with the
@@ -686,7 +686,8 @@ extension JPEG.Table.Huffman
     ///
     ///     At least one symbol must have a non-zero frequency. Passing an invalid
     ///     frequency array will result in a precondition failure.
-    /// - target        : Selector
+    ///
+    /// -   Parameter target:
     ///     The selector target for the created huffman table.
     public
     init(frequencies:[Int], target:Selector)
@@ -1663,20 +1664,21 @@ extension JPEG.Table.Quantization
 }
 extension JPEG.Table
 {
-    /// func JPEG.Table.serialize(_:_:)
-    ///     Serializes the given huffman tables as segment data.
+    /// Serializes the given huffman tables as segment data.
     ///
-    ///     The DC tables appear before the AC tables in the serialized
-    ///     segment.
+    /// The DC tables appear before the AC tables in the serialized segment.
     ///
-    ///     This method is the inverse of [`parse(huffman:)`].
-    /// - _     : [HuffmanDC]
+    /// This method is the inverse of [`parse(huffman:)`].
+    ///
+    /// -   Parameter dc:
     ///     The DC huffman tables to serialize. The tables will appear in the
     ///     serialized segment in the same order they appear in this array.
-    /// - _     : [HuffmanAC]
+    ///
+    /// -   Parameter ac:
     ///     The AC huffman tables to serialize. The tables will appear in the
     ///     serialized segment in the same order they appear in this array.
-    /// - ->    : [Swift.UInt8]
+    ///
+    /// -   Returns:
     ///     A marker segment body. This array does not include the marker type
     ///     indicator, or the marker segment length field.
     public static
@@ -1696,14 +1698,15 @@ extension JPEG.Table
 
         return bytes
     }
-    /// func JPEG.Table.serialize(_:)
-    ///     Serializes the given quantization tables as segment data.
+    /// Serializes the given quantization tables as segment data.
     ///
-    ///     This method is the inverse of [`parse(quantization:)`].
-    /// - _     : [Quantization]
+    /// This method is the inverse of [`parse(quantization:)`].
+    ///
+    /// -   Parameter tables:
     ///     The quantization tables to serialize. The tables will appear in the
     ///     serialized segment in the same order they appear in this array.
-    /// - -> : [Swift.UInt8]
+    ///
+    /// -   Returns:
     ///     A marker segment body. This array does not include the marker type
     ///     indicator, or the marker segment length field.
     public static
@@ -1732,11 +1735,11 @@ extension JPEG.Table
 
 extension JPEG.Header.Frame
 {
-    /// func JPEG.Header.Frame.serialized()
-    ///     Serializes this frame header as segment data.
+    /// Serializes this frame header as segment data.
     ///
-    ///     This method is the inverse of [`parse(_:process:)`].
-    /// - -> : [Swift.UInt8]
+    /// This method is the inverse of [`parse(_:process:)`].
+    ///
+    /// -   Returns:
     ///     A marker segment body. This array does not include the marker type
     ///     indicator, or the marker segment length field.
     public
@@ -1761,11 +1764,11 @@ extension JPEG.Header.Frame
 }
 extension JPEG.Header.Scan
 {
-    /// func JPEG.Header.Scan.serialized()
-    ///     Serializes this scan header as segment data.
+    /// Serializes this scan header as segment data.
     ///
-    ///     This method is the inverse of [`parse(_:process:)`].
-    /// - -> : [Swift.UInt8]
+    /// This method is the inverse of [`parse(_:process:)`].
+    ///
+    /// -   Returns:
     ///     A marker segment body. This array does not include the marker type
     ///     indicator, or the marker segment length field.
     public
@@ -1795,27 +1798,26 @@ extension JPEG.Header.Scan
 
 // formatters (opposite of lexers)
 
-/// protocol JPEG.Bytestream.Destination
-///     A destination bytestream.
+/// A destination bytestream.
 ///
-///     To implement a custom data destination type, conform it to this protocol by
-///     implementing [`(Destination).write(_:)`]. It can
-///     then be used with the library’s core compression interfaces.
+/// To implement a custom data destination type, conform it to this protocol by
+/// implementing [`(Destination).write(_:)`]. It can
+/// then be used with the library’s core compression interfaces.
 public
 protocol _JPEGBytestreamDestination
 {
-    /// mutating func JPEG.Bytestream.Destination.write(_:)
-    /// required
-    ///     Attempts to write the given bytes to this stream.
+    /// Attempts to write the given bytes to this stream.
     ///
-    ///     A successful call to this function should affect the bytestream state
-    ///     such that subsequent calls should pick up where the last call left off.
+    /// A successful call to this function should affect the bytestream state
+    /// such that subsequent calls should pick up where the last call left off.
     ///
-    ///     The rest of the library interprets a `nil` return value from this function
-    ///     as indicating a write failure.
-    /// - bytes     : [Swift.UInt8]
+    /// The rest of the library interprets a `nil` return value from this function
+    /// as indicating a write failure.
+    ///
+    /// -   Parameter bytes:
     ///     The bytes to write.
-    /// - ->        : Swift.Void?
+    ///
+    /// -   Returns:
     ///     A [`Swift.Void`] tuple, or `nil` if the write attempt failed. This
     ///     method should return `nil` even if any number of bytes less than
     ///     `bytes.count` were successfully written.
@@ -1829,16 +1831,15 @@ extension JPEG.Bytestream
 }
 extension JPEG.Bytestream.Destination
 {
-    /// mutating func JPEG.Bytestream.Destination.format(marker:)
-    /// throws
-    ///     Formats a single marker into this bytestream.
+    /// Formats a single marker into this bytestream.
     ///
-    ///     This function is meant to be used with markers without segment bodies,
-    ///     such as [`(Marker).start`], [`(Marker).end`], and [`(Marker).restart(_:)`].
+    /// This function is meant to be used with markers without segment bodies,
+    /// such as [`(Marker).start`], [`(Marker).end`], and [`(Marker).restart(_:)`].
     ///
-    ///     This function can throw a [`FormattingError`] if it fails to write
-    ///     to the bytestream.
-    /// - marker : JPEG.Marker
+    /// This function can throw a [`FormattingError`] if it fails to write
+    /// to the bytestream.
+    ///
+    /// -   Parameter marker:
     ///     The type indicator of the marker to format.
     public mutating
     func format(marker:JPEG.Marker) throws
@@ -1849,19 +1850,19 @@ extension JPEG.Bytestream.Destination
             throw JPEG.FormattingError.invalidDestination
         }
     }
-    /// mutating func JPEG.Bytestream.Destination.format(marker:tail:)
-    /// throws
-    ///     Formats a single marker segment into this bytestream.
+    /// Formats a single marker segment into this bytestream.
     ///
-    ///     This function will output a segment length field, even if no marker data
-    ///     is provided, and so should *not* be used with markers without segment
-    ///     bodies, such as [`(Marker).start`], [`(Marker).end`], and [`(Marker).restart(_:)`].
+    /// This function will output a segment length field, even if no marker data
+    /// is provided, and so should *not* be used with markers without segment
+    /// bodies, such as [`(Marker).start`], [`(Marker).end`], and [`(Marker).restart(_:)`].
     ///
-    ///     This function can throw a [`FormattingError`] if it fails to write
-    ///     to the bytestream.
-    /// - marker : JPEG.Marker
+    /// This function can throw a [`FormattingError`] if it fails to write
+    /// to the bytestream.
+    ///
+    /// -   Parameter marker:
     ///     The type indicator of the marker to format.
-    /// - tail   : [Swift.UInt8]
+    ///
+    /// -   Parameter tail:
     ///     The marker segment body. This array should not include the marker type
     ///     indicator, or the marker segment length field.
     public mutating
@@ -1876,13 +1877,12 @@ extension JPEG.Bytestream.Destination
             throw JPEG.FormattingError.invalidDestination
         }
     }
-    /// mutating func JPEG.Bytestream.Destination.format(prefix:)
-    /// throws
-    ///     Formats the given entropy-coded data into this bytestream.
+    /// Formats the given entropy-coded data into this bytestream.
     ///
-    ///     This function is essentially a wrapper around [`write(_:)`] which converts
-    ///     `nil` return values to a thrown [`FormattingError`].
-    /// - prefix : JPEG.Marker
+    /// This function is essentially a wrapper around [`write(_:)`] which converts
+    /// `nil` return values to a thrown [`FormattingError`].
+    ///
+    /// -   Parameter prefix:
     ///     The data to write to the bytestream.
     public mutating
     func format(prefix:[UInt8]) throws
@@ -1898,14 +1898,12 @@ extension JPEG.Bytestream.Destination
 // staged APIs
 extension JPEG.Data.Spectral
 {
-    /// func JPEG.Data.Spectral.compress<Destination>(stream:)
-    /// throws
-    /// where Destination:JPEG.Bytestream.Destination
-    ///     Compresses a spectral image to the given data destination.
+    /// Compresses a spectral image to the given data destination.
     ///
-    ///     All metadata records in this image will be emitted at the beginning of
-    ///     the outputted file, in the order they appear in the [`metadata`] array.
-    /// - stream    : inout Destination
+    /// All metadata records in this image will be emitted at the beginning of
+    /// the outputted file, in the order they appear in the [`metadata`] array.
+    ///
+    /// -   Parameter stream:
     ///     A destination bytestream.
     public
     func compress<Destination>(stream:inout Destination) throws
@@ -1966,20 +1964,19 @@ extension JPEG.Data.Spectral
 }
 extension JPEG.Data.Planar
 {
-    /// func JPEG.Data.Planar.compress<Destination>(stream:quanta:)
-    /// throws
-    /// where Destination:JPEG.Bytestream.Destination
-    ///     Compresses a planar image to the given data destination.
+    /// Compresses a planar image to the given data destination.
     ///
-    ///     All metadata records in this image will be emitted at the beginning of
-    ///     the outputted file, in the order they appear in the [`metadata`] array.
+    /// All metadata records in this image will be emitted at the beginning of
+    /// the outputted file, in the order they appear in the [`metadata`] array.
     ///
-    ///     This function is a convenience function which calls [`fdct(quanta:)`]
-    ///     to obtain a spectral image, and then calls [`(Spectral).compress(stream:)`]
-    ///     on the output.
-    /// - stream    : inout Destination
+    /// This function is a convenience function which calls [`fdct(quanta:)`]
+    /// to obtain a spectral image, and then calls [`(Spectral).compress(stream:)`]
+    /// on the output.
+    ///
+    /// -   Parameter stream:
     ///     A destination bytestream.
-    /// - quanta: [JPEG.Table.Quantization.Key: [Swift.UInt16]]
+    ///
+    /// -   Parameter quanta:
     ///     The quantum values for each quanta key used by this image’s [`layout`],
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
@@ -1996,20 +1993,19 @@ extension JPEG.Data.Planar
 }
 extension JPEG.Data.Rectangular
 {
-    /// func JPEG.Data.Rectangular.compress<Destination>(stream:quanta:)
-    /// throws
-    /// where Destination:JPEG.Bytestream.Destination
-    ///     Compresses a rectangular image to the given data destination.
+    /// Compresses a rectangular image to the given data destination.
     ///
-    ///     All metadata records in this image will be emitted at the beginning of
-    ///     the outputted file, in the order they appear in the [`metadata`] array.
+    /// All metadata records in this image will be emitted at the beginning of
+    /// the outputted file, in the order they appear in the [`metadata`] array.
     ///
-    ///     This function is a convenience function which calls [`decomposed()`]
-    ///     to obtain a planar image, and then calls [`(Planar).compress(stream:quanta:)`]
-    ///     on the output.
-    /// - stream    : inout Destination
+    /// This function is a convenience function which calls [`decomposed()`]
+    /// to obtain a planar image, and then calls [`(Planar).compress(stream:quanta:)`]
+    /// on the output.
+    ///
+    /// -   Parameter stream:
     ///     A destination bytestream.
-    /// - quanta: [JPEG.Table.Quantization.Key: [Swift.UInt16]]
+    ///
+    /// -   Parameter quanta:
     ///     The quantum values for each quanta key used by this image’s [`layout`],
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
