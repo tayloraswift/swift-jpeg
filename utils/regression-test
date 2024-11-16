@@ -2,7 +2,7 @@
 DEFAULT_BUILD_CONFIGURATION="debug"
 TOOL_NAME="regression-test"
 
-usage() 
+usage()
 {
     echo "usage: utils/$TOOL_NAME [OPTION...]
   -c, --configuration       swift build configuration mode, default '$DEFAULT_BUILD_CONFIGURATION'
@@ -11,14 +11,14 @@ usage()
 
 error()
 {
-    echo $1 
+    echo $1
     exit 1
 }
 
 check()
 {
     message=$1
-    shift 
+    shift
     echo $@
     "$@" || error "$message"
 }
@@ -26,29 +26,29 @@ check()
 build_configuration=$DEFAULT_BUILD_CONFIGURATION
 
 while [ "$1" != "" ] ; do
-    case $1 in 
-    -c | --configuration ) 
+    case $1 in
+    -c | --configuration )
         shift
         build_configuration=$1
         ;;
-    -u | --update ) 
+    -u | --update )
         shift
         gold=(tests/regression/gold/*.jpg.ycc)
         echo "the following ${#gold[@]} golden outputs will be removed and regenerated:"
         for file in ${gold[@]} ; do
             echo "    $file"
-        done 
+        done
         echo "note: regression tests will fail. regression tests will pass on the next run."
         echo -n "press enter to confirm>"
         read confirmation
         rm ${gold[@]}
         ;;
     * )
-        usage 
+        usage
         exit 1
-    esac 
-    shift 
-done 
+    esac
+    shift
+done
 
 check   "error: swift build failed" \
         swift build -c $build_configuration --product $TOOL_NAME

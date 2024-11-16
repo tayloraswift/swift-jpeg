@@ -3,7 +3,7 @@ DEFAULT_BUILD_CONFIGURATION="debug"
 DEFAULT_COUNT="16"
 DEFAULT_PREFIX="tests/fuzz/data"
 
-usage() 
+usage()
 {
     echo "usage: utils/fuzz-test [OPTION...]
   -c, --configuration       swift build configuration mode, default '$DEFAULT_BUILD_CONFIGURATION'
@@ -13,14 +13,14 @@ usage()
 
 error()
 {
-    echo $1 
+    echo $1
     exit 1
 }
 
 check()
 {
     message=$1
-    shift 
+    shift
     echo $@
     "$@" || error "$message"
 }
@@ -37,31 +37,31 @@ prefix=$DEFAULT_PREFIX
 count=$DEFAULT_COUNT
 build_configuration=$DEFAULT_BUILD_CONFIGURATION
 
-JPEG_DIRECTORY_NAME="jpeg" 
-YCC_DIRECTORY_NAME="ycc" 
-JPEG_EXTENSION="jpg" 
+JPEG_DIRECTORY_NAME="jpeg"
+YCC_DIRECTORY_NAME="ycc"
+JPEG_EXTENSION="jpg"
 YCC_EXTENSION="ycc"
 
 while [ "$1" != "" ] ; do
-    case $1 in 
-    -c | --configuration ) 
+    case $1 in
+    -c | --configuration )
         shift
         build_configuration=$1
         ;;
-    -n | --count ) 
-        shift 
+    -n | --count )
+        shift
         count=$1
         ;;
-    -p | --prefix ) 
-        shift 
+    -p | --prefix )
+        shift
         prefix=$1
         ;;
     * )
-        usage 
+        usage
         exit 1
-    esac 
-    shift 
-done 
+    esac
+    shift
+done
 
 jpeg_pattern=$prefix/*.$JPEG_EXTENSION
 ycc_pattern=$prefix/*.$YCC_EXTENSION
@@ -84,9 +84,9 @@ check   "error: test image generation failed" \
 
 rm      $ycc_pattern    &> /dev/null
 
-for file in $jpeg_pattern ; do 
+for file in $jpeg_pattern ; do
     check   "error: system jpeg-to-data conversion failed" \
             convert -depth 8 -define jpeg:dct-method=float "jpeg:$file" "ycbcr:$file.$YCC_EXTENSION"
-done 
+done
 
 $binaries/comparator $jpeg_pattern
