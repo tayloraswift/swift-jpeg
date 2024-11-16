@@ -1,13 +1,13 @@
 import JPEGInspection
 
-enum Test 
+enum Test
 {
-    struct Failure:Swift.Error 
+    struct Failure:Swift.Error
     {
-        let message:String 
+        let message:String
     }
-    
-    enum Function 
+
+    enum Function
     {
         case void(       ()                       -> Result<Void, Failure>)
         case string_int2((String, (x:Int, y:Int)) -> Result<Void, Failure>, [(String, (x:Int, y:Int))])
@@ -20,7 +20,7 @@ func test(_ function:Test.Function, name:String) -> Void?
 {
     var successes:Int                               = 0
     var failures:[(name:String?, message:String)]   = []
-    switch function 
+    switch function
     {
     case .void(let function):
         switch function()
@@ -31,7 +31,7 @@ func test(_ function:Test.Function, name:String) -> Void?
             failures.append((nil, failure.message))
         }
     case .string_int2(let function, let cases):
-        for arguments:(String, (x:Int, y:Int)) in cases 
+        for arguments:(String, (x:Int, y:Int)) in cases
         {
             switch function(arguments.0, arguments.1)
             {
@@ -42,7 +42,7 @@ func test(_ function:Test.Function, name:String) -> Void?
             }
         }
     case .string(let function, let cases):
-        for argument:String in cases 
+        for argument:String in cases
         {
             switch function(argument)
             {
@@ -53,7 +53,7 @@ func test(_ function:Test.Function, name:String) -> Void?
             }
         }
     case .int(let function, let cases):
-        for argument:Int in cases 
+        for argument:Int in cases
         {
             switch function(argument)
             {
@@ -64,8 +64,8 @@ func test(_ function:Test.Function, name:String) -> Void?
             }
         }
     }
-    
-    var width:Int 
+
+    var width:Int
     {
         80
     }
@@ -88,17 +88,17 @@ func test(_ function:Test.Function, name:String) -> Void?
     case (let succeeded, let failed):
         Highlight.print(.pad(" test '\(name)' failed (\(succeeded + failed) cases, \(failed) failed)", right: width), highlight: red)
     }
-    for (i, failure):(Int, (name:String?, message:String)) in failures.enumerated() 
+    for (i, failure):(Int, (name:String?, message:String)) in failures.enumerated()
     {
-        if let name:String = failure.name 
+        if let name:String = failure.name
         {
             Highlight.print(" [\(String.pad("\(i)", left: 2))] case '\(name)' failed: \(failure.message)", color: red)
         }
-        else 
+        else
         {
             Highlight.print(" [\(String.pad("\(i)", left: 2))]: \(failure.message)", color: red)
         }
     }
-    
+
     return failures.count > 0 ? nil : ()
 }

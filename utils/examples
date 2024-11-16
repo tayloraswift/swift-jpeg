@@ -2,7 +2,7 @@
 DEFAULT_BUILD_CONFIGURATION="debug"
 SCRIPT_NAME="examples"
 
-usage() 
+usage()
 {
     echo "usage: utils/$SCRIPT_NAME [OPTION...]
   -c, --configuration       swift build configuration mode, default '$DEFAULT_BUILD_CONFIGURATION'"
@@ -10,14 +10,14 @@ usage()
 
 error()
 {
-    echo $1 
+    echo $1
     exit 1
 }
 
 check()
 {
     message=$1
-    shift 
+    shift
     echo $@
     "$@" || error "$message"
 }
@@ -25,78 +25,78 @@ check()
 build_configuration=$DEFAULT_BUILD_CONFIGURATION
 
 while [ "$1" != "" ] ; do
-    case $1 in 
-    -c | --configuration ) 
+    case $1 in
+    -c | --configuration )
         shift
         build_configuration=$1
         ;;
     * )
-        usage 
+        usage
         exit 1
-    esac 
-    shift 
-done 
+    esac
+    shift
+done
 
-for path in examples/*/ ; do 
+for path in examples/*/ ; do
     product=$(basename $path)
     check   "error: swift build failed" \
             swift build -c $build_configuration --product $product
-            
+
     binaries=".build/$build_configuration"
     if ! [ -f $binaries/$product ]; then
         error "error: missing '$product' product"
     fi
-done 
+done
 
 # run `decode-basic` example
 check   "error: runtime error" \
-        .build/$build_configuration/decode-basic 
+        .build/$build_configuration/decode-basic
 
-for file in examples/decode-basic/*.jpg ; do 
+for file in examples/decode-basic/*.jpg ; do
     size=$(identify -format "%wx%h" jpg:$file)
     convert -depth 8 -size $size "rgb:$file.rgb" "png:$file.rgb.png"
-done 
+done
 
 # run `encode-basic` example
 check   "error: runtime error" \
-        .build/$build_configuration/encode-basic 
+        .build/$build_configuration/encode-basic
 
 # run `decode-advanced` example
 check   "error: runtime error" \
-        .build/$build_configuration/decode-advanced 
+        .build/$build_configuration/decode-advanced
 
-for file in examples/decode-advanced/*.gray ; do 
+for file in examples/decode-advanced/*.gray ; do
     size=$(echo $file | sed -r 's/.*\.([0-9]+)x([0-9]+)\.gray/\1x\2/')
     convert -depth 8 -size $size "gray:$file" "png:$file.png"
-done 
-for file in examples/decode-advanced/*.jpg ; do 
+done
+for file in examples/decode-advanced/*.jpg ; do
     size=$(identify -format "%wx%h" jpg:$file)
     convert -depth 8 -size $size "rgb:$file.rgb" "png:$file.rgb.png"
-done 
+done
 
-# run `encode-advanced` example 
+# run `encode-advanced` example
 check   "error: runtime error" \
-        .build/$build_configuration/encode-advanced 
+        .build/$build_configuration/encode-advanced
 
-# run `in-memory` example 
+# run `in-memory` example
 check   "error: runtime error" \
-        .build/$build_configuration/in-memory 
-for file in examples/in-memory/*.jpg ; do 
+        .build/$build_configuration/in-memory
+for file in examples/in-memory/*.jpg ; do
     if [ -f $file.rgb ]; then
         size=$(identify -format "%wx%h" jpg:$file)
         convert -depth 8 -size $size "rgb:$file.rgb" "png:$file.rgb.png"
     fi
-done 
+done
 
-# run `decode-online` example 
+# run `decode-online` example
 check   "error: runtime error" \
         .build/$build_configuration/decode-online
-for file in examples/decode-online/*.jpg ; do 
+for file in examples/decode-online/*.jpg ; do
     size=$(identify -format "%wx%h" jpg:$file)
-done 
-for file in examples/decode-online/*.rgb ; do 
+done
+for file in examples/decode-online/*.rgb ; do
     convert -depth 8 -size $size "rgb:$file" "png:$file.png"
-done 
+done
 
 # run `recompress` example
 check   "error: runtime error" \
@@ -113,7 +113,7 @@ check   "error: runtime error" \
 # run `custom-color` example
 check   "error: runtime error" \
         .build/$build_configuration/custom-color
-for file in examples/custom-color/*.rgb ; do 
+for file in examples/custom-color/*.rgb ; do
     convert -depth 16 -endian msb -size 1000x200 rgb:$file -depth 16 png:$file-16.png
     convert -depth 16 -endian msb -size 1000x200 rgb:$file -depth 8  png:$file-8.png
-done 
+done

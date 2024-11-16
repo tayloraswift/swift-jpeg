@@ -1,13 +1,13 @@
 import func Foundation.exit
 
-var failed = false 
-for (name, function):(String, Test.Function) in Test.cases 
+var failed = false
+for (name, function):(String, Test.Function) in Test.cases
 {
     guard let _:Void = test(function, name: name)
-    else 
+    else
     {
-        failed = true 
-        continue 
+        failed = true
+        continue
     }
 }
 

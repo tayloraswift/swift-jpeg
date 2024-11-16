@@ -8,7 +8,7 @@
 [![language](https://img.shields.io/badge/version-swift_5.5-ffa020.svg)](https://swift.org)
 [![license](https://img.shields.io/badge/license-MPL2-ff3079.svg)](https://github.com/kelvin13/jpeg/blob/master/LICENSE)
 
-Swift *JPEG* is a cross-platform pure Swift framework for decoding, inspecting, editing, and encoding JPEG images. The core framework has no external dependencies, including *Foundation*, and should compile and provide consistent behavior on *all* Swift platforms. The framework supports additional features, such as file system support, on Linux and MacOS. 
+Swift *JPEG* is a cross-platform pure Swift framework for decoding, inspecting, editing, and encoding JPEG images. The core framework has no external dependencies, including *Foundation*, and should compile and provide consistent behavior on *all* Swift platforms. The framework supports additional features, such as file system support, on Linux and MacOS.
 
 Swift *JPEG* is available under the [Mozilla Public License 2.0](https://www.mozilla.org/en-US/MPL/2.0/). The [example programs](examples/) are public domain and can be adapted freely.
 
@@ -30,60 +30,60 @@ Swift *JPEG* is available under the [Mozilla Public License 2.0](https://www.moz
 * [`JPEG.General`](https://kelvin13.github.io/jpeg/General/)
 * [`JPEG.System`](https://kelvin13.github.io/jpeg/System/)
 
-## getting started 
+## getting started
 
 To Swift *JPEG* in a project, add this descriptor to the `dependencies` list in your `Package.swift`:
 
-```swift 
-.package(url: "https://github.com/kelvin13/jpeg", .exact("1.0.0")) 
+```swift
+.package(url: "https://github.com/kelvin13/jpeg", .exact("1.0.0"))
 ```
 
 ## basic usage
 
 Decode an image:
 
-```swift 
+```swift
 import JPEG
 func decode(jpeg path:String) throws
 {
     guard let image:JPEG.Data.Rectangular<JPEG.Common> = try .decompress(path: path)
-    else 
+    else
     {
         // failed to access file from file system
     }
 
-    let rgb:[JPEG.RGB]      = image.unpack(as: JPEG.RGB.self), 
+    let rgb:[JPEG.RGB]      = image.unpack(as: JPEG.RGB.self),
         size:(x:Int, y:Int) = image.size
     // ...
 }
 ```
 
-Encode an image: 
+Encode an image:
 
-```swift 
+```swift
 import JPEG
-func encode(jpeg path:String, size:(x:Int, y:Int), pixels:[JPEG.RGB], 
+func encode(jpeg path:String, size:(x:Int, y:Int), pixels:[JPEG.RGB],
     compression:Double) // 0.0 = highest quality
-    throws 
+    throws
 {
     let layout:JPEG.Layout<JPEG.Common> = .init(
         format:     .ycc8,
-        process:    .baseline, 
-        components: 
+        process:    .baseline,
+        components:
         [
             1: (factor: (2, 2), qi: 0), // Y
             2: (factor: (1, 1), qi: 1), // Cb
-            3: (factor: (1, 1), qi: 1), // Cr 
-        ], 
-        scans: 
+            3: (factor: (1, 1), qi: 1), // Cr
+        ],
+        scans:
         [
             .sequential((1, \.0, \.0), (2, \.1, \.1), (3, \.1, \.1)),
         ])
     let jfif:JPEG.JFIF = .init(version: .v1_2, density: (72, 72, .inches))
-    let image:JPEG.Data.Rectangular<JPEG.Common> = 
+    let image:JPEG.Data.Rectangular<JPEG.Common> =
         .pack(size: size, layout: layout, metadata: [.jfif(jfif)], pixels: rgb)
 
-    try image.compress(path: path, quanta: 
+    try image.compress(path: path, quanta:
     [
         0: JPEG.CompressionLevel.luminance(  compression).quanta,
         1: JPEG.CompressionLevel.chrominance(compression).quanta
