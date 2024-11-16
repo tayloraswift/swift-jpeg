@@ -2063,15 +2063,14 @@ extension JPEG.Layout
             )
         }
     }
-    /// var JPEG.Layout.components : [JPEG.Component.Key: (factor:(x:Swift.Int, y:Swift.Int), qi:JPEG.Table.Quantization.Key)] { get }
-    ///     A dictionary mapping all of the resident components in the image to
-    ///     their sampling factors and quanta keys.
+    /// A dictionary mapping all of the resident components in the image to
+    /// their sampling factors and quanta keys.
     ///
-    ///     This property should be equivalent to the `components` dictionary
-    ///     that would be used to construct this instance using
-    ///     [`init(format:process:components:scans:)`]. As long as the [`Format`]
-    ///     type is properly implemented, this dictionary will always have at
-    ///     least one element.
+    /// This property should be equivalent to the `components` dictionary
+    /// that would be used to construct this instance using
+    /// [`init(format:process:components:scans:)`]. As long as the [`Format`]
+    /// type is properly implemented, this dictionary will always have at
+    /// least one element.
     public
     var components:
     [
@@ -2185,30 +2184,33 @@ extension JPEG.Data.Spectral.Plane
 
         self.units.y = y
     }
-    /// subscript JPEG.Data.Spectral.Plane[x:y:k:h:] { get set }
-    /// @inlinable
-    ///     Accesses the frequency coefficient at the specified grid index
-    ///     in the specified data unit.
+    /// Accesses the frequency coefficient at the specified grid index
+    /// in the specified data unit.
     ///
-    ///     The `x` and `y` indices of this subscript have no index bounds.
-    ///     Out-of-bounds reads will return 0; out-of-bounds writes will
-    ///     have no effect. The `k` and `h` indices still have to be within the
-    ///     correct range.
+    /// The `x` and `y` indices of this subscript have no index bounds.
+    /// Out-of-bounds reads will return 0; out-of-bounds writes will
+    /// have no effect. The `k` and `h` indices still have to be within the
+    /// correct range.
     ///
-    ///     Using this subscript is equivalent to using [`[x:y:z:]`] with the `z`
-    ///     index set to the output of [`Table.Quantization.z(k:h:)`].
-    /// - x : Swift.Int
+    /// Using this subscript is equivalent to using [`[x:y:z:]`] with the `z`
+    /// index set to the output of [`Table.Quantization.z(k:h:)`].
+    ///
+    /// -   Parameter x:
     ///     The horizontal index of the data unit to access.
-    /// - y : Swift.Int
+    ///
+    /// -   Parameter y:
     ///     The vertical index of the data unit to access. Index 0
     ///     corresponds to the visual top of the image.
-    /// - k     : Swift.Int
+    ///
+    /// -   Parameter z:
     ///     The horizontal frequency index of the coefficient to access.
     ///     This value must be in the range `0 ..< 8`.
-    /// - h     : Swift.Int
+    ///
+    /// -   Parameter h:
     ///     The vertical frequency index of the coefficient to access.
     ///     This value must be in the range `0 ..< 8`.
-    /// - ->: Swift.Int16
+    ///
+    /// -   Returns:
     ///     The frequency coefficient.
     @inlinable
     public
@@ -2261,18 +2263,21 @@ extension JPEG.Data.Spectral
             spectral.set(height: frame.size.y)
         return spectral
     }
-    /// init JPEG.Data.Spectral.init(size:layout:metadata:quanta:)
-    ///     Creates a blank spectral image with the given image parameters and quanta.
+    /// Creates a blank spectral image with the given image parameters and quanta.
     ///
-    ///     This initializer will initialize all frequency coefficients in the image to zero.
-    /// - size      : (x:Swift.Int, y:Swift.Int)
+    /// This initializer will initialize all frequency coefficients in the image to zero.
+    ///
+    /// -   Parameter size:
     ///     The size of the image, in pixels. Passing a negative or zero width, or
     ///     a negative height, will result in a precondition failure.
-    /// - layout    : JPEG.Layout<Format>
+    ///
+    /// -   Parameter layout:
     ///     The layout of the image.
-    /// - metadata  : [JPEG.Metadata]
+    ///
+    /// -   Parameter metadata:
     ///     The metadata records in the image.
-    /// - quanta    : [JPEG.Table.Quantization.Key: [Swift.UInt16]]
+    ///
+    /// -   Parameter quanta:
     ///     The quantum values for each quanta key used by the given `layout`,
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
@@ -2281,7 +2286,7 @@ extension JPEG.Data.Spectral
     ///     of the given layout, and all the values must be in the correct range
     ///     for that bit width.
     ///
-    ///     Passing an invalid quanta dictionary will result in a precondition failure.
+    /// Passing an invalid quanta dictionary will result in a precondition failure.
     public
     init(size:(x:Int, y:Int), layout:JPEG.Layout<Format>,
         metadata:[JPEG.Metadata],
@@ -2313,13 +2318,13 @@ extension JPEG.Data.Spectral
         self.blocks     = (0, 0)
     }
 
-    /// mutating func JPEG.Data.Spectral.set(width:)
-    ///     Sets the width of this image, in pixels.
+    /// Sets the width of this image, in pixels.
     ///
-    ///     Existing data in this image will either be preserved, or cropped.
-    ///     Any additional data units created by this function will have all coefficients
-    ///     initialized to zero.
-    /// - x : Swift.Int
+    /// Existing data in this image will either be preserved, or cropped.
+    /// Any additional data units created by this function will have all coefficients
+    /// initialized to zero.
+    ///
+    /// -   Parameter x:
     ///     The new width of this image, in pixels. This width is measured from the
     ///     left side of the image. Passing a negative or zero value will result
     ///     in a precondition failure.
@@ -2339,13 +2344,13 @@ extension JPEG.Data.Spectral
             self[p].set(width: u)
         }
     }
-    /// mutating func JPEG.Data.Spectral.set(height:)
-    ///     Sets the height of this image, in pixels.
+    /// Sets the height of this image, in pixels.
     ///
-    ///     Existing data in this image will either be preserved, or cropped.
-    ///     Any additional data units created by this function will have all coefficients
-    ///     initialized to zero.
-    /// - y : Swift.Int
+    /// Existing data in this image will either be preserved, or cropped.
+    /// Any additional data units created by this function will have all coefficients
+    /// initialized to zero.
+    ///
+    /// -   Parameter y:
     ///     The new height of this image, in pixels. This height is measured from the
     ///     top of the image. Passing a negative value will result
     ///     in a precondition failure.
@@ -2362,11 +2367,11 @@ extension JPEG.Data.Spectral
             self[p].set(height: u)
         }
     }
-    /// mutating func JPEG.Data.Spectral.set(quanta:)
-    ///     Replaces the quantization tables in this image.
+    /// Replaces the quantization tables in this image.
     ///
-    ///     This function will invalidate all existing quantization table indices.
-    /// - quanta    : [JPEG.Table.Quantization.Key: [Swift.UInt16]]
+    /// This function will invalidate all existing quantization table indices.
+    ///
+    /// -   Parameter quanta:
     ///     The quantum values for each quanta key used by this image’s [`layout`],
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
@@ -2429,17 +2434,19 @@ extension JPEG.Data.Spectral
 }
 extension JPEG.Data.Planar
 {
-    /// init JPEG.Data.Planar.init(size:layout:metadata:initializingWith:)
-    /// rethrows
-    ///     Creates a planar image with the given image parameters and generator.
-    /// - size          : (x:Swift.Int, y:Swift.Int)
+    /// Creates a planar image with the given image parameters and generator.
+    ///
+    /// -   Parameter size:
     ///     The size of the image, in pixels. Both dimensions must be positive,
     ///     or this initializer will suffer a precondition failure.
-    /// - layout        : JPEG.Layout<Format>
+    ///
+    /// -   Parameter layout:
     ///     The layout of the image.
-    /// - metadata      : [JPEG.Metadata]
+    ///
+    /// -   Parameter metadata:
     ///     The metadata records in the image.
-    /// - initializer   : (Swift.Int, (x:Swift.Int, y:Swift.Int), (x:Swift.Int, y:Swift.Int), Swift.UnsafeMutableBufferPointer<Swift.UInt16>) throws -> ()
+    ///
+    /// -   Parameter initializer:
     ///     A closure called by this function to initialize the contents of each
     ///     plane in this image.
     ///
@@ -2489,19 +2496,21 @@ extension JPEG.Data.Planar
             return .init(plane, units: units, factor: factor)
         }
     }
-    /// init JPEG.Data.Planar.init(size:layout:metadata:)
-    ///     Creates a planar image with the given image parameters, initializing
-    ///     all image samples to a neutral color.
+    /// Creates a planar image with the given image parameters, initializing
+    /// all image samples to a neutral color.
     ///
-    ///     This initializer will initialize all samples in all planes to the
-    ///     midpoint of this image’s sample range. The midpoint is equal to
-    ///     2^*w*\ –\ 1^, where *w*\ =\ [`layout``(Layout).format``(JPEG.Format).precision`].
-    /// - size          : (x:Swift.Int, y:Swift.Int)
+    /// This initializer will initialize all samples in all planes to the
+    /// midpoint of this image’s sample range. The midpoint is equal to
+    /// 2^*w*\ –\ 1^, where *w*\ =\ [`layout``(Layout).format``(JPEG.Format).precision`].
+    ///
+    /// -   Parameter size:
     ///     The size of the image, in pixels. Both dimensions must be positive,
     ///     or this initializer will suffer a precondition failure.
-    /// - layout        : JPEG.Layout<Format>
+    ///
+    /// -   Parameter layout:
     ///     The layout of the image.
-    /// - metadata      : [JPEG.Metadata]
+    ///
+    /// -   Parameter metadata:
     ///     The metadata records in the image.
     public
     init(size:(x:Int, y:Int), layout:JPEG.Layout<Format>, metadata:[JPEG.Metadata])
@@ -2515,19 +2524,21 @@ extension JPEG.Data.Planar
 }
 extension JPEG.Data.Rectangular
 {
-    /// init JPEG.Data.Rectangular.init(size:layout:metadata:)
-    ///     Creates a rectangular image with the given image parameters, initializing
-    ///     all image samples to a neutral color.
+    /// Creates a rectangular image with the given image parameters, initializing
+    /// all image samples to a neutral color.
     ///
-    ///     This initializer will initialize all samples to the
-    ///     midpoint of this image’s sample range. The midpoint is equal to
-    ///     2^*w*\ –\ 1^, where *w*\ =\ [`layout``(Layout).format``(JPEG.Format).precision`].
-    /// - size          : (x:Swift.Int, y:Swift.Int)
+    /// This initializer will initialize all samples to the
+    /// midpoint of this image’s sample range. The midpoint is equal to
+    /// 2^*w*\ –\ 1^, where *w*\ =\ [`layout``(Layout).format``(JPEG.Format).precision`].
+    ///
+    /// -   Parameter size:
     ///     The size of the image, in pixels. Both dimensions must be positive,
     ///     or this initializer will suffer a precondition failure.
-    /// - layout        : JPEG.Layout<Format>
+    ///
+    /// -   Parameter layout:
     ///     The layout of the image.
-    /// - metadata      : [JPEG.Metadata]
+    ///
+    /// -   Parameter metadata:
     ///     The metadata records in the image.
     public
     init(size:(x:Int, y:Int), layout:JPEG.Layout<Format>, metadata:[JPEG.Metadata])
@@ -3414,13 +3425,11 @@ extension JPEG.Data.Spectral
 
 extension JPEG
 {
-    /// struct JPEG.Context<Format>
-    /// where Format:JPEG.Format
-    ///     A contextual state manager used for manual decoding.
+    /// A contextual state manager used for manual decoding.
     ///
-    ///     The main use case for this type is to observe the visual state of a
-    ///     partially-decoded image, for example, when performing
-    ///     [online decoding](https://github.com/kelvin13/jpeg/tree/master/examples#online-decoding).
+    /// The main use case for this type is to observe the visual state of a
+    /// partially-decoded image, for example, when performing
+    /// [online decoding](https://github.com/kelvin13/jpeg/tree/master/examples#online-decoding).
     public
     struct Context<Format> where Format:JPEG.Format
     {
@@ -3435,8 +3444,7 @@ extension JPEG
         private
         var interval:Int?
 
-        /// var JPEG.Context.spectral : JPEG.Data.Spectral<Format> { get }
-        ///     The spectral image, as currently decoded.
+        /// The spectral image, as currently decoded.
         public private(set)
         var spectral:Data.Spectral<Format>
         private
@@ -3448,10 +3456,9 @@ extension JPEG
 }
 extension JPEG.Context
 {
-    /// init JPEG.Context.init(frame:)
-    /// throws
-    ///     Initializes the decoder context from the given frame header.
-    /// - frame : JPEG.Header.Frame
+    /// Initializes the decoder context from the given frame header.
+    ///
+    /// -   Parameter frame:
     ///     The frame header of the image. This frame header is used to allocate
     ///     a [`(Data).Spectral`] image.
     public
@@ -3468,57 +3475,56 @@ extension JPEG.Context
         )
         self.interval       = nil
     }
-    /// mutating func JPEG.Context.push(height:)
-    ///     Updates the decoder state with the given height redefinition.
+    /// Updates the decoder state with the given height redefinition.
     ///
-    ///     This method calls [`(Data.Spectral).set(height:)`] on the stored image.
-    /// - height : JPEG.Header.HeightRedefinition
+    /// This method calls [`(Data.Spectral).set(height:)`] on the stored image.
+    ///
+    /// -   Parameter height:
     ///     The height redefinition.
     public mutating
     func push(height:JPEG.Header.HeightRedefinition)
     {
         self.spectral.set(height: height.height)
     }
-    /// mutating func JPEG.Context.push(interval:)
-    ///     Updates the decoder state with the given restart interval definition.
-    /// - interval : JPEG.Header.RestartInterval
+    /// Updates the decoder state with the given restart interval definition.
+    ///
+    /// -   Parameter interval:
     ///     The restart interval definition.
     public mutating
     func push(interval:JPEG.Header.RestartInterval)
     {
         self.interval = interval.interval
     }
-    /// mutating func JPEG.Context.push(dc:)
-    ///     Updates the decoder state with the given DC huffman table.
+    /// Updates the decoder state with the given DC huffman table.
     ///
-    ///     This method binds the table to its target [`(Table.HuffmanDC).Selector`]
-    ///     within this instance.
-    /// - table     : JPEG.Table.HuffmanDC
+    /// This method binds the table to its target [`(Table.HuffmanDC).Selector`]
+    /// within this instance.
+    ///
+    /// -   Parameter table:
     ///     The DC huffman table.
     public mutating
     func push(dc table:JPEG.Table.HuffmanDC)
     {
         self.tables.dc[keyPath: table.target] = table
     }
-    /// mutating func JPEG.Context.push(ac:)
-    ///     Updates the decoder state with the given AC huffman table.
+    /// Updates the decoder state with the given AC huffman table.
     ///
-    ///     This method binds the table to its target [`(Table.HuffmanAC).Selector`]
-    ///     within this instance.
-    /// - table     : JPEG.Table.HuffmanAC
+    /// This method binds the table to its target [`(Table.HuffmanAC).Selector`]
+    /// within this instance.
+    ///
+    /// -   Parameter table:
     ///     The AC huffman table.
     public mutating
     func push(ac table:JPEG.Table.HuffmanAC)
     {
         self.tables.ac[keyPath: table.target] = table
     }
-    /// mutating func JPEG.Context.push(quanta:)
-    /// throws
-    ///     Updates the decoder state with the given quantization table.
+    /// Updates the decoder state with the given quantization table.
     ///
-    ///     This method binds the table to its target [`(Table.Quantization).Selector`]
-    ///     within this instance.
-    /// - table     : JPEG.Table.Quantization
+    /// This method binds the table to its target [`(Table.Quantization).Selector`]
+    /// within this instance.
+    ///
+    /// -   Parameter table:
     ///     The quantization table.
     public mutating
     func push(quanta table:JPEG.Table.Quantization) throws
@@ -3530,31 +3536,32 @@ extension JPEG.Context
         self.counter += 1
         self.tables.quanta[keyPath: table.target]   = (q, qi)
     }
-    /// mutating func JPEG.Context.push(metadata:)
-    ///     Updates the decoder state with the given metadata record.
+    /// Updates the decoder state with the given metadata record.
     ///
-    ///     This method adds the metadata record to the [`(Data.Spectral).metadata`]
-    ///     array in the stored image.
-    /// - metadata  : JPEG.Metadata
+    /// This method adds the metadata record to the [`(Data.Spectral).metadata`]
+    /// array in the stored image.
+    ///
+    /// -   Parameter metadata:
     ///     The metadata record.
     public mutating
     func push(metadata:JPEG.Metadata)
     {
         self.spectral.metadata.append(metadata)
     }
-    /// mutating func JPEG.Context.push(scan:ecss:extend:)
-    /// throws
-    ///     Updates the decoder state with the given scan header, and decodes the
-    ///     given entropy-coded segment.
+    /// Updates the decoder state with the given scan header, and decodes the
+    /// given entropy-coded segment.
     ///
-    ///     This type tracks the scan progression of the stored image, and will
-    ///     validate the newly pushed `scan` header against the stored progressive state.
-    /// - scan  : JPEG.Header.Scan
+    /// This type tracks the scan progression of the stored image, and will
+    /// validate the newly pushed `scan` header against the stored progressive state.
+    ///
+    /// -   Parameter scan:
     ///     The scan header associated with the given entropy-coded segment.
-    /// - ecss  : [[Swift.UInt8]]
+    ///
+    /// -   Parameter ecss:
     ///     The entropy-coded segment. Each sub-array is one restart interval of
     ///     segment.
-    /// - extend: Swift.Bool
+    ///
+    /// -   Parameter extend:
     ///     Specifies whether or not the decoder is allowed to dynamically extend
     ///     the height of the image if the entropy-coded segment contains more
     ///     rows of image data than implied by the frame header [`(Header.Frame).size`].
@@ -4004,9 +4011,9 @@ extension JPEG.Data.Planar.Plane
 
 extension JPEG.Data.Spectral
 {
-    /// func JPEG.Data.Spectral.idct()
-    ///     Converts this spectral image into its planar, spatial representation.
-    /// - ->    : JPEG.Data.Planar<Format>
+    /// Converts this spectral image into its planar, spatial representation.
+    ///
+    /// -   Returns:
     ///     The output of an inverse discrete cosine transform performed on this image.
     public
     func idct() -> JPEG.Data.Planar<Format>
@@ -4024,14 +4031,15 @@ extension JPEG.Data.Spectral
 }
 extension JPEG.Data.Planar
 {
-    /// func JPEG.Data.Planar.interleaved(cosite:)
-    ///     Converts this planar image into its rectangular representation.
-    /// - cosited : Swift.Bool
+    /// Converts this planar image into its rectangular representation.
+    ///
+    /// -   Parameter cosited:
     ///     The upsampling method to use. Setting this parameter to `true` co-sites
     ///     the samples; setting it to `false` centers them instead.
     ///
     ///     The default value is `false`.
-    /// - ->    : JPEG.Data.Rectangular<Format>
+    ///
+    /// -   Returns:
     ///     A rectangular image created by upsampling all planes in the input to
     ///     the same sampling factor.
     public
@@ -4133,14 +4141,12 @@ extension JPEG.Data.Planar
 }
 extension JPEG.Data.Rectangular
 {
-    /// func JPEG.Data.Rectangular.unpack<Color>(as:)
-    /// where Color:JPEG.Color, Color.Format == Format
-    /// @ specialized where Color == JPEG.YCbCr
-    /// @ specialized where Color == JPEG.RGB
-    ///     Unpacks the data in this image into pixels of the given color target.
-    /// - _ : Color.Type
+    /// Unpacks the data in this image into pixels of the given color target.
+    ///
+    /// -   Parameter _:
     ///     The color target.
-    /// - ->: [Color]
+    ///
+    /// -   Returns:
     ///     A row-major array containing pixels of the image in the specified color space.
     @_specialize(where Color == JPEG.YCbCr, Format == JPEG.Common)
     @_specialize(where Color == JPEG.RGB, Format == JPEG.Common)
@@ -4155,13 +4161,12 @@ extension JPEG.Data.Rectangular
 // staged APIs
 extension JPEG.Data.Spectral
 {
-    /// static func JPEG.Data.Spectral.decompress<Source>(stream:)
-    /// throws
-    /// where Source:JPEG.Bytestream.Source
-    ///     Decompresses a spectral image from the given data source.
-    /// - stream    : inout Source
+    /// Decompresses a spectral image from the given data source.
+    ///
+    /// -   Parameter stream:
     ///     A source bytestream.
-    /// - ->        : Self
+    ///
+    /// -   Returns:
     ///     The decompressed image.
     public static
     func decompress<Source>(stream:inout Source) throws -> Self
@@ -4172,17 +4177,16 @@ extension JPEG.Data.Spectral
 }
 extension JPEG.Data.Planar
 {
-    /// static func JPEG.Data.Planar.decompress<Source>(stream:)
-    /// throws
-    /// where Source:JPEG.Bytestream.Source
-    ///     Decompresses a planar image from the given data source.
+    /// Decompresses a planar image from the given data source.
     ///
-    ///     This function is a convenience function which calls [`Spectral.decompress(stream:)`]
-    ///     to obtain a spectral image, and then calls [`(Spectral).idct()`] on the
-    ///     output to return a planar image.
-    /// - stream    : inout Source
+    /// This function is a convenience function which calls [`Spectral.decompress(stream:)`]
+    /// to obtain a spectral image, and then calls [`(Spectral).idct()`] on the
+    /// output to return a planar image.
+    ///
+    /// -   Parameter stream:
     ///     A source bytestream.
-    /// - ->        : Self
+    ///
+    /// -   Returns:
     ///     The decompressed image.
     public static
     func decompress<Source>(stream:inout Source) throws -> Self
@@ -4194,22 +4198,22 @@ extension JPEG.Data.Planar
 }
 extension JPEG.Data.Rectangular
 {
-    /// static func JPEG.Data.Rectangular.decompress<Source>(stream:cosite:)
-    /// throws
-    /// where Source:JPEG.Bytestream.Source
-    ///     Decompresses a rectangular image from the given data source.
+    /// Decompresses a rectangular image from the given data source.
     ///
-    ///     This function is a convenience function which calls [`Planar.decompress(stream:)`]
-    ///     to obtain a planar image, and then calls [`(Planar).interleaved(cosite:)`]
-    ///     on the output to return a rectangular image.
-    /// - stream    : inout Source
+    /// This function is a convenience function which calls [`Planar.decompress(stream:)`]
+    /// to obtain a planar image, and then calls [`(Planar).interleaved(cosite:)`]
+    /// on the output to return a rectangular image.
+    ///
+    /// -   Parameter stream:
     ///     A source bytestream.
-    /// - cosited : Swift.Bool
+    ///
+    /// -   Parameter cosited:
     ///     The upsampling method to use. Setting this parameter to `true` co-sites
     ///     the samples; setting it to `false` centers them instead.
     ///
     ///     The default value is `false`.
-    /// - ->        : Self
+    ///
+    /// -   Returns:
     ///     The decompressed image.
     public static
     func decompress<Source>(stream:inout Source, cosite cosited:Bool = false) throws -> Self
