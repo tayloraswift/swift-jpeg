@@ -7,7 +7,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 /// A source bytestream.
 ///
 /// To implement a custom data source type, conform it to this protocol by
-/// implementing [`(Source).read(count:)`]. It can
+/// implementing ``Source/read(count:)``. It can
 /// then be used with the library’s core decompression interfaces.
 public
 protocol _JPEGBytestreamSource
@@ -87,7 +87,7 @@ extension JPEG.Bytestream.Source
     /// with the `prefix` parameter set to `false`, except that the empty
     /// prefix array is omitted from the return value.
     ///
-    /// This function can throw a [`(JPEG).LexingError`] if it encounters an
+    /// This function can throw a ``JPEG/LexingError`` if it encounters an
     /// unexpected end-of-stream.
     ///
     /// -   Returns:
@@ -102,14 +102,14 @@ extension JPEG.Bytestream.Source
     /// Optionally lexes a single entropy-coded segment followed by a single marker
     /// segment from this bytestream.
     ///
-    /// This function can throw a [`(JPEG).LexingError`] if it encounters an
+    /// This function can throw a ``JPEG/LexingError`` if it encounters an
     /// unexpected end-of-stream.
     ///
     /// -   Parameter prefix:
     ///     Whether this function should expect an entropy-coded segment prefixed
     ///     to the marker segment. If this parameter is set to `false`, and this
     ///     function encounters a prefixed entropy-coded segment, it will throw
-    ///     a [`(JPEG).LexingError`].
+    ///     a ``JPEG/LexingError``.
     ///
     /// -   Returns:
     ///     A tuple containing the entropy-coded segment, marker segment type,
@@ -410,7 +410,7 @@ extension JPEG.Table.Quantization
     ///
     /// -   Parameter values:
     ///     The quantum values, in zigzag order. This array must have exactly 64
-    ///     elements. If the `precision` is [`(Precision).uint8`], all of the values
+    ///     elements. If the `precision` is ``Precision/uint8``, all of the values
     ///     must be within the range of a [`Swift.UInt8`]. Passing an invalid
     ///     array will result in a precondition failure.
     ///
@@ -428,10 +428,10 @@ extension JPEG.Table.Quantization
 }
 extension JPEG.Table
 {
-    /// Parses a [`(Marker).huffman`] segment into huffman tables.
+    /// Parses a ``Marker/huffman`` segment into huffman tables.
     ///
     /// If the given data does not parse to valid huffman tables, this function
-    /// will throw a [`(JPEG).ParsingError`].
+    /// will throw a ``JPEG/ParsingError``.
     ///
     /// -   Parameter data:
     ///     The segment data to parse.
@@ -521,10 +521,10 @@ extension JPEG.Table
 
         return tables
     }
-    /// Parses a [`(Marker).quantization`] segment into huffman tables.
+    /// Parses a ``Marker/quantization`` segment into huffman tables.
     ///
     /// If the given data does not parse to valid quantization tables, this function
-    /// will throw a [`(JPEG).ParsingError`].
+    /// will throw a ``JPEG/ParsingError``.
     ///
     /// -   Parameter data:
     ///     The segment data to parse.
@@ -584,10 +584,10 @@ extension JPEG.Table
 // frame/scan header parsing
 extension JPEG.Header.HeightRedefinition
 {
-    /// Parses a [`(Marker).height`] segment into a height redefinition.
+    /// Parses a ``Marker/height`` segment into a height redefinition.
     ///
     /// If the given data does not parse to a valid height redefinition,
-    /// this function will throw a [`(JPEG).ParsingError`].
+    /// this function will throw a ``JPEG/ParsingError``.
     ///
     /// -   Parameter data:
     ///     The segment data to parse.
@@ -608,10 +608,10 @@ extension JPEG.Header.HeightRedefinition
 }
 extension JPEG.Header.RestartInterval
 {
-    /// Parses an [`(Marker).interval`] segment into a restart interval definition.
+    /// Parses an ``Marker/interval`` segment into a restart interval definition.
     ///
     /// If the given data does not parse to a valid restart interval definition,
-    /// this function will throw a [`(JPEG).ParsingError`].
+    /// this function will throw a ``JPEG/ParsingError``.
     ///
     /// -   Parameter data:
     ///     The segment data to parse.
@@ -637,31 +637,31 @@ extension JPEG.Header.Frame
     ///
     /// If the given parameters are not consistent with one another, and the
     /// [JPEG standard](https://www.w3.org/Graphics/JPEG/itu-t81.pdf), this
-    /// function will throw a [`(JPEG).ParsingError`], unless otherwise noted.
+    /// function will throw a ``JPEG/ParsingError``, unless otherwise noted.
     ///
     /// -   Parameter process:
     ///     The coding process used by the image.
     ///
     /// -   Parameter precision:
-    ///     The bit depth of the image. If the `process` is [`(JPEG.Process).baseline`],
-    ///     this parameter must be 8. If the `process` is [`(JPEG.Process).extended(coding:differential:)`]
-    ///     or [`(JPEG.Process).progressive(coding:differential:)`], this parameter
-    ///     must be either 8 or 12. If the process is [`(JPEG.Process).lossless(coding:differential:)`],
+    ///     The bit depth of the image. If the `process` is ``JPEG.Process/baseline``,
+    ///     this parameter must be 8. If the `process` is ``JPEG.Process/extended(coding:differential:)``
+    ///     or ``JPEG.Process/progressive(coding:differential:)``, this parameter
+    ///     must be either 8 or 12. If the process is ``JPEG.Process/lossless(coding:differential:)``,
     ///     this parameter must be within the interval `2 ... 16`.
     ///
     /// -   Parameter size:
     ///     The size of the image, in pixels. Passing a negative height will result
     ///     in a precondition failure. Passing a negative or zero width will result
-    ///     in a [`(JPEG).ParsingError`]. This constructor treats the two failure
+    ///     in a ``JPEG/ParsingError``. This constructor treats the two failure
     ///     conditions differently because the latter one is the only one that can
     ///     occur when parsing a frame header from input data.
     ///
     /// -   Parameter components:
     ///     The components in the image. This dictionary must have at least one
-    ///     element. If the `process` is [`(JPEG.Process).progressive(coding:differential:)`],
+    ///     element. If the `process` is ``JPEG.Process/progressive(coding:differential:)``,
     ///     it can have no more than four elements. The sampling factors of each
     ///     component must be within the interval `1 ... 4` in both directions.
-    ///     if the `process` is [`(JPEG.Process).baseline`], the components can
+    ///     if the `process` is ``JPEG.Process/baseline``, the components can
     ///     only use the quantization table selectors `\.0` and `\.1`.
     ///
     /// -   Returns:
@@ -736,10 +736,10 @@ extension JPEG.Header.Frame
         return .init(process: process, precision: precision, size: size,
             components: components)
     }
-    /// Parses a [`(Marker).frame(_:)`] segment into a frame header.
+    /// Parses a ``Marker/frame(_:)`` segment into a frame header.
     ///
     /// If the given data does not parse to a valid frame header,
-    /// this function will throw a [`(JPEG).ParsingError`]. This function
+    /// this function will throw a ``JPEG/ParsingError``. This function
     /// invokes [`validate(process:precision:size:components:)`], so any errors
     /// it can throw can also be thrown by this function.
     ///
@@ -812,7 +812,7 @@ extension JPEG.Header.Scan
     ///
     /// If the given parameters are not consistent with one another, and the
     /// [JPEG standard](https://www.w3.org/Graphics/JPEG/itu-t81.pdf), this
-    /// function will throw a [`(JPEG).ParsingError`].
+    /// function will throw a ``JPEG/ParsingError``.
     ///
     /// -   Parameter process:
     ///     The coding process used by the image.
@@ -820,7 +820,7 @@ extension JPEG.Header.Scan
     /// -   Parameter band:
     ///     The frequency band encoded by the scan, in zigzag order. It must be
     ///     within the interval of 0 to 64. If the `process` is
-    ///     [`(Process).progressive(coding:differential:)`], this parameter must
+    ///     ``Process/progressive(coding:differential:)``, this parameter must
     ///     either be `0 ..< 1`, or some range within the interval `1 ..< 64`.
     ///     Otherwise, this parameter must be set to `0 ..< 64`.
     ///
@@ -828,14 +828,14 @@ extension JPEG.Header.Scan
     ///     The bit range encoded by the scan, where bit zero is the least significant
     ///     bit. The upper range bound must be either infinity ([`Swift.Int`max`])
     ///     or one greater than the lower bound. If the `process` is not
-    ///     [`(Process).progressive(coding:differential:)`], this value must
+    ///     ``Process/progressive(coding:differential:)``, this value must
     ///     be set to `0 ..< .max`.
     ///
     /// -   Parameter components:
     ///     The color components in the scan, in the order in which their
     ///     data units are interleaved. If the scan is an AC progressive scan,
     ///     this array must have exactly one element. Otherwise, it must have
-    ///     between one and four elements. If the `process` is [`(Process).baseline`],
+    ///     between one and four elements. If the `process` is ``Process/baseline``,
     ///     the components can only use the huffman table selectors `\.0` and `\.1`.
     ///
     /// -   Returns:
@@ -902,10 +902,10 @@ extension JPEG.Header.Scan
 
         return .init(band: band, bits: bits, components: components)
     }
-    /// Parses a [`(Marker).scan`] segment into a scan header.
+    /// Parses a ``Marker/scan`` segment into a scan header.
     ///
     /// If the given data does not parse to a valid scan header,
-    /// this function will throw a [`(JPEG).ParsingError`]. This function
+    /// this function will throw a ``JPEG/ParsingError``. This function
     /// invokes [`validate(process:band:bits:components:)`], so any errors
     /// it can throw can also be thrown by this function.
     ///
@@ -1716,7 +1716,7 @@ extension JPEG.Data.Spectral.Quanta:RandomAccessCollection
     /// Returns the index of the table with the given key.
     ///
     /// An instance of this type which is part of a [`Spectral`]
-    /// instance will always contain all quanta keys used by its [`(Spectral).layout`],
+    /// instance will always contain all quanta keys used by its ``Spectral/layout``,
     /// including keys used only by non-recognized components.
     ///
     /// -   Parameter qi:
@@ -2050,7 +2050,7 @@ extension JPEG.Layout
 {
     /// The size of the minimum-coded unit of the image, in data units.
     ///
-    /// This value is the maximum of all the sampling [`(JPEG.Component).factor`]s
+    /// This value is the maximum of all the sampling ``JPEG.Component/factor``s
     /// of the components in the image, including the non-recognized components.
     public
     var scale:(x:Int, y:Int)
@@ -2282,7 +2282,7 @@ extension JPEG.Data.Spectral
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
-    ///     determined by the [`(JPEG.Format).precision`] of the color [`(Layout).format`]
+    ///     determined by the ``JPEG.Format/precision`` of the color ``Layout/format``
     ///     of the given layout, and all the values must be in the correct range
     ///     for that bit width.
     ///
@@ -3460,7 +3460,7 @@ extension JPEG.Context
     ///
     /// -   Parameter frame:
     ///     The frame header of the image. This frame header is used to allocate
-    ///     a [`(Data).Spectral`] image.
+    ///     a ``Data/Spectral`` image.
     public
     init(frame:JPEG.Header.Frame) throws
     {
@@ -3477,7 +3477,7 @@ extension JPEG.Context
     }
     /// Updates the decoder state with the given height redefinition.
     ///
-    /// This method calls [`(Data.Spectral).set(height:)`] on the stored image.
+    /// This method calls ``Data.Spectral/set(height:)`` on the stored image.
     ///
     /// -   Parameter height:
     ///     The height redefinition.
@@ -3497,7 +3497,7 @@ extension JPEG.Context
     }
     /// Updates the decoder state with the given DC huffman table.
     ///
-    /// This method binds the table to its target [`(Table.HuffmanDC).Selector`]
+    /// This method binds the table to its target ``Table.HuffmanDC/Selector``
     /// within this instance.
     ///
     /// -   Parameter table:
@@ -3509,7 +3509,7 @@ extension JPEG.Context
     }
     /// Updates the decoder state with the given AC huffman table.
     ///
-    /// This method binds the table to its target [`(Table.HuffmanAC).Selector`]
+    /// This method binds the table to its target ``Table.HuffmanAC/Selector``
     /// within this instance.
     ///
     /// -   Parameter table:
@@ -3521,7 +3521,7 @@ extension JPEG.Context
     }
     /// Updates the decoder state with the given quantization table.
     ///
-    /// This method binds the table to its target [`(Table.Quantization).Selector`]
+    /// This method binds the table to its target ``Table.Quantization/Selector``
     /// within this instance.
     ///
     /// -   Parameter table:
@@ -3538,7 +3538,7 @@ extension JPEG.Context
     }
     /// Updates the decoder state with the given metadata record.
     ///
-    /// This method adds the metadata record to the [`(Data.Spectral).metadata`]
+    /// This method adds the metadata record to the ``Data.Spectral/metadata``
     /// array in the stored image.
     ///
     /// -   Parameter metadata:
@@ -3564,10 +3564,10 @@ extension JPEG.Context
     /// -   Parameter extend:
     ///     Specifies whether or not the decoder is allowed to dynamically extend
     ///     the height of the image if the entropy-coded segment contains more
-    ///     rows of image data than implied by the frame header [`(Header.Frame).size`].
+    ///     rows of image data than implied by the frame header ``Header.Frame/size``.
     ///
     ///     This argument should be set to `true` for the first scan in the file,
-    ///     to accommodate a possible [`(Header).HeightRedefinition`], and `false`
+    ///     to accommodate a possible ``Header/HeightRedefinition``, and `false`
     ///     for all other scans.
     public mutating
     func push(scan:JPEG.Header.Scan, ecss:[[UInt8]], extend:Bool) throws
@@ -4180,7 +4180,7 @@ extension JPEG.Data.Planar
     /// Decompresses a planar image from the given data source.
     ///
     /// This function is a convenience function which calls [`Spectral.decompress(stream:)`]
-    /// to obtain a spectral image, and then calls [`(Spectral).idct()`] on the
+    /// to obtain a spectral image, and then calls ``Spectral/idct()`` on the
     /// output to return a planar image.
     ///
     /// -   Parameter stream:
@@ -4201,7 +4201,7 @@ extension JPEG.Data.Rectangular
     /// Decompresses a rectangular image from the given data source.
     ///
     /// This function is a convenience function which calls [`Planar.decompress(stream:)`]
-    /// to obtain a planar image, and then calls [`(Planar).interleaved(cosite:)`]
+    /// to obtain a planar image, and then calls ``Planar/interleaved(cosite:)``
     /// on the output to return a rectangular image.
     ///
     /// -   Parameter stream:

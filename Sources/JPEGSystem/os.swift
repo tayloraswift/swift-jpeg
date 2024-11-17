@@ -279,7 +279,7 @@ extension JPEG.Data.Planar
     /// Decompresses a planar image from the given file path.
     ///
     /// This function is a convenience function which calls [`Spectral.decompress(path:)`]
-    /// to obtain a spectral image, and then calls [`(Spectral).idct()`] on the
+    /// to obtain a spectral image, and then calls ``Spectral/idct()`` on the
     /// output to return a planar image.
     ///
     /// This function is only available on MacOS and Linux platforms.
@@ -306,7 +306,7 @@ extension JPEG.Data.Planar
     /// the outputted file, in the order they appear in the [`metadata`] array.
     ///
     /// This function is a convenience function which calls [`fdct(quanta:)`]
-    /// to obtain a spectral image, and then calls [`(Spectral).compress(path:)`]
+    /// to obtain a spectral image, and then calls ``Spectral/compress(path:)``
     /// on the output.
     ///
     /// This function is only available on MacOS and Linux platforms.
@@ -337,7 +337,7 @@ extension JPEG.Data.Rectangular
     /// Decompresses a rectangular image from the given file path.
     ///
     /// This function is a convenience function which calls [`Planar.decompress(path:)`]
-    /// to obtain a planar image, and then calls [`(Planar).interleaved(cosite:)`]
+    /// to obtain a planar image, and then calls ``Planar/interleaved(cosite:)``
     /// on the output to return a rectangular image.
     ///
     /// This function is only available on MacOS and Linux platforms.
@@ -371,7 +371,7 @@ extension JPEG.Data.Rectangular
     /// the outputted file, in the order they appear in the [`metadata`] array.
     ///
     /// This function is a convenience function which calls [`decomposed()`]
-    /// to obtain a planar image, and then calls [`(Planar).compress(path:quanta:)`]
+    /// to obtain a planar image, and then calls ``Planar/compress(path:quanta:)``
     /// on the output.
     ///
     /// This function is only available on MacOS and Linux platforms.

@@ -267,7 +267,7 @@ extension JPEG.JFIF
     /// Parses a JFIF segment into a metadata record.
     ///
     /// If the given data does not parse to a valid metadata record,
-    /// this function will throw a [`(JPEG).ParsingError`].
+    /// this function will throw a ``JPEG/ParsingError``.
     ///
     /// This parser ignores embedded thumbnails.
     ///
@@ -405,7 +405,7 @@ extension JPEG.EXIF
     /// Parses an EXIF segment into a metadata record.
     ///
     /// If the given data does not parse to a valid metadata record,
-    /// this function will throw a [`(JPEG).ParsingError`].
+    /// this function will throw a ``JPEG/ParsingError``.
     ///
     /// This constructor will attempt to index the root, *EXIF* (tag 34665),
     /// and *GPS* (tag 34853) field groups, if they are present and well-linked
@@ -519,7 +519,7 @@ extension JPEG.EXIF
             endianness: self.endianness)
         return (type, count, box)
     }
-    /// Loads the [`(FieldType).uint8`] value at the given address.
+    /// Loads the ``FieldType/uint8`` value at the given address.
     ///
     /// -   Parameter offset:
     ///     The address of the value to access. This pointer must be within the
@@ -529,13 +529,13 @@ extension JPEG.EXIF
     ///     This parameter must be set to [`Swift.UInt8`self`].
     ///
     /// -   Returns:
-    ///     The [`(FieldType).uint8`] value.
+    ///     The ``FieldType/uint8`` value.
     public
     subscript(offset:Int, as _:UInt8.Type) -> UInt8
     {
         self.storage[offset]
     }
-    /// Loads the [`(FieldType).uint16`] value at the given address.
+    /// Loads the ``FieldType/uint16`` value at the given address.
     ///
     /// -   Parameter offset:
     ///     The address of the value to access. This pointer, and the address after
@@ -545,7 +545,7 @@ extension JPEG.EXIF
     ///     This parameter must be set to [`Swift.UInt16`self`].
     ///
     /// -   Returns:
-    ///     The [`(FieldType).uint16`] value, loaded according to the [`endianness`]
+    ///     The ``FieldType/uint16`` value, loaded according to the [`endianness`]
     ///     of this metadata record.
     public
     subscript(offset:Int, as _:UInt16.Type) -> UInt16
@@ -560,7 +560,7 @@ extension JPEG.EXIF
                     .init(self[offset + 1, as: UInt8.self])
         }
     }
-    /// Loads the [`(FieldType).uint32`] value at the given address.
+    /// Loads the ``FieldType/uint32`` value at the given address.
     ///
     /// -   Parameter offset:
     ///     The address of the value to access. This pointer, and the next three
@@ -570,7 +570,7 @@ extension JPEG.EXIF
     ///     This parameter must be set to [`Swift.UInt32`self`].
     ///
     /// -   Returns:
-    ///     The [`(FieldType).uint32`] value, loaded according to the [`endianness`]
+    ///     The ``FieldType/uint32`` value, loaded according to the [`endianness`]
     ///     of this metadata record.
     public
     subscript(offset:Int, as _:UInt32.Type) -> UInt32

@@ -618,14 +618,14 @@ extension JPEG
         case prematureEndOfImage
 
         /// The image coding process was anything other than
-        /// [`(Process).baseline`], or [`(Process).extended(coding:differential:)`]
-        /// and [`(Process).progressive(coding:differential:)`] with [`(Process.Coding).huffman`]
+        /// ``Process/baseline``, or ``Process/extended(coding:differential:)``
+        /// and ``Process/progressive(coding:differential:)`` with ``Process.Coding/huffman``
         /// coding and `differential` set to `false`.
         ///
         /// -   Parameter _:
         ///     The coding process used by the image.
         case unsupportedFrameCodingProcess(Process)
-        /// A [`(Format).recognize(_:precision:)`] implementation failed to
+        /// A ``Format/recognize(_:precision:)`` implementation failed to
         /// recognize the component set and bit precision in a frame header.
         ///
         /// -   Parameter components:
