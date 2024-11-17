@@ -14,7 +14,7 @@ Swift *JPEG* is available under the [Mozilla Public License 2.0](https://www.moz
 
 <div align="center">
 
-[documentation](https://swiftinit.org/docs/swift-jpeg/ip) ·
+[documentation](https://swiftinit.org/hist/swift-jpeg:master/jpeg) ·
 [license](LICENSE)
 
 </div>
@@ -35,7 +35,7 @@ The swift-jpeg library requires Swift 5.10 or later.
 | 🍏 Darwin (watchOS) | [![watchOS](https://github.com/tayloraswift/swift-jpeg/actions/workflows/watchOS.yml/badge.svg)](https://github.com/tayloraswift/swift-jpeg/actions/workflows/watchOS.yml) |
 
 
-[Check deployment minimums](https://swiftinit.org/docs/swift-jpeg#ss:platform-requirements)
+[Check deployment minimums](https://swiftinit.org/hist/swift-jpeg:master#ss:platform-requirements)
 
 
 ## [tutorials and example programs](examples/)
