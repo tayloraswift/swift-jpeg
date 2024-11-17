@@ -54,7 +54,7 @@ extension System.File.Source
     ///     The path to the file to open.
     ///
     /// -   Parameter body:
-    ///     A closure with a [`Source`] parameter from which data in
+    ///     A closure with a ``Source`` parameter from which data in
     ///     the specified file can be read. This interface is only valid
     ///     for the duration of the method’s execution. The closure is
     ///     only executed if the specified file could be successfully
@@ -164,7 +164,7 @@ extension System.File.Destination
     ///     The path to the file to open.
     ///
     /// -   Parameter body:
-    ///     A closure with a [`Destination`] parameter representing
+    ///     A closure with a ``Destination`` parameter representing
     ///     the specified file to which data can be written to. This
     ///     interface is only valid for the duration of the method’s
     ///     execution. The closure is only executed if the specified file could
@@ -236,7 +236,7 @@ extension JPEG.Data.Spectral
 {
     /// Decompresses a spectral image from the given file path.
     ///
-    /// Calling this function is equivalent to calling [`System.File.Source.open(path:_:)`]
+    /// Calling this function is equivalent to calling ``System.File.Source.open(path:_:)``
     /// with the closure parameter set to [`Self``decompress(stream:)`].
     ///
     /// This function is only available on MacOS and Linux platforms.
@@ -255,9 +255,9 @@ extension JPEG.Data.Spectral
     /// Compresses a spectral image to the given file path.
     ///
     /// All metadata records in this image will be emitted at the beginning of
-    /// the outputted file, in the order they appear in the [`metadata`] array.
+    /// the outputted file, in the order they appear in the ``metadata`` array.
     ///
-    /// Calling this function is equivalent to calling [`System.File.Destination.open(path:_:)`]
+    /// Calling this function is equivalent to calling ``System.File.Destination.open(path:_:)``
     /// with the closure parameter set to [`Self``compress(stream:)`].
     ///
     /// This function is only available on MacOS and Linux platforms.
@@ -278,7 +278,7 @@ extension JPEG.Data.Planar
 {
     /// Decompresses a planar image from the given file path.
     ///
-    /// This function is a convenience function which calls [`Spectral.decompress(path:)`]
+    /// This function is a convenience function which calls ``Spectral.decompress(path:)``
     /// to obtain a spectral image, and then calls ``Spectral/idct()`` on the
     /// output to return a planar image.
     ///
@@ -303,9 +303,9 @@ extension JPEG.Data.Planar
     /// Compresses a planar image to the given file path.
     ///
     /// All metadata records in this image will be emitted at the beginning of
-    /// the outputted file, in the order they appear in the [`metadata`] array.
+    /// the outputted file, in the order they appear in the ``metadata`` array.
     ///
-    /// This function is a convenience function which calls [`fdct(quanta:)`]
+    /// This function is a convenience function which calls ``fdct(quanta:)``
     /// to obtain a spectral image, and then calls ``Spectral/compress(path:)``
     /// on the output.
     ///
@@ -315,7 +315,7 @@ extension JPEG.Data.Planar
     ///     A file path.
     ///
     /// -   Parameter quanta:
-    ///     The quantum values for each quanta key used by this image’s [`layout`],
+    ///     The quantum values for each quanta key used by this image’s ``layout``,
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
@@ -336,7 +336,7 @@ extension JPEG.Data.Rectangular
 {
     /// Decompresses a rectangular image from the given file path.
     ///
-    /// This function is a convenience function which calls [`Planar.decompress(path:)`]
+    /// This function is a convenience function which calls ``Planar.decompress(path:)``
     /// to obtain a planar image, and then calls ``Planar/interleaved(cosite:)``
     /// on the output to return a rectangular image.
     ///
@@ -368,9 +368,9 @@ extension JPEG.Data.Rectangular
     /// Compresses a rectangular image to the given file path.
     ///
     /// All metadata records in this image will be emitted at the beginning of
-    /// the outputted file, in the order they appear in the [`metadata`] array.
+    /// the outputted file, in the order they appear in the ``metadata`` array.
     ///
-    /// This function is a convenience function which calls [`decomposed()`]
+    /// This function is a convenience function which calls ``decomposed()``
     /// to obtain a planar image, and then calls ``Planar/compress(path:quanta:)``
     /// on the output.
     ///
@@ -380,7 +380,7 @@ extension JPEG.Data.Rectangular
     ///     A file path.
     ///
     /// -   Parameter quanta:
-    ///     The quantum values for each quanta key used by this image’s [`layout`],
+    ///     The quantum values for each quanta key used by this image’s ``layout``,
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width

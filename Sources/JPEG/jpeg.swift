@@ -110,7 +110,7 @@ enum JPEG
 
     /// An 8-bit YCbCr color.
     ///
-    /// This type is a color target for the built-in [`JPEG.Common`] color format.
+    /// This type is a color target for the built-in ``JPEG.Common`` color format.
     ///
     /// ## Color channels
     /// -   ``y``
@@ -162,7 +162,7 @@ enum JPEG
     }
     /// An 8-bit RGB color.
     ///
-    /// This type is a color target for the built-in [`JPEG.Common`] color format.
+    /// This type is a color target for the built-in ``JPEG.Common`` color format.
     ///
     /// ## Color channels
     /// -   ``r``
@@ -821,7 +821,7 @@ extension JPEG
         /// This structure is the parsed form of a ``JPEG.Marker/scan``
         /// marker segment. It defines scan-level image parameters. The library
         /// validates these structures against the global image parameters to
-        /// create the [`JPEG.Scan`] structures elsewhere in the library API.
+        /// create the ``JPEG.Scan`` structures elsewhere in the library API.
         public
         struct Scan
         {
@@ -1037,7 +1037,7 @@ extension JPEG
     ///
     /// Non-recognized components can only occur in images decoded from JPEG files,
     /// and only when using a custom ``JPEG/Format`` type, as the built-in
-    /// [`JPEG.Common`] color format will never accept any component declaration
+    /// ``JPEG.Common`` color format will never accept any component declaration
     /// in a frame header that it does not also recognize. When encoding images to JPEG
     /// files, all declared resident components must also be recognized components.
     public
@@ -1053,7 +1053,7 @@ extension JPEG
         /// The set of color components declared (or to-be-declared) in the
         /// image frame header.
         ///
-        /// The dictionary values are indices to be used with the [`planes`] property
+        /// The dictionary values are indices to be used with the ``planes`` property
         /// on this type.
         public
         let residents:[Component.Key: Int]
@@ -1066,15 +1066,15 @@ extension JPEG
         }
         /// The descriptor array for the planes in the image.
         ///
-        /// Each descriptor consists of a [`JPEG.Component`] instance and a
+        /// Each descriptor consists of a ``JPEG.Component`` instance and a
         /// quantization table key. On layout initialization, the library will
         /// automatically assign table keys to table selectors.
         ///
         /// The ordering of the first *k* array elements follows the order that
-        /// the component keys appear in the [`recognized`] property, where
+        /// the component keys appear in the ``recognized`` property, where
         /// *k* is the number of components in the image. Any
         /// non-recognized resident components will occur at the end of this
-        /// array, can can be indexed using the values of the [`residents`]
+        /// array, can can be indexed using the values of the ``residents``
         /// dictionary.
         public internal(set)
         var planes:[(component:Component, qi:Table.Quantization.Key)]

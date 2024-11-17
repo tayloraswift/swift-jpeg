@@ -83,7 +83,7 @@ extension JPEG.Bytestream.Source
     /// Lexes a single marker segment from this bytestream, assuming there
     /// is no entropy-coded data prefixed to it.
     ///
-    /// Calling this function is roughly equivalent to calling [`segment(prefix:)`]
+    /// Calling this function is roughly equivalent to calling ``segment(prefix:)``
     /// with the `prefix` parameter set to `false`, except that the empty
     /// prefix array is omitted from the return value.
     ///
@@ -347,7 +347,7 @@ extension JPEG.Table.Huffman
     ///
     /// This initializer determines the shape of the tree from the shape of
     /// the leaf array input. It has no knowledge of symbol frequencies or
-    /// priority. To build an *optimal* huffman tree, use the [`init(frequencies:target:)`]
+    /// priority. To build an *optimal* huffman tree, use the ``init(frequencies:target:)``
     /// initializer.
     ///
     /// This initializer will return `nil` if the sizes of the given leaf arrays do not
@@ -740,7 +740,7 @@ extension JPEG.Header.Frame
     ///
     /// If the given data does not parse to a valid frame header,
     /// this function will throw a ``JPEG/ParsingError``. This function
-    /// invokes [`validate(process:precision:size:components:)`], so any errors
+    /// invokes ``validate(process:precision:size:components:)``, so any errors
     /// it can throw can also be thrown by this function.
     ///
     /// -   Parameter data:
@@ -906,7 +906,7 @@ extension JPEG.Header.Scan
     ///
     /// If the given data does not parse to a valid scan header,
     /// this function will throw a ``JPEG/ParsingError``. This function
-    /// invokes [`validate(process:band:bits:components:)`], so any errors
+    /// invokes ``validate(process:band:bits:components:)``, so any errors
     /// it can throw can also be thrown by this function.
     ///
     /// -   Parameter data:
@@ -1281,7 +1281,7 @@ extension JPEG.Table.Quantization
     /// Accesses the quantum value at the given grid index.
     ///
     /// Using this subscript is equivalent to using [`[z:]`] with the output
-    /// of [`z(k:h:)`].
+    /// of ``z(k:h:)``.
     ///
     /// -   Parameter k:
     ///     The horizontal frequency index. This value must be in the range `0 ..< 8`.
@@ -1488,7 +1488,7 @@ extension JPEG.Data
             public
             let units:(x:Int, y:Int)
             /// The size of this plane, in pixels. It is equivalent to multiplying
-            /// [`units`] by 8.
+            /// ``units`` by 8.
             public
             var size:(x:Int, y:Int)
             {
@@ -1630,7 +1630,7 @@ extension JPEG.Data.Spectral.Quanta
     init(default:JPEG.Table.Quantization)
     {
         // generate the ‘default’ quantization table at `qi = -1`, `q = 0`
-        self.quanta = [`default`]
+        self.quanta = ``default``
         self.q      = [-1: 0]
     }
 
@@ -1715,7 +1715,7 @@ extension JPEG.Data.Spectral.Quanta:RandomAccessCollection
     }
     /// Returns the index of the table with the given key.
     ///
-    /// An instance of this type which is part of a [`Spectral`]
+    /// An instance of this type which is part of a ``Spectral``
     /// instance will always contain all quanta keys used by its ``Spectral/layout``,
     /// including keys used only by non-recognized components.
     ///
@@ -2068,7 +2068,7 @@ extension JPEG.Layout
     ///
     /// This property should be equivalent to the `components` dictionary
     /// that would be used to construct this instance using
-    /// [`init(format:process:components:scans:)`]. As long as the [`Format`]
+    /// ``init(format:process:components:scans:)``. As long as the ``Format``
     /// type is properly implemented, this dictionary will always have at
     /// least one element.
     public
@@ -2193,7 +2193,7 @@ extension JPEG.Data.Spectral.Plane
     /// correct range.
     ///
     /// Using this subscript is equivalent to using [`[x:y:z:]`] with the `z`
-    /// index set to the output of [`Table.Quantization.z(k:h:)`].
+    /// index set to the output of ``Table.Quantization.z(k:h:)``.
     ///
     /// -   Parameter x:
     ///     The horizontal index of the data unit to access.
@@ -2372,7 +2372,7 @@ extension JPEG.Data.Spectral
     /// This function will invalidate all existing quantization table indices.
     ///
     /// -   Parameter quanta:
-    ///     The quantum values for each quanta key used by this image’s [`layout`],
+    ///     The quantum values for each quanta key used by this image’s ``layout``,
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
@@ -4179,7 +4179,7 @@ extension JPEG.Data.Planar
 {
     /// Decompresses a planar image from the given data source.
     ///
-    /// This function is a convenience function which calls [`Spectral.decompress(stream:)`]
+    /// This function is a convenience function which calls ``Spectral.decompress(stream:)``
     /// to obtain a spectral image, and then calls ``Spectral/idct()`` on the
     /// output to return a planar image.
     ///
@@ -4200,7 +4200,7 @@ extension JPEG.Data.Rectangular
 {
     /// Decompresses a rectangular image from the given data source.
     ///
-    /// This function is a convenience function which calls [`Planar.decompress(stream:)`]
+    /// This function is a convenience function which calls ``Planar.decompress(stream:)``
     /// to obtain a planar image, and then calls ``Planar/interleaved(cosite:)``
     /// on the output to return a rectangular image.
     ///

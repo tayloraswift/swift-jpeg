@@ -333,10 +333,10 @@ extension JPEG.Data.Planar
 {
     /// Converts this planar image into its spectral representation.
     ///
-    /// This method is the inverse of [`Spectral.idct()`]
+    /// This method is the inverse of ``Spectral.idct()``
     ///
     /// -   Parameter quanta:
-    ///     The quantum values for each quanta key used by this image’s [`layout`],
+    ///     The quantum values for each quanta key used by this image’s ``layout``,
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
@@ -374,11 +374,11 @@ extension JPEG.Data.Rectangular
     /// perform component resampling manually and construct a planar image
     /// directly using ``Planar/init(size:layout:metadata:initializingWith:)``.
     ///
-    /// This method is the inverse of [`Planar.interleaved(cosite:)`].
+    /// This method is the inverse of ``Planar.interleaved(cosite:)``.
     ///
     /// -   Returns:
     ///     A planar image created by resampling all components in the input
-    ///     according to their sampling factors in the image [`layout`].
+    ///     according to their sampling factors in the image ``layout``.
     public
     func decomposed() -> JPEG.Data.Planar<Format>
     {
@@ -426,7 +426,7 @@ extension JPEG.Data.Rectangular
     /// Passing an invalid `size`, or a pixel array of the wrong `count` will
     /// result in a precondition failure.
     ///
-    /// This function is the inverse of [`unpack(as:)`].
+    /// This function is the inverse of ``unpack(as:)``.
     ///
     /// -   Parameter size:
     ///     The size of the image, in pixels. Both dimensions must be positive.
@@ -504,7 +504,7 @@ extension JPEG.Layout
     /// The scan decomposition of this image layout, filtered to include only
     /// recognized components.
     ///
-    /// This property is derived from the this layout’s [`definitions`].
+    /// This property is derived from the this layout’s ``definitions``.
     /// Scans containing only non-recognized components are omitted from this
     /// array.
     public
@@ -1668,7 +1668,7 @@ extension JPEG.Table
     ///
     /// The DC tables appear before the AC tables in the serialized segment.
     ///
-    /// This method is the inverse of [`parse(huffman:)`].
+    /// This method is the inverse of ``parse(huffman:)``.
     ///
     /// -   Parameter dc:
     ///     The DC huffman tables to serialize. The tables will appear in the
@@ -1700,7 +1700,7 @@ extension JPEG.Table
     }
     /// Serializes the given quantization tables as segment data.
     ///
-    /// This method is the inverse of [`parse(quantization:)`].
+    /// This method is the inverse of ``parse(quantization:)``.
     ///
     /// -   Parameter tables:
     ///     The quantization tables to serialize. The tables will appear in the
@@ -1737,7 +1737,7 @@ extension JPEG.Header.Frame
 {
     /// Serializes this frame header as segment data.
     ///
-    /// This method is the inverse of [`parse(_:process:)`].
+    /// This method is the inverse of ``parse(_:process:)``.
     ///
     /// -   Returns:
     ///     A marker segment body. This array does not include the marker type
@@ -1766,7 +1766,7 @@ extension JPEG.Header.Scan
 {
     /// Serializes this scan header as segment data.
     ///
-    /// This method is the inverse of [`parse(_:process:)`].
+    /// This method is the inverse of ``parse(_:process:)``.
     ///
     /// -   Returns:
     ///     A marker segment body. This array does not include the marker type
@@ -1836,7 +1836,7 @@ extension JPEG.Bytestream.Destination
     /// This function is meant to be used with markers without segment bodies,
     /// such as ``Marker/start``, ``Marker/end``, and ``Marker/restart(_:)``.
     ///
-    /// This function can throw a [`FormattingError`] if it fails to write
+    /// This function can throw a ``FormattingError`` if it fails to write
     /// to the bytestream.
     ///
     /// -   Parameter marker:
@@ -1856,7 +1856,7 @@ extension JPEG.Bytestream.Destination
     /// is provided, and so should *not* be used with markers without segment
     /// bodies, such as ``Marker/start``, ``Marker/end``, and ``Marker/restart(_:)``.
     ///
-    /// This function can throw a [`FormattingError`] if it fails to write
+    /// This function can throw a ``FormattingError`` if it fails to write
     /// to the bytestream.
     ///
     /// -   Parameter marker:
@@ -1879,8 +1879,8 @@ extension JPEG.Bytestream.Destination
     }
     /// Formats the given entropy-coded data into this bytestream.
     ///
-    /// This function is essentially a wrapper around [`write(_:)`] which converts
-    /// `nil` return values to a thrown [`FormattingError`].
+    /// This function is essentially a wrapper around ``write(_:)`` which converts
+    /// `nil` return values to a thrown ``FormattingError``.
     ///
     /// -   Parameter prefix:
     ///     The data to write to the bytestream.
@@ -1901,7 +1901,7 @@ extension JPEG.Data.Spectral
     /// Compresses a spectral image to the given data destination.
     ///
     /// All metadata records in this image will be emitted at the beginning of
-    /// the outputted file, in the order they appear in the [`metadata`] array.
+    /// the outputted file, in the order they appear in the ``metadata`` array.
     ///
     /// -   Parameter stream:
     ///     A destination bytestream.
@@ -1967,9 +1967,9 @@ extension JPEG.Data.Planar
     /// Compresses a planar image to the given data destination.
     ///
     /// All metadata records in this image will be emitted at the beginning of
-    /// the outputted file, in the order they appear in the [`metadata`] array.
+    /// the outputted file, in the order they appear in the ``metadata`` array.
     ///
-    /// This function is a convenience function which calls [`fdct(quanta:)`]
+    /// This function is a convenience function which calls ``fdct(quanta:)``
     /// to obtain a spectral image, and then calls ``Spectral/compress(stream:)``
     /// on the output.
     ///
@@ -1977,7 +1977,7 @@ extension JPEG.Data.Planar
     ///     A destination bytestream.
     ///
     /// -   Parameter quanta:
-    ///     The quantum values for each quanta key used by this image’s [`layout`],
+    ///     The quantum values for each quanta key used by this image’s ``layout``,
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
@@ -1996,9 +1996,9 @@ extension JPEG.Data.Rectangular
     /// Compresses a rectangular image to the given data destination.
     ///
     /// All metadata records in this image will be emitted at the beginning of
-    /// the outputted file, in the order they appear in the [`metadata`] array.
+    /// the outputted file, in the order they appear in the ``metadata`` array.
     ///
-    /// This function is a convenience function which calls [`decomposed()`]
+    /// This function is a convenience function which calls ``decomposed()``
     /// to obtain a planar image, and then calls ``Planar/compress(stream:quanta:)``
     /// on the output.
     ///
@@ -2006,7 +2006,7 @@ extension JPEG.Data.Rectangular
     ///     A destination bytestream.
     ///
     /// -   Parameter quanta:
-    ///     The quantum values for each quanta key used by this image’s [`layout`],
+    ///     The quantum values for each quanta key used by this image’s ``layout``,
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
