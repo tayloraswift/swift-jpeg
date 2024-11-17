@@ -635,7 +635,7 @@ extension JPEG
         ///     The bit precision read from the frame header.
         ///
         /// -   Parameter format:
-        ///     The [`Format`] type that tried to detect the color format.
+        ///     The ``Format`` type that tried to detect the color format.
         case unrecognizedColorFormat(Set<Component.Key>, Int, Any.Type)
 
         /// Returns the string `"decoding error"`.

@@ -38,7 +38,7 @@ extension JPEG
         ///
         /// The `x` and `y` fields specify the number of physical samples along
         /// each dimension per `unit` length. For example, the value
-        /// `(x: 72, y: 72, unit: `[`Unit.inches`]`)` indicates a density of 72\ dpi.
+        /// `(x: 72, y: 72, unit: ```Unit.inches```)` indicates a density of 72\ dpi.
         /// If the `unit` field is `nil`, the units are unknown.
         public
         let density:(x:Int, y:Int, unit:Unit?)
@@ -209,7 +209,7 @@ extension JPEG
         ///
         /// The tag codes are listed in the [EXIF standard](https://www.exif.org/Exif2-2.PDF).
         /// The dictionary values are internal file pointers that can be
-        /// dereferenced manually from the [`storage`]; alternatively, the
+        /// dereferenced manually from the ``storage``; alternatively, the
         /// [`[tag:]`] subscript can perform both the lookup and the dereferencing
         /// in one step.
         public private(set)
@@ -348,7 +348,7 @@ extension JPEG.JFIF
 {
     /// Serializes this metadata record as segment data.
     ///
-    /// This method is the inverse of [`parse(_:)`].
+    /// This method is the inverse of ``parse(_:)``.
     ///
     /// -   Returns:
     ///     A marker segment body. This array does not include the marker type
@@ -493,7 +493,7 @@ extension JPEG.EXIF
     ///
     /// -   Parameter tag:
     ///     A tag code. The various EXIF tag codes are listed in the
-    ///     [EXIF standard](https://www.exif.org/Exif2-2.PDF). The [`tags`]
+    ///     [EXIF standard](https://www.exif.org/Exif2-2.PDF). The ``tags``
     ///     dictionary contains an index of the known, defined tags in this metadata
     ///     record.
     ///
@@ -523,7 +523,7 @@ extension JPEG.EXIF
     ///
     /// -   Parameter offset:
     ///     The address of the value to access. This pointer must be within the
-    ///     index range of [`storage`].
+    ///     index range of ``storage``.
     ///
     /// -   Parameter _:
     ///     This parameter must be set to [`Swift.UInt8`self`].
@@ -539,13 +539,13 @@ extension JPEG.EXIF
     ///
     /// -   Parameter offset:
     ///     The address of the value to access. This pointer, and the address after
-    ///     it must be within the index range of [`storage`].
+    ///     it must be within the index range of ``storage``.
     ///
     /// -   Parameter _:
     ///     This parameter must be set to [`Swift.UInt16`self`].
     ///
     /// -   Returns:
-    ///     The ``FieldType/uint16`` value, loaded according to the [`endianness`]
+    ///     The ``FieldType/uint16`` value, loaded according to the ``endianness``
     ///     of this metadata record.
     public
     subscript(offset:Int, as _:UInt16.Type) -> UInt16
@@ -564,13 +564,13 @@ extension JPEG.EXIF
     ///
     /// -   Parameter offset:
     ///     The address of the value to access. This pointer, and the next three
-    ///     addresses after it must be within the index range of [`storage`].
+    ///     addresses after it must be within the index range of ``storage``.
     ///
     /// -   Parameter _:
     ///     This parameter must be set to [`Swift.UInt32`self`].
     ///
     /// -   Returns:
-    ///     The ``FieldType/uint32`` value, loaded according to the [`endianness`]
+    ///     The ``FieldType/uint32`` value, loaded according to the ``endianness``
     ///     of this metadata record.
     public
     subscript(offset:Int, as _:UInt32.Type) -> UInt32
@@ -608,7 +608,7 @@ extension JPEG.EXIF
 {
     /// Serializes this metadata record as segment data.
     ///
-    /// This method is the inverse of [`parse(_:)`].
+    /// This method is the inverse of ``parse(_:)``.
     ///
     /// -   Returns:
     ///     A marker segment body. This array does not include the marker type

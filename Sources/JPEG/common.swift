@@ -19,7 +19,7 @@ extension General
         private
         var storage:I
         /// Creates an instance of this property wrapper, with the given value
-        /// truncated to the width of the storage type [`I`].
+        /// truncated to the width of the storage type ``I``.
         ///
         /// -   Parameter wrappedValue:
         ///     The value to wrap.
@@ -44,7 +44,7 @@ extension General
         private
         var storage:(x:I, y:I)
         /// Creates an instance of this property wrapper, with the given values
-        /// truncated to the width of the storage type [`I`].
+        /// truncated to the width of the storage type ``I``.
         ///
         /// -   Parameter wrappedValue:
         ///     The values to wrap.
@@ -74,7 +74,7 @@ extension General
         private
         var storage:I
         /// Creates an instance of this property wrapper, with the given value
-        /// truncated to the width of the storage type [`I`].
+        /// truncated to the width of the storage type ``I``.
         ///
         /// -   Parameter wrappedValue:
         ///     The value to wrap.
