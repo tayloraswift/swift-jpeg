@@ -2,12 +2,8 @@
 License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-// literal forms
 extension JPEG.Component.Key:ExpressibleByIntegerLiteral
 {
-    /// init JPEG.Component.Key.init(integerLiteral:)
-    /// ?:  Swift.ExpressibleByIntegerLiteral
-    /// - integerLiteral    : Swift.UInt8
     public
     init(integerLiteral:UInt8)
     {
@@ -16,9 +12,6 @@ extension JPEG.Component.Key:ExpressibleByIntegerLiteral
 }
 extension JPEG.Table.Quantization.Key:ExpressibleByIntegerLiteral
 {
-    /// init JPEG.Table.Quantization.Key.init(integerLiteral:)
-    /// ?:  Swift.ExpressibleByIntegerLiteral
-    /// - integerLiteral    : Swift.Int
     public
     init(integerLiteral:Int)
     {
