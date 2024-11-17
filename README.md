@@ -1,41 +1,67 @@
-# jpeg
+<div align="center">
 
-[![platforms](https://img.shields.io/badge/platforms-linux%20%7C%20macos-lightgrey.svg)](https://swift.org)
-[![releases](https://img.shields.io/github/v/release/kelvin13/jpeg)](https://github.com/kelvin13/jpeg/releases)
-[![build](https://img.shields.io/github/workflow/status/kelvin13/jpeg/build/master)](https://github.com/kelvin13/jpeg/actions?query=workflow%3Abuild)
-[![build documentation](https://img.shields.io/github/workflow/status/kelvin13/jpeg/documentation/master?label=build%20docs)](https://github.com/kelvin13/jpeg/actions?query=workflow%3Adocumentation)
-[![issues](https://img.shields.io/github/issues/kelvin13/jpeg)](https://github.com/kelvin13/jpeg/issues?state=open)
-[![language](https://img.shields.io/badge/version-swift_5.5-ffa020.svg)](https://swift.org)
-[![license](https://img.shields.io/badge/license-MPL2-ff3079.svg)](https://github.com/kelvin13/jpeg/blob/master/LICENSE)
+***`jpeg`***
+
+[![Tests](https://github.com/tayloraswift/swift-jpeg/actions/workflows/Tests.yml/badge.svg)](https://github.com/tayloraswift/swift-jpeg/actions/workflows/Tests.yml)
+[![Documentation](https://github.com/tayloraswift/swift-jpeg/actions/workflows/Documentation.yml/badge.svg)](https://github.com/tayloraswift/swift-jpeg/actions/workflows/Documentation.yml)
+
+</div>
+
 
 Swift *JPEG* is a cross-platform pure Swift framework for decoding, inspecting, editing, and encoding JPEG images. The core framework has no external dependencies, including *Foundation*, and should compile and provide consistent behavior on *all* Swift platforms. The framework supports additional features, such as file system support, on Linux and MacOS.
 
-Swift *JPEG* is available under the [Mozilla Public License 2.0](https://www.mozilla.org/en-US/MPL/2.0/). The [example programs](examples/) are public domain and can be adapted freely.
+Swift *JPEG* is available under the [Mozilla Public License 2.0](https://www.mozilla.org/en-US/MPL/2.0/). The [example programs](Snippets/) are public domain and can be adapted freely.
+
+<div align="center">
+
+[documentation](https://swiftinit.org/docs/swift-jpeg/ip) ·
+[license](LICENSE)
+
+</div>
+
+
+## Requirements
+
+The swift-jpeg library requires Swift 5.10 or later.
+
+
+| Platform | Status |
+| -------- | ------ |
+| 🐧 Linux | [![Tests](https://github.com/tayloraswift/swift-jpeg/actions/workflows/Tests.yml/badge.svg)](https://github.com/tayloraswift/swift-jpeg/actions/workflows/Tests.yml) |
+| 🍏 Darwin | [![Tests](https://github.com/tayloraswift/swift-jpeg/actions/workflows/Tests.yml/badge.svg)](https://github.com/tayloraswift/swift-jpeg/actions/workflows/Tests.yml) |
+| 🍏 Darwin (iOS) | [![iOS](https://github.com/tayloraswift/swift-jpeg/actions/workflows/iOS.yml/badge.svg)](https://github.com/tayloraswift/swift-jpeg/actions/workflows/iOS.yml) |
+| 🍏 Darwin (tvOS) | [![tvOS](https://github.com/tayloraswift/swift-jpeg/actions/workflows/tvOS.yml/badge.svg)](https://github.com/tayloraswift/swift-jpeg/actions/workflows/tvOS.yml) |
+| 🍏 Darwin (visionOS) | [![visionOS](https://github.com/tayloraswift/swift-jpeg/actions/workflows/visionOS.yml/badge.svg)](https://github.com/tayloraswift/swift-jpeg/actions/workflows/visionOS.yml) |
+| 🍏 Darwin (watchOS) | [![watchOS](https://github.com/tayloraswift/swift-jpeg/actions/workflows/watchOS.yml/badge.svg)](https://github.com/tayloraswift/swift-jpeg/actions/workflows/watchOS.yml) |
+
+
+[Check deployment minimums](https://swiftinit.org/docs/swift-jpeg#ss:platform-requirements)
+
 
 ## [tutorials and example programs](examples/)
 
-* [basic decoding](examples#basic-decoding) ([sources](decode-basic/))
-* [basic encoding](examples#basic-encoding) ([sources](encode-basic/))
-* [advanced decoding](examples#advanced-decoding) ([sources](decode-advanced/))
-* [advanced encoding](examples#advanced-encoding) ([sources](encode-advanced/))
-* [using in-memory images](examples#using-in-memory-images) ([sources](in-memory/))
-* [online decoding](examples#online-decoding) ([sources](decode-online/))
-* [requantizing images](examples#requantizing-images) ([sources](recompress/))
-* [lossless rotations](examples#lossless-rotations) ([sources](rotate/))
-* [custom color formats](examples#custom-color-formats) ([sources](custom-color/))
+* [basic decoding](examples#basic-decoding)
+* [basic encoding](examples#basic-encoding)
+* [advanced decoding](examples#advanced-decoding)
+* [advanced encoding](examples#advanced-encoding)
+* [using in-memory images](examples#using-in-memory-images)
+* [online decoding](examples#online-decoding)
+* [requantizing images](examples#requantizing-images)
+* [lossless rotations](examples#lossless-rotations)
+* [custom color formats](examples#custom-color-formats)
 
-## [api reference](https://kelvin13.github.io/jpeg/)
+## [api reference](https://swiftinit.org/hist/swift-jpeg:master/jpeg/)
 
-* [`JPEG.JPEG`](https://kelvin13.github.io/jpeg/JPEG/)
-* [`JPEG.General`](https://kelvin13.github.io/jpeg/General/)
-* [`JPEG.System`](https://kelvin13.github.io/jpeg/System/)
+* [`JPEG.JPEG`](https://swiftinit.org/hist/swift-jpeg:master/jpeg/JPEG/)
+* [`JPEG.General`](https://swiftinit.org/hist/swift-jpeg:master/jpeg/General/)
+* [`JPEG.System`](https://swiftinit.org/hist/swift-jpeg:master/jpeg/System/)
 
 ## getting started
 
 To Swift *JPEG* in a project, add this descriptor to the `dependencies` list in your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/kelvin13/jpeg", .exact("1.0.0"))
+.package(url: "https://github.com/tayloraswift/swift-jpeg", from: "1.0.0")
 ```
 
 ## basic usage
