@@ -2,87 +2,82 @@
 License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-/// A color format, determined by the bit depth and set of component keys in
-/// a frame header.
-///
-/// The coding ``JPEG/Process`` of an image may place restrictions on which
-/// combinations of component sets and bit precisions are valid.
-public
-protocol _JPEGFormat
-{
-    /// Detects this color format, given a set of component keys and a bit depth.
-    ///
-    /// -   Parameter components:
-    ///     The set of given component keys.
-    ///
-    /// -   Parameter precision:
-    ///     The given bit depth.
-    ///
-    /// -   Returns:
-    ///     A color format instance.
-    static
-    func recognize(_ components:Set<JPEG.Component.Key>, precision:Int) -> Self?
-
-    /// The set of component keys for this color format.
-    ///
-    /// The ordering is used to determine plane index assignments when initializing
-    /// an image layout. This property should never be empty. It is allowed
-    /// for this array to contain fewer components than were detected by the
-    /// ``Format/recognize(_:precision:)`` constructor.
-    var components:[JPEG.Component.Key]
-    {
-        get
-    }
-
-    /// The bit depth of each component in this color format.
-    var precision:Int
-    {
-        get
-    }
-}
-/// A color target.
-public
-protocol _JPEGColor
-{
-    /// The color format associated with this color target. An image using
-    /// any color format of this type will support rendering to this color target.
-    associatedtype Format:JPEG.Format
-
-    /// Converts the given interleaved samples into an array of structured pixels.
-    ///
-    /// -   Parameter interleaved:
-    ///     A flat array of interleaved component samples.
-    ///
-    /// -   Parameter format:
-    ///     The color format of the interleaved input.
-    ///
-    /// -   Returns:
-    ///     An array of pixels of this color target type.
-    static
-    func unpack(_ interleaved:[UInt16], of format:Format) -> [Self]
-
-    /// Converts the given array of structured pixels into an array of interleaved samples.
-    ///
-    /// -   Parameter pixels:
-    ///     An array of pixels of this color target type.
-    ///
-    /// -   Parameter format:
-    ///     The color format of the interleaved output.
-    ///
-    /// -   Returns:
-    ///     A flat array of interleaved component samples.
-    static
-    func pack(_ pixels:[Self], as format:Format) -> [UInt16]
-}
-
 /// A namespace for JPEG-related functionality.
 public
 enum JPEG
 {
+    /// A color format, determined by the bit depth and set of component keys in
+    /// a frame header.
+    ///
+    /// The coding ``JPEG/Process`` of an image may place restrictions on which
+    /// combinations of component sets and bit precisions are valid.
     public
-    typealias Format = _JPEGFormat
+    protocol Format
+    {
+        /// Detects this color format, given a set of component keys and a bit depth.
+        ///
+        /// -   Parameter components:
+        ///     The set of given component keys.
+        ///
+        /// -   Parameter precision:
+        ///     The given bit depth.
+        ///
+        /// -   Returns:
+        ///     A color format instance.
+        static
+        func recognize(_ components:Set<JPEG.Component.Key>, precision:Int) -> Self?
+
+        /// The set of component keys for this color format.
+        ///
+        /// The ordering is used to determine plane index assignments when initializing
+        /// an image layout. This property should never be empty. It is allowed
+        /// for this array to contain fewer components than were detected by the
+        /// ``Format/recognize(_:precision:)`` constructor.
+        var components:[JPEG.Component.Key]
+        {
+            get
+        }
+
+        /// The bit depth of each component in this color format.
+        var precision:Int
+        {
+            get
+        }
+    }
+    /// A color target.
     public
-    typealias Color  = _JPEGColor
+    protocol Color
+    {
+        /// The color format associated with this color target. An image using
+        /// any color format of this type will support rendering to this color target.
+        associatedtype Format:JPEG.Format
+
+        /// Converts the given interleaved samples into an array of structured pixels.
+        ///
+        /// -   Parameter interleaved:
+        ///     A flat array of interleaved component samples.
+        ///
+        /// -   Parameter format:
+        ///     The color format of the interleaved input.
+        ///
+        /// -   Returns:
+        ///     An array of pixels of this color target type.
+        static
+        func unpack(_ interleaved:[UInt16], of format:Format) -> [Self]
+
+        /// Converts the given array of structured pixels into an array of interleaved samples.
+        ///
+        /// -   Parameter pixels:
+        ///     An array of pixels of this color target type.
+        ///
+        /// -   Parameter format:
+        ///     The color format of the interleaved output.
+        ///
+        /// -   Returns:
+        ///     A flat array of interleaved component samples.
+        static
+        func pack(_ pixels:[Self], as format:Format) -> [UInt16]
+    }
 
     /// A metadata record.
     public
@@ -713,20 +708,6 @@ extension JPEG
     }
 }
 
-/// Functionality common to all table types.
-public
-protocol _JPEGAnyTable
-{
-    /// A type representing a table instance while it is bound to a table slot.
-    associatedtype Delegate
-    /// Four table slots.
-    ///
-    /// JPEG images are always limited to four table slots for each table type.
-    /// Some coding processes may limit further the number of available table slots.
-    typealias Slots     = (Delegate?, Delegate?, Delegate?, Delegate?)
-    /// A table selector.
-    typealias Selector  = WritableKeyPath<Slots, Delegate?>
-}
 extension JPEG
 {
     /// A namespace for header types.
@@ -845,8 +826,21 @@ extension JPEG
         }
     }
 
+    /// Functionality common to all table types.
     public
-    typealias AnyTable = _JPEGAnyTable
+    protocol AnyTable
+    {
+        /// A type representing a table instance while it is bound to a table slot.
+        associatedtype Delegate
+        /// Four table slots.
+        ///
+        /// JPEG images are always limited to four table slots for each table type.
+        /// Some coding processes may limit further the number of available table slots.
+        typealias Slots     = (Delegate?, Delegate?, Delegate?, Delegate?)
+        /// A table selector.
+        typealias Selector  = WritableKeyPath<Slots, Delegate?>
+    }
+
     /// A namespace for table types.
     public
     enum Table

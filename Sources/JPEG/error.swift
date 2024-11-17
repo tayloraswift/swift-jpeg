@@ -2,31 +2,30 @@
 License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-/// Functionality common to all library error types.
-public
-protocol _JPEGError:Swift.Error
-{
-    /// The human-readable namespace for errors of this type.
-    static
-    var namespace:String
-    {
-        get
-    }
-    /// A basic description of this error instance.
-    var message:String
-    {
-        get
-    }
-    /// A detailed description of this error instance, if available.
-    var details:String?
-    {
-        get
-    }
-}
 extension JPEG
 {
+    /// Functionality common to all library error types.
     public
-    typealias Error = _JPEGError
+    protocol Error:Swift.Error
+    {
+        /// The human-readable namespace for errors of this type.
+        static
+        var namespace:String
+        {
+            get
+        }
+        /// A basic description of this error instance.
+        var message:String
+        {
+            get
+        }
+        /// A detailed description of this error instance, if available.
+        var details:String?
+        {
+            get
+        }
+    }
+
     /// A lexing error.
     public
     enum LexingError:JPEG.Error
