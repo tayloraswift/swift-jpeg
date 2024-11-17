@@ -372,7 +372,7 @@ extension JPEG.Data.Rectangular
     /// This method uses a basic box-filter to perform downsampling. A box-filter
     /// is a relatively poor low-pass filter, so it may be worthwhile to
     /// perform component resampling manually and construct a planar image
-    /// directly using [`(Planar).init(size:layout:metadata:initializingWith:)`].
+    /// directly using ``Planar/init(size:layout:metadata:initializingWith:)``.
     ///
     /// This method is the inverse of [`Planar.interleaved(cosite:)`].
     ///
@@ -471,7 +471,7 @@ extension JPEG.Data.Spectral
     ///
     /// The encoded frame header contains only the recognized components in
     /// this image. It encodes the image height eagerly (as opposed to lazily,
-    /// with a [`(JPEG.Header).HeightRedefinition`] header).
+    /// with a ``JPEG.Header/HeightRedefinition`` header).
     ///
     /// -   Returns:
     ///     The encoded frame header.
@@ -682,7 +682,7 @@ extension JPEG.Table.Huffman
     ///     An array of symbol frequencies. This array must contain exactly 256
     ///     elements, corresponding to the 256 possible 8-bit symbols. The *i*th
     ///     array element specifies the frequency of the symbol with the
-    ///     [`(Bitstream.AnySymbol).value`] *i*.
+    ///     ``Bitstream.AnySymbol/value`` *i*.
     ///
     ///     At least one symbol must have a non-zero frequency. Passing an invalid
     ///     frequency array will result in a precondition failure.
@@ -1801,7 +1801,7 @@ extension JPEG.Header.Scan
 /// A destination bytestream.
 ///
 /// To implement a custom data destination type, conform it to this protocol by
-/// implementing [`(Destination).write(_:)`]. It can
+/// implementing ``Destination/write(_:)``. It can
 /// then be used with the library’s core compression interfaces.
 public
 protocol _JPEGBytestreamDestination
@@ -1834,7 +1834,7 @@ extension JPEG.Bytestream.Destination
     /// Formats a single marker into this bytestream.
     ///
     /// This function is meant to be used with markers without segment bodies,
-    /// such as [`(Marker).start`], [`(Marker).end`], and [`(Marker).restart(_:)`].
+    /// such as ``Marker/start``, ``Marker/end``, and ``Marker/restart(_:)``.
     ///
     /// This function can throw a [`FormattingError`] if it fails to write
     /// to the bytestream.
@@ -1854,7 +1854,7 @@ extension JPEG.Bytestream.Destination
     ///
     /// This function will output a segment length field, even if no marker data
     /// is provided, and so should *not* be used with markers without segment
-    /// bodies, such as [`(Marker).start`], [`(Marker).end`], and [`(Marker).restart(_:)`].
+    /// bodies, such as ``Marker/start``, ``Marker/end``, and ``Marker/restart(_:)``.
     ///
     /// This function can throw a [`FormattingError`] if it fails to write
     /// to the bytestream.
@@ -1970,7 +1970,7 @@ extension JPEG.Data.Planar
     /// the outputted file, in the order they appear in the [`metadata`] array.
     ///
     /// This function is a convenience function which calls [`fdct(quanta:)`]
-    /// to obtain a spectral image, and then calls [`(Spectral).compress(stream:)`]
+    /// to obtain a spectral image, and then calls ``Spectral/compress(stream:)``
     /// on the output.
     ///
     /// -   Parameter stream:
@@ -1999,7 +1999,7 @@ extension JPEG.Data.Rectangular
     /// the outputted file, in the order they appear in the [`metadata`] array.
     ///
     /// This function is a convenience function which calls [`decomposed()`]
-    /// to obtain a planar image, and then calls [`(Planar).compress(stream:quanta:)`]
+    /// to obtain a planar image, and then calls ``Planar/compress(stream:quanta:)``
     /// on the output.
     ///
     /// -   Parameter stream:

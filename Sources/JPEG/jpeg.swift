@@ -5,7 +5,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 /// A color format, determined by the bit depth and set of component keys in
 /// a frame header.
 ///
-/// The coding [`(JPEG).Process`] of an image may place restrictions on which
+/// The coding ``JPEG/Process`` of an image may place restrictions on which
 /// combinations of component sets and bit precisions are valid.
 public
 protocol _JPEGFormat
@@ -28,7 +28,7 @@ protocol _JPEGFormat
     /// The ordering is used to determine plane index assignments when initializing
     /// an image layout. This property should never be empty. It is allowed
     /// for this array to contain fewer components than were detected by the
-    /// [`(Format).recognize(_:precision:)`] constructor.
+    /// ``Format/recognize(_:precision:)`` constructor.
     var components:[JPEG.Component.Key]
     {
         get
@@ -284,7 +284,7 @@ extension JPEG.Common:JPEG.Format
 
     /// Detects this color format, given a set of component keys and a bit depth.
     ///
-    /// If this constructor detects a [`(Common).nonconforming3x8(_:_:_:)`]
+    /// If this constructor detects a ``Common/nonconforming3x8(_:_:_:)``
     /// color format, it will populate the associated values with the keys in
     /// ascending order.
     ///
@@ -325,7 +325,7 @@ extension JPEG.Common:JPEG.Format
     }
     /// The set of component keys for this color format.
     ///
-    /// If this instance is a [`(Common).nonconforming3x8(_:_:_:)`] color format,
+    /// If this instance is a ``Common/nonconforming3x8(_:_:_:)`` color format,
     /// the array contains the component keys in the order they appear
     /// in the instance’s associated values.
     public
@@ -531,10 +531,10 @@ extension JPEG
     /// The [JPEG standard](https://www.w3.org/Graphics/JPEG/itu-t81.pdf)
     /// specifies several subformats of the JPEG format known as *coding processes*.
     /// The library can recognize images using any coding process, but
-    /// only supports encoding and decoding images using the [`(Process).baseline`],
-    /// [`(Process).extended(coding:differential:)`], or
-    /// [`(Process).progressive(coding:differential:)`] processes with
-    /// [`(Process.Coding).huffman`] entropy coding and the `differential` flag
+    /// only supports encoding and decoding images using the ``Process/baseline``,
+    /// ``Process/extended(coding:differential:)``, or
+    /// ``Process/progressive(coding:differential:)`` processes with
+    /// ``Process.Coding/huffman`` entropy coding and the `differential` flag
     /// set to `false`.
     public
     enum Process:Sendable
@@ -553,13 +553,13 @@ extension JPEG
         ///
         /// This is a sequential coding process. It allows up to two simultaneously
         /// referenced tables of each type. It can only be used with color formats
-        /// with a bit [`(JPEG.Format).precision`] of 8.
+        /// with a bit ``JPEG.Format/precision`` of 8.
         case baseline
         /// The extended coding process.
         ///
         /// This is a sequential coding process. It allows up to four simultaneously
         /// referenced tables of each type. It can only be used with color formats
-        /// with a bit [`(JPEG.Format).precision`] of 8 or 12.
+        /// with a bit ``JPEG.Format/precision`` of 8 or 12.
         ///
         /// -   Parameter coding:
         ///     The entropy coding used by this coding process.
@@ -572,7 +572,7 @@ extension JPEG
         ///
         /// This is a progressive coding process. It allows up to four simultaneously
         /// referenced tables of each type. It can only be used with color formats
-        /// with a bit [`(JPEG.Format).precision`] of 8 or 12, and no more than
+        /// with a bit ``JPEG.Format/precision`` of 8 or 12, and no more than
         /// four components.
         ///
         /// -   Parameter coding:
@@ -739,7 +739,7 @@ extension JPEG
     {
         /// A height redefinition header.
         ///
-        /// This structure is the parsed form of a [`(JPEG.Marker).height`]
+        /// This structure is the parsed form of a ``JPEG.Marker/height``
         /// marker segment.
         public
         struct HeightRedefinition
@@ -763,7 +763,7 @@ extension JPEG
         }
         /// A restart interval definition header.
         ///
-        /// This structure is the parsed form of an [`(JPEG.Marker).interval`]
+        /// This structure is the parsed form of an ``JPEG.Marker/interval``
         /// marker segment. It can modify or clear the restart interval of an
         /// image.
         public
@@ -790,10 +790,10 @@ extension JPEG
         }
         /// A frame header.
         ///
-        /// This structure is the parsed form of a [`(JPEG.Marker).frame(_:)`]
+        /// This structure is the parsed form of a ``JPEG.Marker/frame(_:)``
         /// marker segment. In non-hierarchical mode images, it defines global
         /// image parameters. It contains some of the information needed to
-        /// fully-define an image [`(JPEG).Layout`].
+        /// fully-define an image ``JPEG/Layout``.
         public
         struct Frame
         {
@@ -807,7 +807,7 @@ extension JPEG
             ///
             /// The width is always positive. The height can be either positive
             /// or zero, if the height is to be defined later by a
-            /// [`(JPEG.Header).HeightRedefinition`] header.
+            /// ``JPEG.Header/HeightRedefinition`` header.
             public
             let size:(x:Int, y:Int)
             /// The components in this image.
@@ -818,7 +818,7 @@ extension JPEG
         }
         /// A scan header.
         ///
-        /// This structure is the parsed form of a [`(JPEG.Marker).scan`]
+        /// This structure is the parsed form of a ``JPEG.Marker/scan``
         /// marker segment. It defines scan-level image parameters. The library
         /// validates these structures against the global image parameters to
         /// create the [`JPEG.Scan`] structures elsewhere in the library API.
@@ -962,7 +962,7 @@ extension JPEG
     /// Depending on the coding process used by the image, a scan may encode
     /// a select frequency band, range of bits, and subset of color components.
     ///
-    /// This type contains essentially the same information as [`(JPEG).Header.Scan`],
+    /// This type contains essentially the same information as ``JPEG/Header.Scan``,
     /// but has been validated against the global image parameters and has its
     /// component keys pre-resolved to integer indices.
     public
@@ -994,7 +994,7 @@ extension JPEG
         ///
         /// This property specifies a range of zigzag-indexed frequency coefficients.
         /// It is always within the interval of 0 to 64. If the image coding
-        /// process is not [`(Process).progressive(coding:differential:)`],
+        /// process is not ``Process/progressive(coding:differential:)``,
         /// this value will be `0 ..< 64`.
         public
         let band:Range<Int>
@@ -1003,7 +1003,7 @@ extension JPEG
         /// This property specifies a range of bit indices, where bit zero is
         /// the least significant bit. The upper range bound is always either
         /// infinity ([`Swift.Int`max`]) or one greater than the lower bound.
-        /// If the image coding process is not [`(Process).progressive(coding:differential:)`],
+        /// If the image coding process is not ``Process/progressive(coding:differential:)``,
         /// this value will be `0 ..< .max`.
         public
         let bits:Range<Int>
@@ -1030,13 +1030,13 @@ extension JPEG
     ///
     /// This structure records both the *recognized components* and
     /// the *resident components* in an image. We draw this distinction because
-    /// the [`(Layout).planes`] property is allowed to include definitions for components
+    /// the ``Layout/planes`` property is allowed to include definitions for components
     /// that are not part of [`(Layout).format``(Format).components`].
-    /// Such components will not recieve a plane in the [`(JPEG).Data`] types,
+    /// Such components will not recieve a plane in the ``JPEG/Data`` types,
     /// but will be ignored by the scan decoder without errors.
     ///
     /// Non-recognized components can only occur in images decoded from JPEG files,
-    /// and only when using a custom [`(JPEG).Format`] type, as the built-in
+    /// and only when using a custom ``JPEG/Format`` type, as the built-in
     /// [`JPEG.Common`] color format will never accept any component declaration
     /// in a frame header that it does not also recognize. When encoding images to JPEG
     /// files, all declared resident components must also be recognized components.
@@ -1148,12 +1148,12 @@ extension JPEG.Layout
     /// Creates an image layout given image parameters and a scan decomposition.
     ///
     /// If the image coding process is a sequential process, the given scan headers
-    /// should be constructed using the [`(JPEG.Header.Scan).sequential(...:)`]
+    /// should be constructed using the ``JPEG.Header.Scan/sequential(...:)``
     /// constructor. If the coding process is progressive, the scan headers
-    /// should be constructed with the [`(JPEG.Header.Scan).progressive(...:bits:)`],
-    /// [`(JPEG.Header.Scan).progressive(...:bit:)`],
-    /// [`(JPEG.Header.Scan).progressive(_:band:bits:)`], or
-    /// [`(JPEG.Header.Scan).progressive(_:band:bit:)`] constructors.
+    /// should be constructed with the ``JPEG.Header.Scan/progressive(...:bits:)``,
+    /// ``JPEG.Header.Scan/progressive(...:bit:)``,
+    /// ``JPEG.Header.Scan/progressive(_:band:bits:)``, or
+    /// ``JPEG.Header.Scan/progressive(_:band:bit:)`` constructors.
     ///
     /// This initializer will validate the scan progression and attempt to
     /// generate a sequence of table definitions to implement the
@@ -1166,7 +1166,7 @@ extension JPEG.Layout
     /// argument. It will strip non-recognized components from the headers,
     /// and rearrange their component descriptors in ascending numeric order.
     /// It will also validate the scan headers against the `process` argument
-    /// with [`(Header.Scan).validate(process:band:bits:components:)`].
+    /// with ``Header.Scan/validate(process:band:bits:components:)``.
     /// Passing invalid scan headers will result in a precondition failure.
     /// See the [advanced encoding](https://github.com/kelvin13/jpeg/tree/master/examples#advanced-encoding)
     /// library tutorial to learn more about the validation rules.
@@ -1457,7 +1457,7 @@ extension JPEG.Header.Scan
     /// Creates a sequential scan descriptor.
     ///
     /// This constructor bypasses normal scan header validation checks. It is
-    /// otherwise equivalent to calling [`(Header.Scan).validate(process:band:bits:components:)`]
+    /// otherwise equivalent to calling ``Header.Scan/validate(process:band:bits:components:)``
     /// with the `band` argument set to `0 ..< 64` and the `bits` argument set
     /// to `0 ..< .max`.
     ///
@@ -1484,7 +1484,7 @@ extension JPEG.Header.Scan
     }
     /// Creates a sequential scan descriptor.
     ///
-    /// This function is variadic sugar for [`(Scan).sequential(_:)`].
+    /// This function is variadic sugar for ``Scan/sequential(_:)``.
     public static
     func sequential(_ components:
         (
@@ -1498,7 +1498,7 @@ extension JPEG.Header.Scan
     /// Creates a progressive initial DC scan descriptor.
     ///
     /// This constructor bypasses normal scan header validation checks. It is
-    /// otherwise equivalent to calling [`(Header.Scan).validate(process:band:bits:components:)`]
+    /// otherwise equivalent to calling ``Header.Scan/validate(process:band:bits:components:)``
     /// with the `band` argument set to `0 ..< 1`.
     ///
     /// Initial DC scans only use DC huffman tables, so no AC table selectors
@@ -1529,7 +1529,7 @@ extension JPEG.Header.Scan
     }
     /// Creates a progressive initial DC scan descriptor.
     ///
-    /// This function is variadic sugar for [`(Scan).progressive(_:bits:)`].
+    /// This function is variadic sugar for ``Scan/progressive(_:bits:)``.
     public static
     func progressive(_
         components:(ci:JPEG.Component.Key, dc:JPEG.Table.HuffmanDC.Selector)...,
@@ -1540,7 +1540,7 @@ extension JPEG.Header.Scan
     /// Creates a progressive refining DC scan descriptor.
     ///
     /// This constructor bypasses normal scan header validation checks. It is
-    /// otherwise equivalent to calling [`(Header.Scan).validate(process:band:bits:components:)`]
+    /// otherwise equivalent to calling ``Header.Scan/validate(process:band:bits:components:)``
     /// with the `band` argument set to `0 ..< 1` and the `bits` argument set
     /// to `bit ..< bit + 1`.
     ///
@@ -1569,7 +1569,7 @@ extension JPEG.Header.Scan
     }
     /// Creates a progressive refining DC scan descriptor.
     ///
-    /// This function is variadic sugar for [`(Scan).progressive(_:bit:)`].
+    /// This function is variadic sugar for ``Scan/progressive(_:bit:)``.
     public static
     func progressive(_
         components:JPEG.Component.Key...,
@@ -1580,7 +1580,7 @@ extension JPEG.Header.Scan
     /// Creates a progressive initial AC scan descriptor.
     ///
     /// This constructor bypasses normal scan header validation checks. It is
-    /// otherwise equivalent to calling [`(Header.Scan).validate(process:band:bits:components:)`].
+    /// otherwise equivalent to calling ``Header.Scan/validate(process:band:bits:components:)``.
     ///
     /// AC scans only use AC huffman tables, so no DC table selectors
     /// need to be specified.
@@ -1613,7 +1613,7 @@ extension JPEG.Header.Scan
     /// Creates a progressive refining AC scan descriptor.
     ///
     /// This constructor bypasses normal scan header validation checks. It is
-    /// otherwise equivalent to calling [`(Header.Scan).validate(process:band:bits:components:)`]
+    /// otherwise equivalent to calling ``Header.Scan/validate(process:band:bits:components:)``
     /// with the `bits` argument set to `bit ..< bit + 1`.
     ///
     /// AC scans only use AC huffman tables, so no DC table selectors
