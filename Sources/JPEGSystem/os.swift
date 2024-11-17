@@ -14,29 +14,20 @@ import JPEG
 
 #if os(macOS) || os(Linux)
 
-/// enum System
-///     A namespace for platform-dependent functionality.
+/// A namespace for platform-dependent functionality.
 ///
-///     These APIs are only available on MacOS and Linux. However, the rest of the
-///     framework is pure Swift and should support all Swift platforms.
-/// #  [File IO](system-file-io)
-/// #  [See also](top-level-namespaces)
-/// ## (2:top-level-namespaces)
+/// These APIs are only available on MacOS and Linux. However, the rest of the
+/// framework is pure Swift and should support all Swift platforms.
 public
 enum System
 {
-    /// enum System.File
-    ///     A namespace for file IO functionality.
-    /// ## (system-file-io)
+    /// A namespace for file IO functionality.
     public
     enum File
     {
         typealias Descriptor = UnsafeMutablePointer<FILE>
 
-        /// struct System.File.Source
-        /// :   JPEG.Bytestream.Source
-        ///     A type for reading data from files on disk.
-        /// ## (system-file-io)
+        /// A type for reading data from files on disk.
         public
         struct Source
         {
@@ -44,10 +35,7 @@ enum System
             let descriptor:Descriptor
         }
 
-        /// struct System.File.Destination
-        /// :   JPEG.Bytestream.Destination
-        ///     A type for writing data to files on disk.
-        /// ## (system-file-io)
+        /// A type for writing data to files on disk.
         public
         struct Destination
         {
@@ -58,22 +46,23 @@ enum System
 }
 extension System.File.Source
 {
-    /// static func System.File.Source.open<R>(path:_:)
-    /// rethrows
-    ///     Calls a closure with an interface for reading from the specified file.
+    /// Calls a closure with an interface for reading from the specified file.
     ///
-    ///     This method automatically closes the file when its closure argument returns.
-    /// - path  : Swift.String
+    /// This method automatically closes the file when its closure argument returns.
+    ///
+    /// -   Parameter path:
     ///     The path to the file to open.
-    /// - body  : (inout Self) throws -> R
-    ///     A closure with a [`Source`] parameter from which data in
+    ///
+    /// -   Parameter body:
+    ///     A closure with a ``Source`` parameter from which data in
     ///     the specified file can be read. This interface is only valid
     ///     for the duration of the method’s execution. The closure is
     ///     only executed if the specified file could be successfully
     ///     opened, otherwise this method will return `nil`. If `body` has a
     ///     return value and the specified file could be opened, this method
     ///     returns the return value of the closure.
-    /// - ->    : R?
+    ///
+    /// -   Returns:
     ///     The return value of the closure argument, or `nil` if the specified
     ///     file could not be opened.
     public static
@@ -95,15 +84,15 @@ extension System.File.Source
         return try body(&file)
     }
 
-    /// func System.File.Source.read(count:)
-    /// ?:  JPEG.Bytestream.Source
-    ///     Reads the specified number of bytes from this file interface.
+    /// Reads the specified number of bytes from this file interface.
     ///
-    ///     This method only returns an array if the exact number of bytes
-    ///     specified could be read. This method advances the file pointer.
-    /// - capacity  : Swift.Int
+    /// This method only returns an array if the exact number of bytes
+    /// specified could be read. This method advances the file pointer.
+    ///
+    /// -   Parameter capacity:
     ///     The number of bytes to read.
-    /// - ->        : [Swift.UInt8]?
+    ///
+    /// -   Returns:
     ///     An array containing the read data, or `nil` if the specified
     ///     number of bytes could not be read.
     public
@@ -125,11 +114,10 @@ extension System.File.Source
 
         return buffer
     }
-    /// var System.File.Source.count : Swift.Int? { get }
-    ///     The size of the file, in bytes, or `nil` if the file is not a regular
-    ///     file or a link to a file.
+    /// The size of the file, in bytes, or `nil` if the file is not a regular
+    /// file or a link to a file.
     ///
-    ///     This property queries the file size using `stat`.
+    /// This property queries the file size using `stat`.
     public
     var count:Int?
     {
@@ -168,22 +156,23 @@ extension System.File.Source
 }
 extension System.File.Destination
 {
-    /// static func System.File.Destination.open<R>(path:_:)
-    /// rethrows
-    ///     Calls a closure with an interface for writing to the specified file.
+    /// Calls a closure with an interface for writing to the specified file.
     ///
-    ///     This method automatically closes the file when its closure argument returns.
-    /// - path  : Swift.String
+    /// This method automatically closes the file when its closure argument returns.
+    ///
+    /// -   Parameter path:
     ///     The path to the file to open.
-    /// - body  : (inout Self) throws -> R
-    ///     A closure with a [`Destination`] parameter representing
+    ///
+    /// -   Parameter body:
+    ///     A closure with a ``Destination`` parameter representing
     ///     the specified file to which data can be written to. This
     ///     interface is only valid for the duration of the method’s
     ///     execution. The closure is only executed if the specified file could
     ///     be successfully opened, otherwise this method will return `nil`.
     ///     If `body` has a return value and the specified file could be opened,
     ///     this method returns the return value of the closure.
-    /// - ->    : R?
+    ///
+    /// -   Returns:
     ///     The return value of the closure argument, or `nil` if the specified
     ///     file could not be opened.
     public static
@@ -205,16 +194,16 @@ extension System.File.Destination
         return try body(&file)
     }
 
-    /// func System.File.Destination.write(_:)
-    /// ?:  JPEG.Bytestream.Destination
-    ///     Write the bytes in the given array to this file interface.
+    /// Write the bytes in the given array to this file interface.
     ///
-    ///     This method only returns `()` if the entire array argument could
-    ///     be written. This method advances the file pointer.
-    /// - buffer    : [Swift.UInt8]
+    /// This method only returns `()` if the entire array argument could
+    /// be written. This method advances the file pointer.
+    ///
+    /// -   Parameter buffer:
     ///     The data to write.
-    /// - ->        : Swift.Void?
-    ///     A [`Swift.Void`] tuple if the entire array argument could be written,
+    ///
+    /// -   Returns:
+    ///     A ``Void`` tuple if the entire array argument could be written,
     ///     or `nil` otherwise.
     public
     func write(_ buffer:[UInt8]) -> Void?
@@ -245,44 +234,40 @@ extension System.File.Destination:JPEG.Bytestream.Destination
 // file-based encoding and decoding apis
 extension JPEG.Data.Spectral
 {
-    /// static func JPEG.Data.Spectral.decompress(path:)
-    /// throws
-    ///     Decompresses a spectral image from the given file path.
+    /// Decompresses a spectral image from the given file path.
     ///
-    ///     Calling this function is equivalent to calling [`System.File.Source.open(path:_:)`]
-    ///     with the closure parameter set to [`Self``decompress(stream:)`].
+    /// Calling this function is equivalent to calling ``System.File.Source.open(path:_:)``
+    /// with the closure parameter set to ``decompress(stream:)``.
     ///
-    ///     This function is only available on MacOS and Linux platforms.
-    /// - path      : Swift.String
+    /// This function is only available on MacOS and Linux platforms.
+    ///
+    /// -   Parameter path:
     ///     A file path.
-    /// - ->        : Self?
+    ///
+    /// -   Returns:
     ///     The decompressed image, or `nil` if the file could not be opened at
     ///     the given file path.
-    /// #  [See also](spectral-create-image)
-    /// ## (2:spectral-create-image)
     public static
     func decompress(path:String) throws -> Self?
     {
         return try System.File.Source.open(path: path, Self.decompress(stream:))
     }
-    /// func JPEG.Data.Spectral.compress(path:)
-    /// throws
-    ///     Compresses a spectral image to the given file path.
+    /// Compresses a spectral image to the given file path.
     ///
-    ///     All metadata records in this image will be emitted at the beginning of
-    ///     the outputted file, in the order they appear in the [`metadata`] array.
+    /// All metadata records in this image will be emitted at the beginning of
+    /// the outputted file, in the order they appear in the ``metadata`` array.
     ///
-    ///     Calling this function is equivalent to calling [`System.File.Destination.open(path:_:)`]
-    ///     with the closure parameter set to [`Self``compress(stream:)`].
+    /// Calling this function is equivalent to calling ``System.File.Destination.open(path:_:)``
+    /// with the closure parameter set to ``compress(stream:)``.
     ///
-    ///     This function is only available on MacOS and Linux platforms.
-    /// - path      : Swift.String
+    /// This function is only available on MacOS and Linux platforms.
+    ///
+    /// -   Parameter path:
     ///     A file path.
-    /// - ->        : Swift.Void?
-    ///     A [`Swift.Void`] tuple, or `nil` if the file could not be opened at
+    ///
+    /// -   Returns:
+    ///     A ``Void`` tuple, or `nil` if the file could not be opened at
     ///     the given file path.
-    /// #  [See also](spectral-save-image)
-    /// ## (2:spectral-save-image)
     public
     func compress(path:String) throws -> Void?
     {
@@ -291,22 +276,20 @@ extension JPEG.Data.Spectral
 }
 extension JPEG.Data.Planar
 {
-    /// static func JPEG.Data.Planar.decompress(path:)
-    /// throws
-    ///     Decompresses a planar image from the given file path.
+    /// Decompresses a planar image from the given file path.
     ///
-    ///     This function is a convenience function which calls [`Spectral.decompress(path:)`]
-    ///     to obtain a spectral image, and then calls [`(Spectral).idct()`] on the
-    ///     output to return a planar image.
+    /// This function is a convenience function which calls ``Spectral.decompress(path:)``
+    /// to obtain a spectral image, and then calls ``Spectral/idct()`` on the
+    /// output to return a planar image.
     ///
-    ///     This function is only available on MacOS and Linux platforms.
-    /// - path      : Swift.String
+    /// This function is only available on MacOS and Linux platforms.
+    ///
+    /// -   Parameter path:
     ///     A file path.
-    /// - ->        : Self?
+    ///
+    /// -   Returns:
     ///     The decompressed image, or `nil` if the file could not be opened at
     ///     the given file path.
-    /// #  [See also](planar-create-image)
-    /// ## (3:planar-create-image)
     public static
     func decompress(path:String) throws -> Self?
     {
@@ -317,32 +300,31 @@ extension JPEG.Data.Planar
         }
         return spectral.idct()
     }
-    /// func JPEG.Data.Planar.compress(path:quanta:)
-    /// throws
-    ///     Compresses a planar image to the given file path.
+    /// Compresses a planar image to the given file path.
     ///
-    ///     All metadata records in this image will be emitted at the beginning of
-    ///     the outputted file, in the order they appear in the [`metadata`] array.
+    /// All metadata records in this image will be emitted at the beginning of
+    /// the outputted file, in the order they appear in the ``metadata`` array.
     ///
-    ///     This function is a convenience function which calls [`fdct(quanta:)`]
-    ///     to obtain a spectral image, and then calls [`(Spectral).compress(path:)`]
-    ///     on the output.
+    /// This function is a convenience function which calls ``fdct(quanta:)``
+    /// to obtain a spectral image, and then calls ``Spectral/compress(path:)``
+    /// on the output.
     ///
-    ///     This function is only available on MacOS and Linux platforms.
-    /// - path      : Swift.String
+    /// This function is only available on MacOS and Linux platforms.
+    ///
+    /// -   Parameter path:
     ///     A file path.
-    /// - quanta: [JPEG.Table.Quantization.Key: [Swift.UInt16]]
-    ///     The quantum values for each quanta key used by this image’s [`layout`],
+    ///
+    /// -   Parameter quanta:
+    ///     The quantum values for each quanta key used by this image’s ``layout``,
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
-    ///     determined by this image’s [`layout``(Layout).format``(JPEG.Format).precision`],
+    ///     determined by this image’s `layout.format.precision`,
     ///     and all the values must be in the correct range for that bit width.
-    /// - ->        : Swift.Void?
-    ///     A [`Swift.Void`] tuple, or `nil` if the file could not be opened at
+    ///
+    /// -   Returns:
+    ///     A ``Void`` tuple, or `nil` if the file could not be opened at
     ///     the given file path.
-    /// #  [See also](planar-save-image)
-    /// ## (1:planar-save-image)
     public
     func compress(path:String, quanta:[JPEG.Table.Quantization.Key: [UInt16]]) throws
         -> Void?
@@ -352,27 +334,26 @@ extension JPEG.Data.Planar
 }
 extension JPEG.Data.Rectangular
 {
-    /// static func JPEG.Data.Rectangular.decompress(path:cosite:)
-    /// throws
-    ///     Decompresses a rectangular image from the given file path.
+    /// Decompresses a rectangular image from the given file path.
     ///
-    ///     This function is a convenience function which calls [`Planar.decompress(path:)`]
-    ///     to obtain a planar image, and then calls [`(Planar).interleaved(cosite:)`]
-    ///     on the output to return a rectangular image.
+    /// This function is a convenience function which calls ``Planar.decompress(path:)``
+    /// to obtain a planar image, and then calls ``Planar/interleaved(cosite:)``
+    /// on the output to return a rectangular image.
     ///
-    ///     This function is only available on MacOS and Linux platforms.
-    /// - path      : Swift.String
+    /// This function is only available on MacOS and Linux platforms.
+    ///
+    /// -   Parameter path:
     ///     A file path.
-    /// - cosited : Swift.Bool
+    ///
+    /// -   Parameter cosited:
     ///     The upsampling method to use. Setting this parameter to `true` co-sites
     ///     the samples; setting it to `false` centers them instead.
     ///
     ///     The default value is `false`.
-    /// - ->        : Self?
+    ///
+    /// -   Returns:
     ///     The decompressed image, or `nil` if the file could not be opened at
     ///     the given file path.
-    /// #  [See also](rectangular-create-image)
-    /// ## (4:rectangular-create-image)
     public static
     func decompress(path:String, cosite cosited:Bool = false) throws -> Self?
     {
@@ -384,32 +365,31 @@ extension JPEG.Data.Rectangular
 
         return planar.interleaved(cosite: cosited)
     }
-    /// func JPEG.Data.Rectangular.compress(path:quanta:)
-    /// throws
-    ///     Compresses a rectangular image to the given file path.
+    /// Compresses a rectangular image to the given file path.
     ///
-    ///     All metadata records in this image will be emitted at the beginning of
-    ///     the outputted file, in the order they appear in the [`metadata`] array.
+    /// All metadata records in this image will be emitted at the beginning of
+    /// the outputted file, in the order they appear in the ``metadata`` array.
     ///
-    ///     This function is a convenience function which calls [`decomposed()`]
-    ///     to obtain a planar image, and then calls [`(Planar).compress(path:quanta:)`]
-    ///     on the output.
+    /// This function is a convenience function which calls ``decomposed()``
+    /// to obtain a planar image, and then calls ``Planar/compress(path:quanta:)``
+    /// on the output.
     ///
-    ///     This function is only available on MacOS and Linux platforms.
-    /// - path      : Swift.String
+    /// This function is only available on MacOS and Linux platforms.
+    ///
+    /// -   Parameter path:
     ///     A file path.
-    /// - quanta: [JPEG.Table.Quantization.Key: [Swift.UInt16]]
-    ///     The quantum values for each quanta key used by this image’s [`layout`],
+    ///
+    /// -   Parameter quanta:
+    ///     The quantum values for each quanta key used by this image’s ``layout``,
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
-    ///     determined by this image’s [`layout``(Layout).format``(JPEG.Format).precision`],
+    ///     determined by this image’s `layout.format.precision`,
     ///     and all the values must be in the correct range for that bit width.
-    /// - ->        : Swift.Void?
-    ///     A [`Swift.Void`] tuple, or `nil` if the file could not be opened at
+    ///
+    /// -   Returns:
+    ///     A ``Void`` tuple, or `nil` if the file could not be opened at
     ///     the given file path.
-    /// #  [See also](rectangular-save-image)
-    /// ## (1:rectangular-save-image)
     public
     func compress(path:String, quanta:[JPEG.Table.Quantization.Key: [UInt16]]) throws
         -> Void?
