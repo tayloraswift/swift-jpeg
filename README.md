@@ -14,7 +14,7 @@ Swift *JPEG* is available under the [Mozilla Public License 2.0](https://www.moz
 
 <div align="center">
 
-[documentation](https://swiftinit.org/hist/swift-jpeg:master/jpeg) ·
+[documentation](https://swiftinit.org/docs/swift-jpeg/jpeg) ·
 [license](LICENSE)
 
 </div>
@@ -35,7 +35,7 @@ The swift-jpeg library requires Swift 5.10 or later.
 | 🍏 Darwin (watchOS) | [![watchOS](https://github.com/tayloraswift/swift-jpeg/actions/workflows/watchOS.yml/badge.svg)](https://github.com/tayloraswift/swift-jpeg/actions/workflows/watchOS.yml) |
 
 
-[Check deployment minimums](https://swiftinit.org/hist/swift-jpeg:master#ss:platform-requirements)
+[Check deployment minimums](https://swiftinit.org/docs/swift-jpeg#ss:platform-requirements)
 
 
 ## [tutorials and example programs](examples/)
@@ -50,18 +50,18 @@ The swift-jpeg library requires Swift 5.10 or later.
 * [lossless rotations](examples#lossless-rotations)
 * [custom color formats](examples#custom-color-formats)
 
-## [api reference](https://swiftinit.org/hist/swift-jpeg:master/jpeg/)
+## [api reference](https://swiftinit.org/docs/swift-jpeg/jpeg/)
 
-* [`JPEG.JPEG`](https://swiftinit.org/hist/swift-jpeg:master/jpeg/JPEG/)
-* [`JPEG.General`](https://swiftinit.org/hist/swift-jpeg:master/jpeg/General/)
-* [`JPEG.System`](https://swiftinit.org/hist/swift-jpeg:master/jpeg/System/)
+* [`JPEG.JPEG`](https://swiftinit.org/docs/swift-jpeg/jpeg/jpeg)
+* [`JPEG.General`](https://swiftinit.org/docs/swift-jpeg/jpeg/general)
+* [`JPEG.System`](https://swiftinit.org/docs/swift-jpeg/jpegsystem/system)
 
 ## getting started
 
 To Swift *JPEG* in a project, add this descriptor to the `dependencies` list in your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/tayloraswift/swift-jpeg", from: "1.0.0")
+.package(url: "https://github.com/tayloraswift/swift-jpeg", from: "2.0.0")
 ```
 
 ## basic usage
