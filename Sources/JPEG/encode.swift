@@ -340,7 +340,7 @@ extension JPEG.Data.Planar
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
-    ///     determined by this image’s [`layout``(Layout).format``(JPEG.Format).precision`],
+    ///     determined by this image’s `layout.format.precision`,
     ///     and all the values must be in the correct range for that bit width.
     ///
     /// -   Returns:
@@ -439,7 +439,7 @@ extension JPEG.Data.Rectangular
     ///
     /// -   Parameter pixels:
     ///     An array of pixels, in row major order, and without
-    ///     padding. The array must have exactly [`size`x`]\ ×\ [`size`y`] pixels.
+    ///     padding. The array must have exactly `x`\ ×\ `y` pixels.
     ///
     /// -   Returns:
     ///     A rectangular image.
@@ -1981,7 +1981,7 @@ extension JPEG.Data.Planar
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
-    ///     determined by this image’s [`layout``(Layout).format``(JPEG.Format).precision`],
+    ///     determined by this image’s `layout.format.precision`,
     ///     and all the values must be in the correct range for that bit width.
     public
     func compress<Destination>(stream:inout Destination,
@@ -2010,7 +2010,7 @@ extension JPEG.Data.Rectangular
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
-    ///     determined by this image’s [`layout``(Layout).format``(JPEG.Format).precision`],
+    ///     determined by this image’s `layout.format.precision`,
     ///     and all the values must be in the correct range for that bit width.
     public
     func compress<Destination>(stream:inout Destination,

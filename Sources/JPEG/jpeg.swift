@@ -875,15 +875,15 @@ extension JPEG
         /// A quantization table.
         ///
         /// Quantization tables store 64 coefficient quanta. The quantum values
-        /// can be accessed using either a zigzag index with the [`(Quantization).[z:]`]
-        /// subscript, or grid indices with the [`(Quantization).[k:h:]`] subscript.
+        /// can be accessed using either a zigzag index with the ``Quantization/subscript(z:)``
+        /// subscript, or grid indices with the ``Quantization/subscript(k:h:)`` subscript.
         public
         struct Quantization:AnyTable
         {
             /// A unique identifier assigned to each quantization table in an image.
             ///
-            /// Quanta keys are numeric values ranging from [`Swift.Int`min`]
-            /// to [`Swift.Int`max`]. In these reference pages, quanta keys
+            /// Quanta keys are numeric values ranging from ``Int.min``
+            /// to ``Int.max``. In these reference pages, quanta keys
             /// in their numerical representation are written in **boldface**.
             public
             struct Key:Hashable, Comparable, Sendable
@@ -1002,7 +1002,7 @@ extension JPEG
         ///
         /// This property specifies a range of bit indices, where bit zero is
         /// the least significant bit. The upper range bound is always either
-        /// infinity ([`Swift.Int`max`]) or one greater than the lower bound.
+        /// infinity ``Int.max`` or one greater than the lower bound.
         /// If the image coding process is not ``Process/progressive(coding:differential:)``,
         /// this value will be `0 ..< .max`.
         public
@@ -1031,7 +1031,7 @@ extension JPEG
     /// This structure records both the *recognized components* and
     /// the *resident components* in an image. We draw this distinction because
     /// the ``Layout/planes`` property is allowed to include definitions for components
-    /// that are not part of [`(Layout).format``(Format).components`].
+    /// that are not part of `format.components`.
     /// Such components will not recieve a plane in the ``JPEG/Data`` types,
     /// but will be ignored by the scan decoder without errors.
     ///

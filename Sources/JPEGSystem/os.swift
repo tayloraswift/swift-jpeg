@@ -237,7 +237,7 @@ extension JPEG.Data.Spectral
     /// Decompresses a spectral image from the given file path.
     ///
     /// Calling this function is equivalent to calling ``System.File.Source.open(path:_:)``
-    /// with the closure parameter set to [`Self``decompress(stream:)`].
+    /// with the closure parameter set to ``decompress(stream:)``.
     ///
     /// This function is only available on MacOS and Linux platforms.
     ///
@@ -258,7 +258,7 @@ extension JPEG.Data.Spectral
     /// the outputted file, in the order they appear in the ``metadata`` array.
     ///
     /// Calling this function is equivalent to calling ``System.File.Destination.open(path:_:)``
-    /// with the closure parameter set to [`Self``compress(stream:)`].
+    /// with the closure parameter set to ``compress(stream:)``.
     ///
     /// This function is only available on MacOS and Linux platforms.
     ///
@@ -319,7 +319,7 @@ extension JPEG.Data.Planar
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
-    ///     determined by this image’s [`layout``(Layout).format``(JPEG.Format).precision`],
+    ///     determined by this image’s `layout.format.precision`,
     ///     and all the values must be in the correct range for that bit width.
     ///
     /// -   Returns:
@@ -384,7 +384,7 @@ extension JPEG.Data.Rectangular
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
-    ///     determined by this image’s [`layout``(Layout).format``(JPEG.Format).precision`],
+    ///     determined by this image’s `layout.format.precision`,
     ///     and all the values must be in the correct range for that bit width.
     ///
     /// -   Returns:

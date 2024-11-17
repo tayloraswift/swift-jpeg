@@ -526,7 +526,7 @@ extension JPEG.EXIF
     ///     index range of ``storage``.
     ///
     /// -   Parameter _:
-    ///     This parameter must be set to [`Swift.UInt8`self`].
+    ///     This parameter must be set to `UInt8.self`.
     ///
     /// -   Returns:
     ///     The ``FieldType/uint8`` value.
@@ -542,7 +542,7 @@ extension JPEG.EXIF
     ///     it must be within the index range of ``storage``.
     ///
     /// -   Parameter _:
-    ///     This parameter must be set to [`Swift.UInt16`self`].
+    ///     This parameter must be set to `UInt16.self`.
     ///
     /// -   Returns:
     ///     The ``FieldType/uint16`` value, loaded according to the ``endianness``
@@ -567,7 +567,7 @@ extension JPEG.EXIF
     ///     addresses after it must be within the index range of ``storage``.
     ///
     /// -   Parameter _:
-    ///     This parameter must be set to [`Swift.UInt32`self`].
+    ///     This parameter must be set to `UInt32.self`.
     ///
     /// -   Returns:
     ///     The ``FieldType/uint32`` value, loaded according to the ``endianness``

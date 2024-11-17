@@ -826,7 +826,7 @@ extension JPEG.Header.Scan
     ///
     /// -   Parameter bits:
     ///     The bit range encoded by the scan, where bit zero is the least significant
-    ///     bit. The upper range bound must be either infinity ([`Swift.Int`max`])
+    ///     bit. The upper range bound must be either infinity (``Int.max``)
     ///     or one greater than the lower bound. If the `process` is not
     ///     ``Process/progressive(coding:differential:)``, this value must
     ///     be set to `0 ..< .max`.
@@ -1448,7 +1448,7 @@ extension JPEG.Data
         /// and vertical directions.
         ///
         /// The size of the minimum-coded unit, in 8×8 blocks of pixels,
-        /// is given by [`layout``(Layout).scale`].
+        /// is given by ``layout`` → ``Layout/scale``.
         public private(set)
         var blocks:(x:Int, y:Int)
         /// The layout of this image.
@@ -1604,9 +1604,9 @@ extension JPEG.Data
         /// -   Parameter values:
         ///     An array of interleaved samples, in row major order, and without
         ///     padding. The array must have exactly
-        ///     [`layout``(Layout).recognized`count`]\ ×\ [`size`x`]\ ×\ [`size`y`] samples.
+        ///     `layout.recognized.count`\ ×\ `x`\ ×\ `y` samples.
         ///     Each ``UInt16`` is one sample. The samples should not be
-        ///     normalized, so an image with a [`layout``(Layout).format``(Format).precision`] of
+        ///     normalized, so an image with a `layout.format.precision` of
         ///     8 should only have samples in the range `0 ... 255`.
         public
         init(size:(x:Int, y:Int),
@@ -1754,7 +1754,7 @@ extension JPEG.Data.Spectral:RandomAccessCollection
     /// The index one greater than the index of the last plane in this image.
     ///
     /// This index is always the number of recognized components in the image’s
-    /// [`layout``(JPEG.Layout).format`].
+    /// `layout.format`.
     public
     var endIndex:Int
     {
@@ -1812,7 +1812,7 @@ extension JPEG.Data.Planar:RandomAccessCollection
     /// The index one greater than the index of the last plane in this image.
     ///
     /// This index is always the number of recognized components in the image’s
-    /// [`layout``(JPEG.Layout).format`].
+    /// `layout.format`.
     public
     var endIndex:Int
     {
@@ -2376,7 +2376,7 @@ extension JPEG.Data.Spectral
     ///     including quanta keys used only by non-recognized components. Each
     ///     array of quantum values must have exactly 64 elements. The quantization
     ///     tables created from these values will be encoded using integers with a bit width
-    ///     determined by this image’s [`layout``(Layout).format``(JPEG.Format).precision`],
+    ///     determined by this image’s `layout.format.precision`,
     ///     and all the values must be in the correct range for that bit width.
     public mutating
     func set(quanta:[JPEG.Table.Quantization.Key: [UInt16]])
@@ -2501,7 +2501,7 @@ extension JPEG.Data.Planar
     ///
     /// This initializer will initialize all samples in all planes to the
     /// midpoint of this image’s sample range. The midpoint is equal to
-    /// 2^*w*\ –\ 1^, where *w*\ =\ [`layout``(Layout).format``(JPEG.Format).precision`].
+    /// 2^*w*\ –\ 1^, where *w*\ =\ `layout.format.precision`.
     ///
     /// -   Parameter size:
     ///     The size of the image, in pixels. Both dimensions must be positive,
@@ -2529,7 +2529,7 @@ extension JPEG.Data.Rectangular
     ///
     /// This initializer will initialize all samples to the
     /// midpoint of this image’s sample range. The midpoint is equal to
-    /// 2^*w*\ –\ 1^, where *w*\ =\ [`layout``(Layout).format``(JPEG.Format).precision`].
+    /// 2^*w*\ –\ 1^, where *w*\ =\ `layout.format.precision`.
     ///
     /// -   Parameter size:
     ///     The size of the image, in pixels. Both dimensions must be positive,
