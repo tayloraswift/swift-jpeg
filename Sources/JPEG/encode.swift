@@ -1798,36 +1798,34 @@ extension JPEG.Header.Scan
 
 // formatters (opposite of lexers)
 
-/// A destination bytestream.
-///
-/// To implement a custom data destination type, conform it to this protocol by
-/// implementing ``Destination/write(_:)``. It can
-/// then be used with the library’s core compression interfaces.
-public
-protocol _JPEGBytestreamDestination
-{
-    /// Attempts to write the given bytes to this stream.
-    ///
-    /// A successful call to this function should affect the bytestream state
-    /// such that subsequent calls should pick up where the last call left off.
-    ///
-    /// The rest of the library interprets a `nil` return value from this function
-    /// as indicating a write failure.
-    ///
-    /// -   Parameter bytes:
-    ///     The bytes to write.
-    ///
-    /// -   Returns:
-    ///     A ``Void`` tuple, or `nil` if the write attempt failed. This
-    ///     method should return `nil` even if any number of bytes less than
-    ///     `bytes.count` were successfully written.
-    mutating
-    func write(_ bytes:[UInt8]) -> Void?
-}
 extension JPEG.Bytestream
 {
+    /// A destination bytestream.
+    ///
+    /// To implement a custom data destination type, conform it to this protocol by
+    /// implementing ``Destination/write(_:)``. It can
+    /// then be used with the library’s core compression interfaces.
     public
-    typealias Destination = _JPEGBytestreamDestination
+    protocol Destination
+    {
+        /// Attempts to write the given bytes to this stream.
+        ///
+        /// A successful call to this function should affect the bytestream state
+        /// such that subsequent calls should pick up where the last call left off.
+        ///
+        /// The rest of the library interprets a `nil` return value from this function
+        /// as indicating a write failure.
+        ///
+        /// -   Parameter bytes:
+        ///     The bytes to write.
+        ///
+        /// -   Returns:
+        ///     A ``Void`` tuple, or `nil` if the write attempt failed. This
+        ///     method should return `nil` even if any number of bytes less than
+        ///     `bytes.count` were successfully written.
+        mutating
+        func write(_ bytes:[UInt8]) -> Void?
+    }
 }
 extension JPEG.Bytestream.Destination
 {

@@ -4,40 +4,38 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 // binary utilities
 
-/// A source bytestream.
-///
-/// To implement a custom data source type, conform it to this protocol by
-/// implementing ``Source/read(count:)``. It can
-/// then be used with the library’s core decompression interfaces.
-public
-protocol _JPEGBytestreamSource
-{
-    /// Attempts to read and return the given number of bytes from this stream.
-    ///
-    /// A successful call to this function should affect the bytestream state
-    /// such that subsequent calls should pick up where the last call left off.
-    ///
-    /// The rest of the library interprets a `nil` return value from this function
-    /// as indicating end-of-stream.
-    ///
-    /// -   Parameter count:
-    ///     The number of bytes to read.
-    ///
-    /// -   Returns:
-    ///     The `count` bytes read, or `nil` if the read attempt failed. This
-    ///     method should return `nil` even if any number of bytes less than `count`
-    ///     were successfully read.
-    mutating
-    func read(count:Int) -> [UInt8]?
-}
 extension JPEG
 {
     /// A namespace for bytestream utilities.
     public
     enum Bytestream
     {
+        /// A source bytestream.
+        ///
+        /// To implement a custom data source type, conform it to this protocol by
+        /// implementing ``Source/read(count:)``. It can
+        /// then be used with the library’s core decompression interfaces.
         public
-        typealias Source = _JPEGBytestreamSource
+        protocol Source
+        {
+            /// Attempts to read and return the given number of bytes from this stream.
+            ///
+            /// A successful call to this function should affect the bytestream state
+            /// such that subsequent calls should pick up where the last call left off.
+            ///
+            /// The rest of the library interprets a `nil` return value from this function
+            /// as indicating end-of-stream.
+            ///
+            /// -   Parameter count:
+            ///     The number of bytes to read.
+            ///
+            /// -   Returns:
+            ///     The `count` bytes read, or `nil` if the read attempt failed. This
+            ///     method should return `nil` even if any number of bytes less than `count`
+            ///     were successfully read.
+            mutating
+            func read(count:Int) -> [UInt8]?
+        }
     }
 }
 
@@ -183,25 +181,24 @@ extension JPEG.Bytestream.Source
 
 // parsing
 
-/// Functionality common to all bitstream symbols.
-public
-protocol _JPEGBitstreamAnySymbol:Hashable
-{
-    /// Creates a symbol instance.
-    ///
-    /// -   Parameter value:
-    ///     The byte value of this symbol.
-    init(_ value:UInt8)
-    /// The byte value of this symbol.
-    var value:UInt8
-    {
-        get
-    }
-}
 extension JPEG.Bitstream
 {
+    /// Functionality common to all bitstream symbols.
     public
-    typealias AnySymbol = _JPEGBitstreamAnySymbol
+    protocol AnySymbol:Hashable
+    {
+        /// Creates a symbol instance.
+        ///
+        /// -   Parameter value:
+        ///     The byte value of this symbol.
+        init(_ value:UInt8)
+        /// The byte value of this symbol.
+        var value:UInt8
+        {
+            get
+        }
+    }
+
     /// A namespace for bitstream symbol types.
     public
     enum Symbol
