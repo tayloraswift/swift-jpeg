@@ -1630,7 +1630,7 @@ extension JPEG.Data.Spectral.Quanta
     init(default:JPEG.Table.Quantization)
     {
         // generate the ‘default’ quantization table at `qi = -1`, `q = 0`
-        self.quanta = ``default``
+        self.quanta = [`default`]
         self.q      = [-1: 0]
     }
 
