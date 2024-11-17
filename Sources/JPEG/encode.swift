@@ -1818,7 +1818,7 @@ protocol _JPEGBytestreamDestination
     ///     The bytes to write.
     ///
     /// -   Returns:
-    ///     A [`Swift.Void`] tuple, or `nil` if the write attempt failed. This
+    ///     A ``Void`` tuple, or `nil` if the write attempt failed. This
     ///     method should return `nil` even if any number of bytes less than
     ///     `bytes.count` were successfully written.
     mutating

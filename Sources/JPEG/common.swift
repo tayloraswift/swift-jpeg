@@ -10,7 +10,7 @@ enum General
 
 extension General
 {
-    /// A property wrapper providing an immutable [`Swift.Int`] interface backed
+    /// A property wrapper providing an immutable ``Int`` interface backed
     /// by a different integer type.
     @propertyWrapper
     public
@@ -28,14 +28,14 @@ extension General
         {
             self.storage = .init(truncatingIfNeeded: wrappedValue)
         }
-        /// The value wrapped by this property wrapper, expanded to an [`Swift.Int`].
+        /// The value wrapped by this property wrapper, expanded to an ``Int``.
         public
         var wrappedValue:Int
         {
             .init(self.storage)
         }
     }
-    /// A property wrapper providing an immutable `(`[`Swift.Int`]`, `[`Swift.Int`]`)`
+    /// A property wrapper providing an immutable `(```Int```, ```Int```)`
     /// interface backed by a different integer type.
     @propertyWrapper
     public
@@ -58,14 +58,14 @@ extension General
             )
         }
         /// The values wrapped by this property wrapper, expanded to an
-        /// `(`[`Swift.Int`]`, `[`Swift.Int`]`)` tuple.
+        /// `(```Int```, ```Int```)` tuple.
         public
         var wrappedValue:(x:Int, y:Int)
         {
             (.init(self.storage.x), .init(self.storage.y))
         }
     }
-    /// A property wrapper providing a mutable [`Swift.Int`] interface backed
+    /// A property wrapper providing a mutable ``Int`` interface backed
     /// by a different integer type.
     @propertyWrapper
     public
@@ -83,7 +83,7 @@ extension General
         {
             self.storage = .init(truncatingIfNeeded: wrappedValue)
         }
-        /// The value wrapped by this property wrapper, expanded to an [`Swift.Int`].
+        /// The value wrapped by this property wrapper, expanded to an ``Int``.
         public
         var wrappedValue:Int
         {

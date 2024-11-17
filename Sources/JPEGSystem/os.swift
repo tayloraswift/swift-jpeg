@@ -203,7 +203,7 @@ extension System.File.Destination
     ///     The data to write.
     ///
     /// -   Returns:
-    ///     A [`Swift.Void`] tuple if the entire array argument could be written,
+    ///     A ``Void`` tuple if the entire array argument could be written,
     ///     or `nil` otherwise.
     public
     func write(_ buffer:[UInt8]) -> Void?
@@ -266,7 +266,7 @@ extension JPEG.Data.Spectral
     ///     A file path.
     ///
     /// -   Returns:
-    ///     A [`Swift.Void`] tuple, or `nil` if the file could not be opened at
+    ///     A ``Void`` tuple, or `nil` if the file could not be opened at
     ///     the given file path.
     public
     func compress(path:String) throws -> Void?
@@ -323,7 +323,7 @@ extension JPEG.Data.Planar
     ///     and all the values must be in the correct range for that bit width.
     ///
     /// -   Returns:
-    ///     A [`Swift.Void`] tuple, or `nil` if the file could not be opened at
+    ///     A ``Void`` tuple, or `nil` if the file could not be opened at
     ///     the given file path.
     public
     func compress(path:String, quanta:[JPEG.Table.Quantization.Key: [UInt16]]) throws
@@ -388,7 +388,7 @@ extension JPEG.Data.Rectangular
     ///     and all the values must be in the correct range for that bit width.
     ///
     /// -   Returns:
-    ///     A [`Swift.Void`] tuple, or `nil` if the file could not be opened at
+    ///     A ``Void`` tuple, or `nil` if the file could not be opened at
     ///     the given file path.
     public
     func compress(path:String, quanta:[JPEG.Table.Quantization.Key: [UInt16]]) throws

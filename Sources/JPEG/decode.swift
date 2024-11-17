@@ -411,7 +411,7 @@ extension JPEG.Table.Quantization
     /// -   Parameter values:
     ///     The quantum values, in zigzag order. This array must have exactly 64
     ///     elements. If the `precision` is ``Precision/uint8``, all of the values
-    ///     must be within the range of a [`Swift.UInt8`]. Passing an invalid
+    ///     must be within the range of a ``UInt8``. Passing an invalid
     ///     array will result in a precondition failure.
     ///
     /// -   Parameter target:
@@ -1379,7 +1379,7 @@ extension JPEG.Data
 
             /// The sampling factors of the color component this plane stores.
             ///
-            /// This property is backed by two [`Swift.Int16`]s to circumvent compiler
+            /// This property is backed by two ``Int16``s to circumvent compiler
             /// size limits for the `read` and `modify` accessors that the image
             /// planes are subscriptable through.
             @General.Storage2<Int16>
@@ -1497,7 +1497,7 @@ extension JPEG.Data
 
             /// The sampling factors of the color component this plane stores.
             ///
-            /// This property is backed by two [`Swift.Int32`]s to circumvent compiler
+            /// This property is backed by two ``Int32``s to circumvent compiler
             /// size limits for the `read` and `modify` accessors that the image
             /// planes are subscriptable through.
             @General.Storage2<Int32>
@@ -1605,7 +1605,7 @@ extension JPEG.Data
         ///     An array of interleaved samples, in row major order, and without
         ///     padding. The array must have exactly
         ///     [`layout``(Layout).recognized`count`]\ ×\ [`size`x`]\ ×\ [`size`y`] samples.
-        ///     Each [`Swift.UInt16`] is one sample. The samples should not be
+        ///     Each ``UInt16`` is one sample. The samples should not be
         ///     normalized, so an image with a [`layout``(Layout).format``(Format).precision`] of
         ///     8 should only have samples in the range `0 ... 255`.
         public
@@ -1676,7 +1676,7 @@ extension JPEG.Data.Spectral.Quanta:RandomAccessCollection
     /// The index of the first quantization table in this container.
     ///
     /// The default (all-zeroes) quantization table is not part of the
-    /// [`Swift.RandomAccessCollection`]. This index is 1 greater than the
+    /// ``RandomAccessCollection``. This index is 1 greater than the
     /// index of the default quanta.
     public
     var startIndex:Int
@@ -1767,7 +1767,7 @@ extension JPEG.Data.Spectral:RandomAccessCollection
     ///
     /// -   Parameter p:
     ///     The index of the plane to access. This index must be within the index
-    ///     bounds of this [`Swift.RandomAccessCollection`].
+    ///     bounds of this ``RandomAccessCollection``.
     ///
     /// -   Returns:
     ///     The plane.
@@ -1825,7 +1825,7 @@ extension JPEG.Data.Planar:RandomAccessCollection
     ///
     /// -   Parameter p:
     ///     The index of the plane to access. This index must be within the index
-    ///     bounds of this [`Swift.RandomAccessCollection`].
+    ///     bounds of this ``RandomAccessCollection``.
     ///
     /// -   Returns:
     ///     The plane.
@@ -1907,7 +1907,7 @@ extension JPEG.Data.Spectral.Plane
 {
     /// A two-dimensional index range encompassing the data units in this plane.
     ///
-    /// This index range is a [`Swift.Sequence`] which can be used to iterate
+    /// This index range is a ``Sequence`` which can be used to iterate
     /// through its index space in row-major order.
     public
     var indices:General.Range2<Int>
@@ -1919,7 +1919,7 @@ extension JPEG.Data.Planar.Plane
 {
     /// A two-dimensional index range encompassing the data units in this plane.
     ///
-    /// This index range is a [`Swift.Sequence`] which can be used to iterate
+    /// This index range is a ``Sequence`` which can be used to iterate
     /// through its index space in row-major order.
     public
     var indices:General.Range2<Int>

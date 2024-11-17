@@ -92,34 +92,34 @@ extension JPEG
         public
         enum FieldType
         {
-            /// A [`Swift.Unicode.ASCII.CodeUnit`] field.
+            /// A ``Unicode.ASCII.CodeUnit`` field.
             case ascii
-            /// A [`Swift.UInt8`] field.
+            /// A ``UInt8`` field.
             ///
             /// The [EXIF standard](https://www.exif.org/Exif2-2.PDF)
             /// refers to this variant type as a *byte*.
             case uint8
-            /// A [`Swift.UInt16`] field.
+            /// A ``UInt16`` field.
             ///
             /// The [EXIF standard](https://www.exif.org/Exif2-2.PDF)
             /// refers to this variant type as a *short*.
             case uint16
-            /// A [`Swift.UInt32`] field.
+            /// A ``UInt32`` field.
             ///
             /// The [EXIF standard](https://www.exif.org/Exif2-2.PDF)
             /// refers to this variant type as a *long*.
             case uint32
-            /// An [`Swift.Int32`] field.
+            /// An ``Int32`` field.
             ///
             /// The [EXIF standard](https://www.exif.org/Exif2-2.PDF)
             /// refers to this variant type as a *slong*.
             case int32
-            /// An unsigned fraction field, represented as two [`Swift.UInt32`]s.
+            /// An unsigned fraction field, represented as two ``UInt32``s.
             ///
             /// The [EXIF standard](https://www.exif.org/Exif2-2.PDF)
             /// refers to this variant type as a *rational*.
             case urational
-            /// A signed fraction field, represented as two [`Swift.Int32`]s.
+            /// A signed fraction field, represented as two ``Int32``s.
             ///
             /// The [EXIF standard](https://www.exif.org/Exif2-2.PDF)
             /// refers to this variant type as a *srational*.
@@ -158,7 +158,7 @@ extension JPEG
             let endianness:Endianness
 
             /// The contents of this field box, interpreted as a 32-bit internal
-            /// file pointer, and extended to the width of an [`Swift.Int`].
+            /// file pointer, and extended to the width of an ``Int``.
             public
             var asOffset:Int
             {
