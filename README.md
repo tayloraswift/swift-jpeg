@@ -10,7 +10,7 @@
 
 Swift *JPEG* is a cross-platform pure Swift framework for decoding, inspecting, editing, and encoding JPEG images. The core framework has no external dependencies, including *Foundation*, and should compile and provide consistent behavior on *all* Swift platforms. The framework supports additional features, such as file system support, on Linux and MacOS.
 
-Swift *JPEG* is available under the [Mozilla Public License 2.0](https://www.mozilla.org/en-US/MPL/2.0/). The [example programs](Snippets/) are public domain and can be adapted freely.
+Swift *JPEG* is available under the [Apache 2.0 License](LICENSE). The [example programs](Snippets/) are public domain and can be adapted freely.
 
 <div align="center">
 
