@@ -33,5 +33,5 @@
 ### Accessing samples
 
 -   ``stride``
--   ``subscript(x:y:p:)``
+-   ``subscript(x:y:_:)``
 -   ``offset(forKey:)``
