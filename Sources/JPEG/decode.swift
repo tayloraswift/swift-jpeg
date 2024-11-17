@@ -1280,7 +1280,7 @@ extension JPEG.Table.Quantization
 
     /// Accesses the quantum value at the given grid index.
     ///
-    /// Using this subscript is equivalent to using [`[z:]`] with the output
+    /// Using this subscript is equivalent to using ``subscript(z:)`` with the output
     /// of ``z(k:h:)``.
     ///
     /// -   Parameter k:
@@ -1724,7 +1724,7 @@ extension JPEG.Data.Spectral.Quanta:RandomAccessCollection
     ///     will result in a precondition failure.
     ///
     /// -   Returns:
-    ///     The integer index. This index can be used with the [`[_:]`] subscript.
+    ///     The integer index. This index can be used with the ``subscript(_:)`` subscript.
     public
     func index(forKey qi:JPEG.Table.Quantization.Key) -> Int
     {
@@ -1792,7 +1792,7 @@ extension JPEG.Data.Spectral:RandomAccessCollection
     ///
     /// -   Returns:
     ///     The integer index of the plane, or `nil`. If not `nil`, this index
-    ///     can be used with the [`[_:]`] subscript.
+    ///     can be used with the ``subscript(_:)`` subscript.
     public
     func index(forKey ci:JPEG.Component.Key) -> Int?
     {
@@ -1850,7 +1850,7 @@ extension JPEG.Data.Planar:RandomAccessCollection
     ///
     /// -   Returns:
     ///     The integer index of the plane, or `nil`. If not `nil`, this index
-    ///     can be used with the [`[_:]`] subscript.
+    ///     can be used with the ``subscript(_:)`` subscript.
     public
     func index(forKey ci:JPEG.Component.Key) -> Int?
     {
@@ -1895,7 +1895,7 @@ extension JPEG.Data.Rectangular
     ///
     /// -   Returns:
     ///     The interleaved offset of the channel, or `nil`. If not `nil`, this offset
-    ///     can be used as the `p` parameter to the [`[x:y:p:]`] subscript.
+    ///     can be used as the `p` parameter to the ``subscript(x:y:p:)`` subscript.
     public
     func offset(forKey ci:JPEG.Component.Key) -> Int?
     {
@@ -2192,7 +2192,7 @@ extension JPEG.Data.Spectral.Plane
     /// have no effect. The `k` and `h` indices still have to be within the
     /// correct range.
     ///
-    /// Using this subscript is equivalent to using [`[x:y:z:]`] with the `z`
+    /// Using this subscript is equivalent to using ``subscript(x:y:z:)`` with the `z`
     /// index set to the output of ``Table.Quantization.z(k:h:)``.
     ///
     /// -   Parameter x:
