@@ -210,7 +210,7 @@ extension JPEG
         /// The tag codes are listed in the [EXIF standard](https://www.exif.org/Exif2-2.PDF).
         /// The dictionary values are internal file pointers that can be
         /// dereferenced manually from the ``storage``; alternatively, the
-        /// [`[tag:]`] subscript can perform both the lookup and the dereferencing
+        /// ``subscript(tag:)`` subscript can perform both the lookup and the dereferencing
         /// in one step.
         public private(set)
         var tags:[UInt16: Int]
