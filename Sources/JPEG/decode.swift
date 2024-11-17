@@ -1892,7 +1892,7 @@ extension JPEG.Data.Rectangular
     ///
     /// -   Returns:
     ///     The interleaved offset of the channel, or `nil`. If not `nil`, this offset
-    ///     can be used as the `p` parameter to the ``subscript(x:y:p:)`` subscript.
+    ///     can be used as the `p` parameter to the ``subscript(x:y:_:)`` subscript.
     public
     func offset(forKey ci:JPEG.Component.Key) -> Int?
     {
@@ -2003,7 +2003,7 @@ extension JPEG.Data.Planar
     ///     The return value of the given closure.
     public
     func read<R>(ci:JPEG.Component.Key,
-        body:(Plane) throws -> R)
+        _ body:(Plane) throws -> R)
         rethrows -> R
     {
         guard let p:Int = self.index(forKey: ci)
@@ -2030,7 +2030,7 @@ extension JPEG.Data.Planar
     ///     The return value of the given closure.
     public mutating
     func with<R>(ci:JPEG.Component.Key,
-        body:(inout Plane) throws -> R)
+        _ body:(inout Plane) throws -> R)
         rethrows -> R
     {
         guard let p:Int = self.index(forKey: ci)
@@ -3494,7 +3494,7 @@ extension JPEG.Context
     }
     /// Updates the decoder state with the given DC huffman table.
     ///
-    /// This method binds the table to its target ``Table.HuffmanDC/Selector``
+    /// This method binds the table to its target ``JPEG.AnyTable/Selector``
     /// within this instance.
     ///
     /// -   Parameter table:
@@ -3506,7 +3506,7 @@ extension JPEG.Context
     }
     /// Updates the decoder state with the given AC huffman table.
     ///
-    /// This method binds the table to its target ``Table.HuffmanAC/Selector``
+    /// This method binds the table to its target ``JPEG.AnyTable/Selector``
     /// within this instance.
     ///
     /// -   Parameter table:
@@ -3518,7 +3518,7 @@ extension JPEG.Context
     }
     /// Updates the decoder state with the given quantization table.
     ///
-    /// This method binds the table to its target ``Table.Quantization/Selector``
+    /// This method binds the table to its target ``JPEG.AnyTable/Selector``
     /// within this instance.
     ///
     /// -   Parameter table:
