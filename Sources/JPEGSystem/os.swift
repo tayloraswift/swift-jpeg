@@ -9,7 +9,7 @@ import JPEG
 #elseif os(Linux)
     import Glibc
 #else
-    #warning("unsupported or untested platform (please open an issue at https://github.com/kelvin13/jpeg/issues)")
+    #warning("unsupported or untested platform (please open an issue at https://github.com/tayloraswift/swift-jpeg/issues)")
 #endif
 
 #if os(macOS) || os(Linux)

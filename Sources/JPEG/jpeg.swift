@@ -1162,7 +1162,7 @@ extension JPEG.Layout
     /// It will also validate the scan headers against the `process` argument
     /// with ``Header.Scan/validate(process:band:bits:components:)``.
     /// Passing invalid scan headers will result in a precondition failure.
-    /// See the [advanced encoding](https://github.com/kelvin13/jpeg/tree/master/examples#advanced-encoding)
+    /// See the [advanced encoding](https://github.com/tayloraswift/swift-jpeg/tree/master/examples#advanced-encoding)
     /// library tutorial to learn more about the validation rules.
     ///
     /// -   Parameter format:

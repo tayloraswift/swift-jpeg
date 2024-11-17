@@ -3426,7 +3426,7 @@ extension JPEG
     ///
     /// The main use case for this type is to observe the visual state of a
     /// partially-decoded image, for example, when performing
-    /// [online decoding](https://github.com/kelvin13/jpeg/tree/master/examples#online-decoding).
+    /// [online decoding](https://github.com/tayloraswift/swift-jpeg/tree/master/examples#online-decoding).
     public
     struct Context<Format> where Format:JPEG.Format
     {
