@@ -1142,10 +1142,12 @@ extension JPEG.Layout
     /// Creates an image layout given image parameters and a scan decomposition.
     ///
     /// If the image coding process is a sequential process, the given scan headers
-    /// should be constructed using the ``JPEG.Header.Scan/sequential(_:) [8EG0R]``
+    /// should be constructed using the
+    /// ``JPEG.Header.Scan/sequential(_:) ((JPEG.Component.Key, JPEG.Table.HuffmanDC.Selector, JPEG.Table.HuffmanAC.Selector)...)``
     /// constructor. If the coding process is progressive, the scan headers
-    /// should be constructed with the ``JPEG.Header.Scan/progressive(_:bits:) [4VRKH]``,
-    /// ``JPEG.Header.Scan/progressive(_:bit:) [6Z2C2]``,
+    /// should be constructed with the
+    /// ``JPEG.Header.Scan/progressive(_:bits:) ((JPEG.Component.Key, JPEG.Table.HuffmanDC.Selector)..., _)``,
+    /// ``JPEG.Header.Scan/progressive(_:bit:) (JPEG.Component.Key..., _)``,
     /// ``JPEG.Header.Scan/progressive(_:band:bits:)``, or
     /// ``JPEG.Header.Scan/progressive(_:band:bit:)`` constructors.
     ///
@@ -1478,7 +1480,8 @@ extension JPEG.Header.Scan
     }
     /// Creates a sequential scan descriptor.
     ///
-    /// This function is variadic sugar for ``Scan/sequential(_:) [4K2XD]``.
+    /// This function is variadic sugar for
+    /// ``Scan/sequential(_:) ([(JPEG.Component.Key, JPEG.Table.HuffmanDC.Selector, JPEG.Table.HuffmanAC.Selector)])``.
     public static
     func sequential(_ components:
         (
@@ -1523,7 +1526,8 @@ extension JPEG.Header.Scan
     }
     /// Creates a progressive initial DC scan descriptor.
     ///
-    /// This function is variadic sugar for ``Scan/progressive(_:bits:) [4NV9J]``.
+    /// This function is variadic sugar for
+    /// ``Scan/progressive(_:bits:) ([(JPEG.Component.Key, JPEG.Table.HuffmanDC.Selector)], _)``.
     public static
     func progressive(_
         components:(ci:JPEG.Component.Key, dc:JPEG.Table.HuffmanDC.Selector)...,
@@ -1563,7 +1567,8 @@ extension JPEG.Header.Scan
     }
     /// Creates a progressive refining DC scan descriptor.
     ///
-    /// This function is variadic sugar for ``Scan/progressive(_:bit:) [404AZ]``.
+    /// This function is variadic sugar for
+    /// ``Scan/progressive(_:bit:) ([JPEG.Component.Key], _)``.
     public static
     func progressive(_
         components:JPEG.Component.Key...,
