@@ -7,7 +7,14 @@ on:
         branches: [ master ]
 
 jobs:
-    build:
-        uses: skiptools/swift-android-action@v2
-        with:
-            run-tests: false
+    android:
+        runs-on: ubuntu-24.04
+        name: Android
+
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v4
+            -   name: Build for Android
+                uses: skiptools/swift-android-action@v2
+                with:
+                    run-tests: false
