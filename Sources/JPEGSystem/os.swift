@@ -8,11 +8,13 @@ import JPEG
     import Darwin
 #elseif os(Linux)
     import Glibc
+#elseif os(Android)
+    import Android
 #else
     #warning("unsupported or untested platform (please open an issue at https://github.com/tayloraswift/swift-jpeg/issues)")
 #endif
 
-#if os(macOS) || os(Linux)
+#if os(macOS) || os(Linux) || os(Android)
 
 /// A namespace for platform-dependent functionality.
 ///
@@ -25,7 +27,11 @@ enum System
     public
     enum File
     {
+        #if os(Android)
+        typealias Descriptor = OpaquePointer
+        #else
         typealias Descriptor = UnsafeMutablePointer<FILE>
+        #endif
 
         /// A type for reading data from files on disk.
         public
@@ -102,7 +108,12 @@ extension System.File.Source
         {
             (buffer:inout UnsafeMutableBufferPointer<UInt8>, count:inout Int) in
 
-            count = fread(buffer.baseAddress, MemoryLayout<UInt8>.stride,
+            #if os(Android)
+            let baseAddress = buffer.baseAddress!
+            #else
+            let baseAddress = buffer.baseAddress
+            #endif
+            count = fread(baseAddress, MemoryLayout<UInt8>.stride,
                 capacity, self.descriptor)
         }
 
@@ -210,7 +221,12 @@ extension System.File.Destination
     {
         let count:Int = buffer.withUnsafeBufferPointer
         {
-            fwrite($0.baseAddress, MemoryLayout<UInt8>.stride,
+            #if os(Android)
+            let baseAddress = $0.baseAddress!
+            #else
+            let baseAddress = $0.baseAddress
+            #endif
+            return fwrite(baseAddress, MemoryLayout<UInt8>.stride,
                 $0.count, self.descriptor)
         }
 

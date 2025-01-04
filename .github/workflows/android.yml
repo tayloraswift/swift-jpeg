@@ -1,0 +1,13 @@
+name: Android
+
+on:
+    push:
+        branches: [ master ]
+    pull_request:
+        branches: [ master ]
+
+jobs:
+    build:
+        uses: skiptools/swift-android-action@v2
+        with:
+            run-tests: false
