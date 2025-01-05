@@ -1768,6 +1768,20 @@ extension JPEG.Data.Spectral:RandomAccessCollection
     ///
     /// -   Returns:
     ///     The plane.
+    #if os(Android) // workaround for an Android toolchain crash in `yield`
+    public
+    subscript(p:Int) -> Plane
+    {
+        get
+        {
+            self.planes[p]
+        }
+        set
+        {
+            self.planes[p] = newValue
+        }
+    }
+    #else
     public
     subscript(p:Int) -> Plane
     {
@@ -1780,6 +1794,7 @@ extension JPEG.Data.Spectral:RandomAccessCollection
             yield &self.planes[p]
         }
     }
+    #endif
     /// Returns the index of the plane storing the color channel represented
     /// by the given component key, or `nil` if the component key is a
     /// non-recognized component.
