@@ -6,8 +6,10 @@ import JPEG
 
 #if os(macOS)
     import Darwin
-#elseif os(Linux)
+#elseif canImport(Glibc)
     import Glibc
+#elseif canImport(Musl)
+    import Musl
 #elseif os(Android)
     import Android
 #else
