@@ -29,6 +29,7 @@ extension Test
             ("huffman-table-building",          .void(Self.huffmanBuilding)),
             ("huffman-table-coding-asymmetric", .void(Self.huffmanCoding)),
             ("huffman-table-coding-symmetric",  .int (Self.huffmanCodingSymmetric(_:), [16, 256, 4096, 65536])),
+            ("tables-before-sos",               .void(Self.tablesBeforeSOS)),
         ]
     }
 
@@ -497,6 +498,180 @@ extension Test
         {
             return .failure(.init(message:
                 "huffman coder failed to round-trip symbolic sequence (\(symbols.count) symbols)"))
+        }
+
+        return .success(())
+    }
+
+    // MARK: - Table placement tests
+
+    /// In-memory JPEG bytestream for encoding.
+    private
+    struct Blob:JPEG.Bytestream.Destination
+    {
+        var data:[UInt8] = []
+
+        mutating
+        func write(_ bytes:[UInt8]) -> Void?
+        {
+            self.data.append(contentsOf: bytes)
+            return ()
+        }
+    }
+
+    /// Scan raw JPEG bytes for marker positions.
+    /// Returns an array of (marker-code, byte-offset) pairs.
+    private
+    static func markers(in data:[UInt8]) -> [(marker:UInt8, offset:Int)]
+    {
+        var result:[(marker:UInt8, offset:Int)] = []
+        var i:Int = 0
+        while i < data.count - 1
+        {
+            guard data[i] == 0xFF
+            else
+            {
+                i += 1
+                continue
+            }
+
+            let marker:UInt8 = data[i + 1]
+            // skip padding and stuffed bytes
+            if marker == 0x00 || marker == 0xFF
+            {
+                i += 1
+                continue
+            }
+
+            result.append((marker, i))
+
+            // standalone markers (no length field)
+            if marker == 0xD8 || marker == 0xD9 || (marker >= 0xD0 && marker <= 0xD7)
+            {
+                i += 2
+                continue
+            }
+
+            // read length and skip payload
+            guard i + 3 < data.count
+            else
+            {
+                break
+            }
+            let length:Int = Int(data[i + 2]) << 8 | Int(data[i + 3])
+
+            // for SOS, skip past entropy-coded data
+            if marker == 0xDA
+            {
+                i += 2 + length
+                while i < data.count - 1
+                {
+                    if data[i] == 0xFF && data[i + 1] != 0x00 && data[i + 1] != 0xFF
+                    {
+                        break
+                    }
+                    i += 1
+                }
+            }
+            else
+            {
+                i += 2 + length
+            }
+        }
+        return result
+    }
+
+    /// Verify that all DQT and DHT markers appear before the first SOS marker
+    /// when encoding a baseline JPEG with multiple scans.
+    ///
+    /// Apple's ImageIO (CGImageSourceCreateImageAtIndex) rejects baseline JPEGs
+    /// that contain table-definition markers (DQT, DHT) between SOS markers.
+    /// While ITU-T T.81 technically permits inter-scan table definitions, many
+    /// real-world decoders — including iOS/macOS ImageIO — do not accept them
+    /// in baseline sequential JPEGs.
+    static
+    func tablesBeforeSOS() -> Result<Void, Failure>
+    {
+        // Encode a 256×256 image using the exact layout that triggered the bug:
+        // Baseline YCbCr 4:2:0, separate scans for Y and Cb+Cr.
+        let width:Int  = 256
+        let height:Int = 256
+
+        // Simple gradient pattern (any pattern reproduces the issue)
+        var pixels:[JPEG.RGB] = []
+        pixels.reserveCapacity(width * height)
+        for y:Int in 0 ..< height
+        {
+            for x:Int in 0 ..< width
+            {
+                pixels.append(.init(
+                    UInt8(truncatingIfNeeded: x),
+                    UInt8(truncatingIfNeeded: y),
+                    UInt8(truncatingIfNeeded: x &+ y)))
+            }
+        }
+
+        let layout:JPEG.Layout<JPEG.Common> = .init(
+            format:     .ycc8,
+            process:    .baseline,
+            components:
+            [
+                1: (factor: (2, 2), qi: 0 as JPEG.Table.Quantization.Key),
+                2: (factor: (1, 1), qi: 1 as JPEG.Table.Quantization.Key),
+                3: (factor: (1, 1), qi: 1 as JPEG.Table.Quantization.Key),
+            ],
+            scans:
+            [
+                .sequential((1, \.0, \.0)),
+                .sequential((2, \.1, \.1), (3, \.1, \.1)),
+            ])
+
+        let image:JPEG.Data.Rectangular<JPEG.Common> = .pack(
+            size:       (x: width, y: height),
+            layout:     layout,
+            metadata:   [],
+            pixels:     pixels)
+
+        var blob:Blob = .init()
+        do
+        {
+            try image.compress(stream: &blob, quanta:
+            [
+                0: JPEG.CompressionLevel.luminance(  1.0).quanta,
+                1: JPEG.CompressionLevel.chrominance(1.0).quanta,
+            ])
+        }
+        catch
+        {
+            return .failure(.init(message:
+                "encoding failed: \(error)"))
+        }
+
+        // Parse JPEG markers and verify table placement
+        let found:[(marker:UInt8, offset:Int)] = Self.markers(in: blob.data)
+
+        guard let firstSOSIndex:Int = found.firstIndex(where: { $0.marker == 0xDA })
+        else
+        {
+            return .failure(.init(message:
+                "encoded JPEG contains no SOS marker"))
+        }
+
+        // Check for DQT (0xDB) or DHT (0xC4) markers after the first SOS
+        for (marker, offset):(UInt8, Int) in found[found.index(after: firstSOSIndex)...]
+        {
+            if marker == 0xDB
+            {
+                return .failure(.init(message:
+                    "DQT marker at byte offset \(offset) appears after first SOS marker (at byte offset \(found[firstSOSIndex].offset)); "
+                    + "Apple ImageIO rejects baseline JPEGs with inter-scan table definitions"))
+            }
+            if marker == 0xC4
+            {
+                return .failure(.init(message:
+                    "DHT marker at byte offset \(offset) appears after first SOS marker (at byte offset \(found[firstSOSIndex].offset)); "
+                    + "Apple ImageIO rejects baseline JPEGs with inter-scan table definitions"))
+            }
         }
 
         return .success(())

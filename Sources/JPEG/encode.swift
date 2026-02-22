@@ -1925,33 +1925,103 @@ extension JPEG.Data.Spectral
 
         let frame:JPEG.Header.Frame = self.encode()
         try stream.format(marker: .frame(frame.process), tail: frame.serialized())
-        for (qi, scans):([JPEG.Table.Quantization.Key], [JPEG.Scan]) in
-            self.layout.definitions
+
+        switch frame.process
         {
-            let quanta:[JPEG.Table.Quantization] = qi.map
+        case .progressive:
+            // Progressive JPEGs may redefine tables between scans (e.g.
+            // between successive-approximation passes).  Keep the existing
+            // interleaved table/scan emission order.
+            for (qi, scans):([JPEG.Table.Quantization.Key], [JPEG.Scan]) in
+                self.layout.definitions
             {
-                self.quanta[self.quanta.index(forKey: $0)]
-            }
-
-            if !quanta.isEmpty
-            {
-                try stream.format(marker: .quantization, tail: JPEG.Table.serialize(quanta))
-            }
-
-            for scan:JPEG.Scan in scans
-            {
-                let dc:[JPEG.Table.HuffmanDC],
-                    ac:[JPEG.Table.HuffmanAC],
-                    header:JPEG.Header.Scan,
-                    ecs:[UInt8]
-
-                (dc, ac, header, ecs) = self.encode(scan: scan)
-
-                if !dc.isEmpty || !ac.isEmpty
+                let quanta:[JPEG.Table.Quantization] = qi.map
                 {
-                    try stream.format(marker: .huffman, tail: JPEG.Table.serialize(dc, ac))
+                    self.quanta[self.quanta.index(forKey: $0)]
                 }
 
+                if !quanta.isEmpty
+                {
+                    try stream.format(marker: .quantization,
+                        tail: JPEG.Table.serialize(quanta))
+                }
+
+                for scan:JPEG.Scan in scans
+                {
+                    let dc:[JPEG.Table.HuffmanDC],
+                        ac:[JPEG.Table.HuffmanAC],
+                        header:JPEG.Header.Scan,
+                        ecs:[UInt8]
+
+                    (dc, ac, header, ecs) = self.encode(scan: scan)
+
+                    if !dc.isEmpty || !ac.isEmpty
+                    {
+                        try stream.format(marker: .huffman,
+                            tail: JPEG.Table.serialize(dc, ac))
+                    }
+
+                    try stream.format(marker: .scan, tail: header.serialized())
+                    try stream.format(prefix: ecs)
+                }
+            }
+
+        default:
+            // For baseline, extended, and lossless processes, emit all table
+            // definitions (DQT, DHT) before the first SOS marker.
+            //
+            // While ITU-T T.81 technically permits inter-scan table
+            // definitions for all processes, many real-world decoders —
+            // notably Apple's ImageIO (CGImageSourceCreateImageAtIndex) —
+            // reject baseline JPEGs that contain DQT or DHT markers between
+            // SOS markers, returning error -59.
+
+            // 1.  Emit all quantization tables.
+            let allQuanta:[JPEG.Table.Quantization] = self.layout.definitions.flatMap
+            {
+                (qi, _) in qi.map
+                {
+                    self.quanta[self.quanta.index(forKey: $0)]
+                }
+            }
+
+            if !allQuanta.isEmpty
+            {
+                try stream.format(marker: .quantization,
+                    tail: JPEG.Table.serialize(allQuanta))
+            }
+
+            // 2.  Pre-encode every scan so we can emit all Huffman tables
+            //     before any entropy-coded segment.
+            var encodedScans:
+            [(
+                dc:     [JPEG.Table.HuffmanDC],
+                ac:     [JPEG.Table.HuffmanAC],
+                header: JPEG.Header.Scan,
+                ecs:    [UInt8]
+            )] = []
+            for (_, scans):([JPEG.Table.Quantization.Key], [JPEG.Scan]) in
+                self.layout.definitions
+            {
+                for scan:JPEG.Scan in scans
+                {
+                    encodedScans.append(self.encode(scan: scan))
+                }
+            }
+
+            // 3.  Emit all Huffman tables.
+            for (dc, ac, _, _) in encodedScans
+            {
+                if !dc.isEmpty || !ac.isEmpty
+                {
+                    try stream.format(marker: .huffman,
+                        tail: JPEG.Table.serialize(dc, ac))
+                }
+            }
+
+            // 4.  Emit all scan headers and entropy-coded segments.
+            for (_, _, header, ecs) in encodedScans
+            {
                 try stream.format(marker: .scan, tail: header.serialized())
                 try stream.format(prefix: ecs)
             }
