@@ -1925,35 +1925,182 @@ extension JPEG.Data.Spectral
 
         let frame:JPEG.Header.Frame = self.encode()
         try stream.format(marker: .frame(frame.process), tail: frame.serialized())
-        for (qi, scans):([JPEG.Table.Quantization.Key], [JPEG.Scan]) in
-            self.layout.definitions
+
+        switch frame.process
         {
-            let quanta:[JPEG.Table.Quantization] = qi.map
+        case .progressive:
+            // Progressive JPEGs may redefine tables between scans (e.g.
+            // between successive-approximation passes).  Keep the existing
+            // interleaved table/scan emission order.
+            for (qi, scans):([JPEG.Table.Quantization.Key], [JPEG.Scan]) in
+                self.layout.definitions
             {
-                self.quanta[self.quanta.index(forKey: $0)]
-            }
-
-            if !quanta.isEmpty
-            {
-                try stream.format(marker: .quantization, tail: JPEG.Table.serialize(quanta))
-            }
-
-            for scan:JPEG.Scan in scans
-            {
-                let dc:[JPEG.Table.HuffmanDC],
-                    ac:[JPEG.Table.HuffmanAC],
-                    header:JPEG.Header.Scan,
-                    ecs:[UInt8]
-
-                (dc, ac, header, ecs) = self.encode(scan: scan)
-
-                if !dc.isEmpty || !ac.isEmpty
+                let quanta:[JPEG.Table.Quantization] = qi.map
                 {
-                    try stream.format(marker: .huffman, tail: JPEG.Table.serialize(dc, ac))
+                    self.quanta[self.quanta.index(forKey: $0)]
                 }
 
-                try stream.format(marker: .scan, tail: header.serialized())
-                try stream.format(prefix: ecs)
+                if !quanta.isEmpty
+                {
+                    try stream.format(marker: .quantization,
+                        tail: JPEG.Table.serialize(quanta))
+                }
+
+                for scan:JPEG.Scan in scans
+                {
+                    let dc:[JPEG.Table.HuffmanDC],
+                        ac:[JPEG.Table.HuffmanAC],
+                        header:JPEG.Header.Scan,
+                        ecs:[UInt8]
+
+                    (dc, ac, header, ecs) = self.encode(scan: scan)
+
+                    if !dc.isEmpty || !ac.isEmpty
+                    {
+                        try stream.format(marker: .huffman,
+                            tail: JPEG.Table.serialize(dc, ac))
+                    }
+
+                    try stream.format(marker: .scan, tail: header.serialized())
+                    try stream.format(prefix: ecs)
+                }
+            }
+
+        default:
+            // For baseline, extended, and lossless processes, emit all table
+            // definitions (DQT, DHT) before the first SOS marker.
+            //
+            // While ITU-T T.81 technically permits inter-scan table
+            // definitions for all processes, many real-world decoders —
+            // notably Apple's ImageIO (CGImageSourceCreateImageAtIndex) —
+            // reject baseline JPEGs that contain DQT or DHT markers between
+            // SOS markers, returning error -59.
+
+            // Pre-encode every scan, preserving definition-group association
+            // so we can fall back to interleaved emission if needed.
+            var encodedGroups:
+            [(
+                quanta: [JPEG.Table.Quantization],
+                scans:
+                [(
+                    dc:     [JPEG.Table.HuffmanDC],
+                    ac:     [JPEG.Table.HuffmanAC],
+                    header: JPEG.Header.Scan,
+                    ecs:    [UInt8]
+                )]
+            )] = []
+            for (qi, scans):([JPEG.Table.Quantization.Key], [JPEG.Scan]) in
+                self.layout.definitions
+            {
+                let quanta:[JPEG.Table.Quantization] = qi.map
+                {
+                    self.quanta[self.quanta.index(forKey: $0)]
+                }
+                var encoded:
+                [(
+                    dc:     [JPEG.Table.HuffmanDC],
+                    ac:     [JPEG.Table.HuffmanAC],
+                    header: JPEG.Header.Scan,
+                    ecs:    [UInt8]
+                )] = []
+                for scan:JPEG.Scan in scans
+                {
+                    encoded.append(self.encode(scan: scan))
+                }
+                encodedGroups.append((quanta: quanta, scans: encoded))
+            }
+
+            // Check whether any Huffman table selector is reused across
+            // scans.  When selectors collide, we cannot pre-emit all
+            // Huffman tables because later tables would overwrite earlier
+            // ones for the same slot, corrupting earlier scans.
+            var seenDC:Set<UInt8> = [],
+                seenAC:Set<UInt8> = []
+            var selectorsCollide:Bool = false
+            for (_, scans) in encodedGroups
+            {
+                for (dc, ac, _, _) in scans
+                {
+                    for table:JPEG.Table.HuffmanDC in dc
+                    where !seenDC.insert(
+                        JPEG.Table.HuffmanDC.serialize(
+                            selector: table.target)).inserted
+                    {
+                        selectorsCollide = true
+                    }
+                    for table:JPEG.Table.HuffmanAC in ac
+                    where !seenAC.insert(
+                        JPEG.Table.HuffmanAC.serialize(
+                            selector: table.target)).inserted
+                    {
+                        selectorsCollide = true
+                    }
+                }
+            }
+
+            if selectorsCollide
+            {
+                // Selectors are reused across scans — fall back to
+                // per-scan table emission, matching the progressive path.
+                // This preserves correctness for non-Apple decoders.
+                // (Apple ImageIO will still reject inter-scan table
+                // markers for baseline, but that is inherent to the
+                // selector-reuse configuration and cannot be fixed
+                // without building cross-scan merged Huffman tables.)
+                for (quanta, scans) in encodedGroups
+                {
+                    if !quanta.isEmpty
+                    {
+                        try stream.format(marker: .quantization,
+                            tail: JPEG.Table.serialize(quanta))
+                    }
+                    for (dc, ac, header, ecs) in scans
+                    {
+                        if !dc.isEmpty || !ac.isEmpty
+                        {
+                            try stream.format(marker: .huffman,
+                                tail: JPEG.Table.serialize(dc, ac))
+                        }
+                        try stream.format(marker: .scan,
+                            tail: header.serialized())
+                        try stream.format(prefix: ecs)
+                    }
+                }
+            }
+            else
+            {
+                // No selector collision — safe to pre-emit all tables.
+
+                // 1.  Emit all quantization tables.
+                for (quanta, _) in encodedGroups where !quanta.isEmpty
+                {
+                    try stream.format(marker: .quantization,
+                        tail: JPEG.Table.serialize(quanta))
+                }
+
+                // 2.  Emit all Huffman tables.
+                for (_, scans) in encodedGroups
+                {
+                    for (dc, ac, _, _) in scans
+                    {
+                        if !dc.isEmpty || !ac.isEmpty
+                        {
+                            try stream.format(marker: .huffman,
+                                tail: JPEG.Table.serialize(dc, ac))
+                        }
+                    }
+                }
+
+                // 3.  Emit all scan headers and entropy-coded segments.
+                for (_, scans) in encodedGroups
+                {
+                    for (_, _, header, ecs) in scans
+                    {
+                        try stream.format(marker: .scan,
+                            tail: header.serialized())
+                        try stream.format(prefix: ecs)
+                    }
+                }
             }
         }
 
