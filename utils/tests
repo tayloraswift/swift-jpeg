@@ -1,6 +1,29 @@
 #!/bin/bash
+SCRIPT_NAME="tests"
+DEFAULT_BUILD_FLAGS=""
 
-utils/unit-test                     || exit 1
-utils/integration-test -c release   || exit 1
-utils/regression-test -c release    || exit 1
-utils/fuzz-test -c release -n 16    || exit 1
+usage()
+{
+    echo "usage: utils/$SCRIPT_NAME [OPTION...]
+    -b, --build-flags         swift build additional command flags, default '$DEFAULT_BUILD_FLAGS'"
+}
+
+build_flags=$DEFAULT_BUILD_FLAGS
+
+while [ "$1" != "" ] ; do
+    case $1 in
+    -b | --build-flags )
+        shift
+        build_flags=$1
+        ;;
+    * )
+        usage
+        exit 1
+    esac
+    shift
+done
+
+utils/unit-test -b "$build_flags"                     || exit 1
+utils/integration-test -c release -b "$build_flags"   || exit 1
+utils/regression-test -c release -b "$build_flags"    || exit 1
+utils/fuzz-test -c release -n 16 -b "$build_flags"    || exit 1

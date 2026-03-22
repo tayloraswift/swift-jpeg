@@ -2,5 +2,28 @@
 set -e
 swift --version
 
-utils/tests
-utils/examples -c release
+DEFAULT_BUILD_FLAGS=""
+
+usage()
+{
+    echo "usage: Scripts/TestAll [OPTION...]
+    -b, --build-flags         swift build additional command flags, default '$DEFAULT_BUILD_FLAGS'"
+}
+
+build_flags=$DEFAULT_BUILD_FLAGS
+
+while [ "$1" != "" ] ; do
+    case $1 in
+    -b | --build-flags )
+        shift
+        build_flags=$1
+        ;;
+    * )
+        usage
+        exit 1
+    esac
+    shift
+done
+
+utils/tests -b "$build_flags"
+utils/examples -c release -b "$build_flags"
