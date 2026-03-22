@@ -1,5 +1,8 @@
 #!/bin/bash
 TOOL_NAME="JPEGUnitTests"
+SCRIPT_NAME="unit-test"
+DEFAULT_BUILD_FLAGS=""
+
 error()
 {
     echo $1
@@ -14,8 +17,29 @@ check()
     "$@" || error "$message"
 }
 
+usage()
+{
+    echo "usage: utils/$SCRIPT_NAME [OPTION...]
+    -b, --build-flags         swift build additional command flags, default '$DEFAULT_BUILD_FLAGS'"
+}
+
+build_flags=$DEFAULT_BUILD_FLAGS
+
+while [ "$1" != "" ] ; do
+    case $1 in
+    -b | --build-flags )
+        shift
+        build_flags=$1
+        ;;
+    * )
+        usage
+        exit 1
+    esac
+    shift
+done
+
 check   "error: swift build failed" \
-        swift build -c release --product $TOOL_NAME
+        swift build -c release --product $TOOL_NAME $build_flags
 
 binaries=".build/release"
 if ! [ -f $binaries/$TOOL_NAME ]; then

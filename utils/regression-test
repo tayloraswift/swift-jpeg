@@ -1,11 +1,13 @@
 #!/bin/bash
 DEFAULT_BUILD_CONFIGURATION="debug"
 TOOL_NAME="JPEGRegressionTests"
+DEFAULT_BUILD_FLAGS=""
 
 usage()
 {
     echo "usage: utils/$TOOL_NAME [OPTION...]
   -c, --configuration       swift build configuration mode, default '$DEFAULT_BUILD_CONFIGURATION'
+  -b, --build-flags         swift build additional command flags, default '$DEFAULT_BUILD_FLAGS'
   -u, --update              remove and regenerate golden outputs (tests will fail)"
 }
 
@@ -24,12 +26,17 @@ check()
 }
 
 build_configuration=$DEFAULT_BUILD_CONFIGURATION
+build_flags=$DEFAULT_BUILD_FLAGS
 
 while [ "$1" != "" ] ; do
     case $1 in
     -c | --configuration )
         shift
         build_configuration=$1
+        ;;
+    -b | --build-flags )
+        shift
+        build_flags=$1
         ;;
     -u | --update )
         shift
@@ -51,7 +58,7 @@ while [ "$1" != "" ] ; do
 done
 
 check   "error: swift build failed" \
-        swift build -c $build_configuration --product $TOOL_NAME
+        swift build -c $build_configuration --product $TOOL_NAME $build_flags
 
 binaries=".build/$build_configuration"
 if ! [ -f $binaries/$TOOL_NAME ]; then
