@@ -1,5 +1,12 @@
-name: documentation
+#  ❣❣❣  DO NOT EDIT  ❣  THIS FILE IS AUTOMATICALLY SYNCED  ❣  DO NOT EDIT  ❣❣❣
 
+# This workflow validates the package’s documentation. Because documentation building involves
+# compiling the package, this also checks that the package itself compiles successfully on each
+# supported platform.
+name: Documentation
+
+permissions:
+    contents: write
 on:
     push:
         branches: [ master ]
@@ -7,42 +14,80 @@ on:
         branches: [ master ]
 
 jobs:
-    linux:
+    changes:
+        runs-on: ubuntu-latest
+        name: Assess changes
+        steps:
+            -   name: 🤍 Checkout repository 🤍
+                uses: actions/checkout@v6
+                with:
+                    # need to fetch the preceding commit
+                    fetch-depth: 2
+
+            -   name: 🤍 Decide checks 🤍
+                uses: tj-actions/changed-files@v47
+                id: changes
+                with:
+                    files_ignore: |
+                        README.md
+                        LICENSE
+                        NOTICE
+                        .mailmap
+                        .gitignore
+                        .github/FUNDING.yml
+        outputs:
+            code_changed: ${{ steps.changes.outputs.any_changed }}
+
+    Linux:
         runs-on: ubuntu-24.04
         name: Ubuntu 24.04
-
+        needs: changes
+        if: ${{ needs.changes.outputs.code_changed == 'true' }}
         steps:
-            -   name: Install Swift
-                uses: tayloraswift/swift-install-action@master
+            -   name: 🤍 Install Swift 🤍
+                uses: rarestype/swift-install-action@master
                 with:
-                    swift-prefix: "swift-6.0.3-release/ubuntu2404/swift-6.0.3-RELEASE"
-                    swift-id: "swift-6.0.3-RELEASE-ubuntu24.04"
+                    swift-prefix: "swift-6.2.4-release/ubuntu2404/swift-6.2.4-RELEASE"
+                    swift-id: "swift-6.2.4-RELEASE-ubuntu24.04"
 
-            -   name: Install Unidoc
-                uses: tayloraswift/swift-unidoc-action@master
+            -   name: 🤍 Install Unidoc 🤍
+                uses: rarestype/unidoc-action@master
 
-            -   name: Checkout repository
-                uses: actions/checkout@v3
+            #   This clobbers everything in the current directory!
+            -   name: 🤍 Checkout repository 🤍
+                uses: actions/checkout@v6
 
-            -   name: Validate documentation
+            -   name: 🤍 Validate documentation 🤍
                 run: |
-                    unidoc compile \
-                    --swift-toolchain $SWIFT_INSTALLATION \
+                    unidoc build \
                     --ci fail-on-errors \
-                    --project-path .
+                    --project-path . \
+                    --swift-toolchain $SWIFT_INSTALLATION
 
-    macos:
-        runs-on: macos-15
-        name: macOS
+            -   name: 🤍 Update badge 🤍
+                uses: rarestype/rarestbadge@v1
+                if: always()
+
+    macOS:
+        runs-on: macos-26
+        needs: changes
+        if: ${{ needs.changes.outputs.code_changed == 'true' }}
         steps:
-            -   name: Install Unidoc
-                uses: tayloraswift/swift-unidoc-action@master
+            -   name: 🤍 Install Unidoc 🤍
+                uses: rarestype/unidoc-action@master
 
-            -   name: Checkout repository
-                uses: actions/checkout@v3
+            -   name: 🤍 Checkout repository 🤍
+                uses: actions/checkout@v6
 
-            -   name: Validate documentation
+            -   name: 🤍 Select Xcode 26.3 🤍
+                run: sudo xcode-select -s /Applications/Xcode_26.3.app/Contents/Developer
+
+            -   name: 🤍 Validate documentation 🤍
                 run: |
-                    unidoc compile \
+                    unidoc build \
                     --ci fail-on-errors \
                     --project-path .
+
+            -   name: 🤍 Update badge 🤍
+                uses: rarestype/rarestbadge@v1
+                if: always()
