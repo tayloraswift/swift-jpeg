@@ -2,31 +2,23 @@
 License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-extension JPEG.Component.Key:ExpressibleByIntegerLiteral
-{
-    public
-    init(integerLiteral:UInt8)
-    {
+extension JPEG.Component.Key: ExpressibleByIntegerLiteral {
+    public init(integerLiteral: UInt8) {
         self.init(integerLiteral)
     }
 }
-extension JPEG.Table.Quantization.Key:ExpressibleByIntegerLiteral
-{
-    public
-    init(integerLiteral:Int)
-    {
+extension JPEG.Table.Quantization.Key: ExpressibleByIntegerLiteral {
+    public init(integerLiteral: Int) {
         self.init(integerLiteral)
     }
 }
 
 // print descriptions
-extension String
-{
-    public
-    init<Delegate>(selector:WritableKeyPath<(Delegate?, Delegate?, Delegate?, Delegate?), Delegate?>)
-    {
-        switch selector
-        {
+extension String {
+    public init<Delegate>(
+        selector: WritableKeyPath<(Delegate?, Delegate?, Delegate?, Delegate?), Delegate?>
+    ) {
+        switch selector {
         case \.0:
             self = "0"
         case \.1:
@@ -42,63 +34,62 @@ extension String
     }
 }
 
-extension JPEG.Process:CustomStringConvertible
-{
-    public
-    var description:String
-    {
-        switch self
-        {
+extension JPEG.Process: CustomStringConvertible {
+    public var description: String {
+        switch self {
         case .baseline:
             return "baseline sequential DCT"
         case .extended(coding: let coding, differential: let differential):
-            return "extended sequential DCT (\(coding), \(differential ? "differential" : "non-differential"))"
+            return """
+            extended sequential DCT (\(coding), \(
+                differential ? "differential" : "non-differential"
+            ))
+            """
         case .progressive(coding: let coding, differential: let differential):
-            return "progressive DCT (\(coding), \(differential ? "differential" : "non-differential"))"
+            return """
+            progressive DCT (\(coding), \(differential ? "differential" : "non-differential"))
+            """
         case .lossless(coding: let coding, differential: let differential):
-            return "lossless process (\(coding), \(differential ? "differential" : "non-differential"))"
+            return """
+            lossless process (\(coding), \(differential ? "differential" : "non-differential"))
+            """
         }
     }
 }
 
-extension JPEG.Component:CustomStringConvertible
-{
-    public
-    var description:String
-    {
-        return "{quantization table: \(String.init(selector: self.selector)), sample factors: (\(self.factor.x), \(self.factor.y))}"
+extension JPEG.Component: CustomStringConvertible {
+    public var description: String {
+        return """
+        {quantization table: \(String.init(selector: self.selector)), sample factors: (\(
+            self.factor.x
+        ), \(
+            self.factor.y
+        ))}
+        """
     }
 }
-extension JPEG.Scan.Component:CustomStringConvertible
-{
-    public
-    var description:String
-    {
-        "{dc huffman table: \(String.init(selector: self.selector.dc)), ac huffman table: \(String.init(selector: self.selector.ac))}"
+extension JPEG.Scan.Component: CustomStringConvertible {
+    public var description: String {
+        """
+        {dc huffman table: \(String.init(selector: self.selector.dc)), ac huffman table: \(
+            String.init(selector: self.selector.ac)
+        )}
+        """
     }
 }
-extension JPEG.Component.Key:CustomStringConvertible
-{
-    public
-    var description:String
-    {
+extension JPEG.Component.Key: CustomStringConvertible {
+    public var description: String {
         "[\(self.value)]"
     }
 }
-extension JPEG.Table.Quantization.Key:CustomStringConvertible
-{
-    public
-    var description:String
-    {
+extension JPEG.Table.Quantization.Key: CustomStringConvertible {
+    public var description: String {
         "[\(self.value)]"
     }
 }
 
-extension JPEG.Header.Frame:CustomStringConvertible
-{
-    public
-    var description:String
-    {
+extension JPEG.Header.Frame: CustomStringConvertible {
+    public var description: String {
         """
         frame header:
         {
@@ -107,21 +98,17 @@ extension JPEG.Header.Frame:CustomStringConvertible
             initial size    : (\(self.size.x), \(self.size.y)),
             components      :
             [
-                \(self.components.sorted(by: { $0.key < $1.key }).map
-                {
-                    return "[\($0.key)]: \($0.value)"
-                }.joined(separator: ", \n        "))
+                \(self.components.sorted(by: { $0.key < $1.key }).map {
+                return "[\($0.key)]: \($0.value)"
+            }.joined(separator: ", \n        "))
             ]
         }
         """
     }
 }
 
-extension JPEG.Header.Scan:CustomStringConvertible
-{
-    public
-    var description:String
-    {
+extension JPEG.Header.Scan: CustomStringConvertible {
+    public var description: String {
         """
         scan header (\(Self.self)):
         {
@@ -129,21 +116,17 @@ extension JPEG.Header.Scan:CustomStringConvertible
             bits            : \(self.bits.lowerBound) ..< \(self.bits.upperBound),
             components      :
             [
-                \(self.components.map
-                {
-                    "[\($0.ci)]: \($0)"
-                }.joined(separator: ", \n        "))
+                \(self.components.map {
+                "[\($0.ci)]: \($0)"
+            }.joined(separator: ", \n        "))
             ]
         }
         """
     }
 }
 
-extension JPEG.Table.Huffman:CustomStringConvertible
-{
-    public
-    var description:String
-    {
+extension JPEG.Table.Huffman: CustomStringConvertible {
+    public var description: String {
         """
         huffman table (\(Self.self))
         {
@@ -153,11 +136,8 @@ extension JPEG.Table.Huffman:CustomStringConvertible
     }
 }
 
-extension JPEG.Table.Quantization:CustomStringConvertible
-{
-    public
-    var description:String
-    {
+extension JPEG.Table.Quantization: CustomStringConvertible {
+    public var description: String {
         """
         quantization table (\(Self.self))
         {
@@ -167,11 +147,8 @@ extension JPEG.Table.Quantization:CustomStringConvertible
     }
 }
 
-extension JPEG.JFIF:CustomStringConvertible
-{
-    public
-    var description:String
-    {
+extension JPEG.JFIF: CustomStringConvertible {
+    public var description: String {
         """
         metadata (\(Self.self))
         {
@@ -182,11 +159,8 @@ extension JPEG.JFIF:CustomStringConvertible
         """
     }
 }
-extension JPEG.EXIF:CustomStringConvertible
-{
-    public
-    var description:String
-    {
+extension JPEG.EXIF: CustomStringConvertible {
+    public var description: String {
         """
         metadata (\(Self.self))
         {

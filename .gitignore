@@ -1,11 +1,14 @@
 .DS_Store
-.vscode
-.build/
-.build.ssgc/
-.ssgc/
+
+/*.xcodeproj
+/.vscode
+/.build/
+/.build.ssgc/
+/.ssgc/
 
 /Packages
-/*.xcodeproj
+/Package.resolved
+
 /tests/fuzz/data
 /tests/integration/decode/*.png
 /tests/integration/decode/*.rgb

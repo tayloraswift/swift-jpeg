@@ -85,6 +85,8 @@ jobs:
             -   name: 💖 Update badge 💖
                 uses: rarestype/rarestbadge@v1
                 if: always()
+                with:
+                    title: Linux
 
     macOS:
         runs-on: macos-26

@@ -3,17 +3,13 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 /// A namespace for JPEG-related functionality.
-public
-enum JPEG
-{
+public enum JPEG {
     /// A color format, determined by the bit depth and set of component keys in
     /// a frame header.
     ///
     /// The coding ``JPEG/Process`` of an image may place restrictions on which
     /// combinations of component sets and bit precisions are valid.
-    public
-    protocol Format
-    {
+    public protocol Format {
         /// Detects this color format, given a set of component keys and a bit depth.
         ///
         /// -   Parameter components:
@@ -24,8 +20,7 @@ enum JPEG
         ///
         /// -   Returns:
         ///     A color format instance.
-        static
-        func recognize(_ components:Set<JPEG.Component.Key>, precision:Int) -> Self?
+        static func recognize(_ components: Set<JPEG.Component.Key>, precision: Int) -> Self?
 
         /// The set of component keys for this color format.
         ///
@@ -33,24 +28,20 @@ enum JPEG
         /// an image layout. This property should never be empty. It is allowed
         /// for this array to contain fewer components than were detected by the
         /// ``Format/recognize(_:precision:)`` constructor.
-        var components:[JPEG.Component.Key]
-        {
+        var components: [JPEG.Component.Key] {
             get
         }
 
         /// The bit depth of each component in this color format.
-        var precision:Int
-        {
+        var precision: Int {
             get
         }
     }
     /// A color target.
-    public
-    protocol Color
-    {
+    public protocol Color {
         /// The color format associated with this color target. An image using
         /// any color format of this type will support rendering to this color target.
-        associatedtype Format:JPEG.Format
+        associatedtype Format: JPEG.Format
 
         /// Converts the given interleaved samples into an array of structured pixels.
         ///
@@ -62,8 +53,7 @@ enum JPEG
         ///
         /// -   Returns:
         ///     An array of pixels of this color target type.
-        static
-        func unpack(_ interleaved:[UInt16], of format:Format) -> [Self]
+        static func unpack(_ interleaved: [UInt16], of format: Format) -> [Self]
 
         /// Converts the given array of structured pixels into an array of interleaved samples.
         ///
@@ -75,14 +65,11 @@ enum JPEG
         ///
         /// -   Returns:
         ///     A flat array of interleaved component samples.
-        static
-        func pack(_ pixels:[Self], as format:Format) -> [UInt16]
+        static func pack(_ pixels: [Self], as format: Format) -> [UInt16]
     }
 
     /// A metadata record.
-    public
-    enum Metadata
-    {
+    public enum Metadata {
         /// A JFIF metadata record.
         case jfif(JFIF)
         /// An EXIF metadata record.
@@ -94,13 +81,13 @@ enum JPEG
         ///
         /// -   Parameter data:
         ///     The raw data of this application segment.
-        case application(Int, data:[UInt8])
+        case application(Int, data: [UInt8])
         /// A comment segment.
         ///
         /// -   Parameter data:
         ///     The raw contents of this comment segment. Often, but not always,
         ///     this data is UTF-8-encoded text.
-        case comment(data:[UInt8])
+        case comment(data: [UInt8])
     }
 
     /// An 8-bit YCbCr color.
@@ -111,19 +98,13 @@ enum JPEG
     /// -   ``y``
     /// -   ``cb``
     /// -   ``cr``
-    @frozen
-    public
-    struct YCbCr:Hashable
-    {
+    @frozen public struct YCbCr: Hashable {
         /// The luminance component of this color.
-        public
-        var y:UInt8
+        public var y: UInt8
         /// The blue component of this color.
-        public
-        var cb:UInt8
+        public var cb: UInt8
         /// The red component of this color.
-        public
-        var cr:UInt8
+        public var cr: UInt8
 
         /// Initializes this color to the given luminance level.
         ///
@@ -131,9 +112,7 @@ enum JPEG
         ///
         /// -   Parameter y:
         ///     The given luminance level.
-        public
-        init(y:UInt8)
-        {
+        public init(y: UInt8) {
             self.init(y: y, cb: 128, cr: 128)
         }
 
@@ -147,9 +126,7 @@ enum JPEG
         ///
         /// -   Parameter cr:
         ///     The given red component.
-        public
-        init(y:UInt8, cb:UInt8, cr:UInt8)
-        {
+        public init(y: UInt8, cb: UInt8, cr: UInt8) {
             self.y  = y
             self.cb = cb
             self.cr = cr
@@ -163,28 +140,20 @@ enum JPEG
     /// -   ``r``
     /// -   ``g``
     /// -   ``b``
-    @frozen
-    public
-    struct RGB:Hashable
-    {
+    @frozen public struct RGB: Hashable {
         /// The red component of this color.
-        public
-        var r:UInt8
+        public var r: UInt8
         /// The green component of this color.
-        public
-        var g:UInt8
+        public var g: UInt8
         /// The blue component of this color.
-        public
-        var b:UInt8
+        public var b: UInt8
 
         /// Creates an opaque grayscale color with all color components set
         /// to the given value sample.
         ///
         /// -   Parameter value:
         ///     The value to initialize all color components to.
-        public
-        init(_ value:UInt8)
-        {
+        public init(_ value: UInt8) {
             self.init(value, value, value)
         }
 
@@ -198,9 +167,7 @@ enum JPEG
         ///
         /// -   Parameter blue:
         ///     The value to initialize the blue component to.
-        public
-        init(_ red:UInt8, _ green:UInt8, _ blue:UInt8)
-        {
+        public init(_ red: UInt8, _ green: UInt8, _ blue: UInt8) {
             self.r = red
             self.g = green
             self.b = blue
@@ -209,8 +176,7 @@ enum JPEG
 }
 
 // pixel accessors
-extension JPEG
-{
+extension JPEG {
     /// A built-in color format which covers the JFIF/EXIF subset of the
     /// [JPEG standard](https://www.w3.org/Graphics/JPEG/itu-t81.pdf).
     ///
@@ -219,9 +185,7 @@ extension JPEG
     /// To provide compatibility with older, faulty JPEG codecs, it is also
     /// able to recognize non-standard component schemes as long as
     /// they have the correct arity and form a contiguously increasing sequence.
-    public
-    enum Common
-    {
+    public enum Common {
         /// The standard JFIF 8-bit grayscale format.
         ///
         /// This color format uses the component key assignment *Y*\ =\ **1**.
@@ -262,19 +226,20 @@ extension JPEG
         case nonconforming3x8(JPEG.Component.Key, JPEG.Component.Key, JPEG.Component.Key)
     }
 }
-extension JPEG.Common:JPEG.Format
-{
-    fileprivate static
-    func clamp<T>(_ x:Float, to _:T.Type) -> T where T:FixedWidthInteger
-    {
+extension JPEG.Common: JPEG.Format {
+    fileprivate static func clamp<T>(_ x: Float, to _: T.Type) -> T where T: FixedWidthInteger {
         .init(max(.init(T.min), min(x, .init(T.max))))
     }
-    fileprivate static
-    func clamp<T>(_ x:SIMD3<Float>, to _:T.Type) -> SIMD3<T> where T:FixedWidthInteger
-    {
-        .init(x.clamped(
-            lowerBound: .init(repeating: .init(T.min)),
-            upperBound: .init(repeating: .init(T.max))))
+    fileprivate static func clamp<T>(
+        _ x: SIMD3<Float>,
+        to _: T.Type
+    ) -> SIMD3<T> where T: FixedWidthInteger {
+        .init(
+            x.clamped(
+                lowerBound: .init(repeating: .init(T.min)),
+                upperBound: .init(repeating: .init(T.max))
+            )
+        )
     }
 
     /// Detects this color format, given a set of component keys and a bit depth.
@@ -289,12 +254,12 @@ extension JPEG.Common:JPEG.Format
     ///
     /// -   Parameter precision:
     ///     Must be 8, or this constructor will return `nil`.
-    public static
-    func recognize(_ components:Set<JPEG.Component.Key>, precision:Int) -> Self?
-    {
-        let sorted:[JPEG.Component.Key] = components.sorted()
-        switch (sorted, precision)
-        {
+    public static func recognize(
+        _ components: Set<JPEG.Component.Key>,
+        precision: Int
+    ) -> Self? {
+        let sorted: [JPEG.Component.Key] = components.sorted()
+        switch (sorted, precision) {
         case ([1],          8):
             return .y8
         case ([1, 2, 3],    8):
@@ -303,18 +268,13 @@ extension JPEG.Common:JPEG.Format
             break
         }
 
-        if sorted.count == 1
-        {
+        if sorted.count == 1 {
             return .nonconforming1x8(sorted[0])
-        }
-        else if let base:Int = sorted.first?.value,
+        } else if let base: Int = sorted.first?.value,
             sorted.count == 3,
-            sorted.map(\.value) == .init(base ..< base + 3)
-        {
+            sorted.map(\.value) == .init(base ..< base + 3) {
             return .nonconforming3x8(sorted[0], sorted[1], sorted[2])
-        }
-        else
-        {
+        } else {
             return nil
         }
     }
@@ -323,11 +283,8 @@ extension JPEG.Common:JPEG.Format
     /// If this instance is a ``Common/nonconforming3x8(_:_:_:)`` color format,
     /// the array contains the component keys in the order they appear
     /// in the instance’s associated values.
-    public
-    var components:[JPEG.Component.Key]
-    {
-        switch self
-        {
+    public var components: [JPEG.Component.Key] {
+        switch self {
         case .y8:
             return [1]
         case .ycc8:
@@ -341,62 +298,51 @@ extension JPEG.Common:JPEG.Format
     /// The bit depth of each component in this color format.
     ///
     /// This value is always 8.
-    public
-    var precision:Int
-    {
+    public var precision: Int {
         8
     }
 }
-extension JPEG.YCbCr
-{
+extension JPEG.YCbCr {
     /// This color represented in the RGB color space.
     ///
     /// This property applies the YCbCr-to-RGB conversion formula defined in
     /// the [JFIF standard](https://www.w3.org/Graphics/JPEG/jfif3.pdf). Some
     /// YCbCr colors are not representable in the RGB color space; such colors
     /// will be clipped to the acceptable range.
-    public
-    var rgb:JPEG.RGB
-    {
-        let matrix:(cb:SIMD3<Float>, cr:SIMD3<Float>) =
-        (
+    public var rgb: JPEG.RGB {
+        let matrix: (cb: SIMD3<Float>, cr: SIMD3<Float>) = (
             .init( 0.00000, -0.34414,  1.77200),
             .init( 1.40200, -0.71414,  0.00000)
         )
-        let x:SIMD3<Float> = (.init(self.y)         as       Float ) +
-            (matrix.cb *     (.init(self.cb) - 128) as SIMD3<Float>) +
-            (matrix.cr *     (.init(self.cr) - 128) as SIMD3<Float>)
-        let c:SIMD3<UInt8> = JPEG.Common.clamp(x, to: UInt8.self)
+        let x: SIMD3<Float> = (.init(self.y)         as       Float ) +
+        (matrix.cb *     (.init(self.cb) - 128) as SIMD3<Float>) +
+        (matrix.cr *     (.init(self.cr) - 128) as SIMD3<Float>)
+        let c: SIMD3<UInt8> = JPEG.Common.clamp(x, to: UInt8.self)
         return .init(c.x, c.y, c.z)
     }
 }
-extension JPEG.RGB
-{
+extension JPEG.RGB {
     /// This color represented in the YCbCr color space.
     ///
     /// This property applies the RGB-to-YCbCr conversion formula defined in
     /// the [JFIF standard](https://www.w3.org/Graphics/JPEG/jfif3.pdf).
-    public
-    var ycc:JPEG.YCbCr
-    {
-        let matrix:(SIMD3<Float>, r:SIMD3<Float>, g:SIMD3<Float>, b:SIMD3<Float>) =
-        (
+    public var ycc: JPEG.YCbCr {
+        let matrix: (SIMD3<Float>, r: SIMD3<Float>, g: SIMD3<Float>, b: SIMD3<Float>) = (
             .init( 0,     128,     128     ),
             .init( 0.2990, -0.1687,  0.5000),
             .init( 0.5870, -0.3313, -0.4187),
             .init( 0.1140,  0.5000, -0.0813)
         )
-        let x:SIMD3<Float> = matrix.0                  +
-            (matrix.r * .init(self.r) as SIMD3<Float>) +
-            (matrix.g * .init(self.g) as SIMD3<Float>) +
-            (matrix.b * .init(self.b) as SIMD3<Float>)
-        let c:SIMD3<UInt8> = JPEG.Common.clamp(x, to: UInt8.self)
+        let x: SIMD3<Float> = matrix.0                  +
+        (matrix.r * .init(self.r) as SIMD3<Float>) +
+        (matrix.g * .init(self.g) as SIMD3<Float>) +
+        (matrix.b * .init(self.b) as SIMD3<Float>)
+        let c: SIMD3<UInt8> = JPEG.Common.clamp(x, to: UInt8.self)
         return .init(y: c.x, cb: c.y, cr: c.z)
     }
 }
 
-extension JPEG.YCbCr:JPEG.Color
-{
+extension JPEG.YCbCr: JPEG.Color {
     /// Converts the given interleaved samples into an array of YCbCr pixels.
     ///
     /// -   Parameter interleaved:
@@ -407,26 +353,22 @@ extension JPEG.YCbCr:JPEG.Color
     ///
     /// -   Returns:
     ///     An array of YCbCr pixels.
-    public static
-    func unpack(_ interleaved:[UInt16], of format:JPEG.Common) -> [Self]
-    {
+    public static func unpack(_ interleaved: [UInt16], of format: JPEG.Common) -> [Self] {
         // no need to clamp uint16 to uint8,, the idct should have already done
         // this alongside the level shift
-        switch format
-        {
+        switch format {
         case .y8, .nonconforming1x8:
-            return interleaved.map
-            {
+            return interleaved.map {
                 Self.init(y: .init($0))
             }
 
         case .ycc8, .nonconforming3x8:
-            return stride(from: 0, to: interleaved.count, by: 3).map
-            {
+            return stride(from: 0, to: interleaved.count, by: 3).map {
                 Self.init(
-                    y:  .init(interleaved[$0    ]),
+                    y: .init(interleaved[$0    ]),
                     cb: .init(interleaved[$0 + 1]),
-                    cr: .init(interleaved[$0 + 2]))
+                    cr: .init(interleaved[$0 + 2])
+                )
             }
         }
     }
@@ -440,11 +382,8 @@ extension JPEG.YCbCr:JPEG.Color
     ///
     /// -   Returns:
     ///     A flat array of interleaved component samples.
-    public static
-    func pack(_ pixels:[Self], as format:JPEG.Common) -> [UInt16]
-    {
-        switch format
-        {
+    public static func pack(_ pixels: [Self], as format: JPEG.Common) -> [UInt16] {
+        switch format {
         case .y8, .nonconforming1x8:
             return pixels.map{ .init($0.y) }
 
@@ -454,8 +393,7 @@ extension JPEG.YCbCr:JPEG.Color
     }
 }
 
-extension JPEG.RGB:JPEG.Color
-{
+extension JPEG.RGB: JPEG.Color {
     /// Converts the given interleaved samples into an array of RGB pixels.
     ///
     /// -   Parameter interleaved:
@@ -466,25 +404,21 @@ extension JPEG.RGB:JPEG.Color
     ///
     /// -   Returns:
     ///     An array of RGB pixels.
-    public static
-    func unpack(_ interleaved:[UInt16], of format:JPEG.Common) -> [Self]
-    {
-        switch format
-        {
+    public static func unpack(_ interleaved: [UInt16], of format: JPEG.Common) -> [Self] {
+        switch format {
         case .y8, .nonconforming1x8:
-            return interleaved.map
-            {
-                let ycc:JPEG.YCbCr = .init(y: .init($0))
+            return interleaved.map {
+                let ycc: JPEG.YCbCr = .init(y: .init($0))
                 return ycc.rgb
             }
 
         case .ycc8, .nonconforming3x8:
-            return stride(from: 0, to: interleaved.count, by: 3).map
-            {
-                let ycc:JPEG.YCbCr = .init(
-                    y:  .init(interleaved[$0    ]),
+            return stride(from: 0, to: interleaved.count, by: 3).map {
+                let ycc: JPEG.YCbCr = .init(
+                    y: .init(interleaved[$0    ]),
                     cb: .init(interleaved[$0 + 1]),
-                    cr: .init(interleaved[$0 + 2]))
+                    cr: .init(interleaved[$0 + 2])
+                )
                 return ycc.rgb
             }
         }
@@ -499,19 +433,15 @@ extension JPEG.RGB:JPEG.Color
     ///
     /// -   Returns:
     ///     A flat array of interleaved component samples.
-    public static
-    func pack(_ pixels:[Self], as format:JPEG.Common) -> [UInt16]
-    {
-        switch format
-        {
+    public static func pack(_ pixels: [Self], as format: JPEG.Common) -> [UInt16] {
+        switch format {
         case .y8, .nonconforming1x8:
             return pixels.map{ .init($0.ycc.y) }
 
         case .ycc8, .nonconforming3x8:
-            return pixels.flatMap
-            {
-                (rgb:JPEG.RGB) -> [UInt16] in
-                let ycc:JPEG.YCbCr = rgb.ycc
+            return pixels.flatMap {
+                (rgb: JPEG.RGB) -> [UInt16] in
+                let ycc: JPEG.YCbCr = rgb.ycc
                 return [ .init(ycc.y), .init(ycc.cb), .init(ycc.cr) ]
             } as [UInt16]
         }
@@ -519,8 +449,7 @@ extension JPEG.RGB:JPEG.Color
 }
 
 // compound types
-extension JPEG
-{
+extension JPEG {
     /// A coding process.
     ///
     /// The [JPEG standard](https://www.w3.org/Graphics/JPEG/itu-t81.pdf)
@@ -531,13 +460,9 @@ extension JPEG
     /// ``Process/progressive(coding:differential:)`` processes with
     /// ``Process.Coding/huffman`` entropy coding and the `differential` flag
     /// set to `false`.
-    public
-    enum Process:Sendable
-    {
+    public enum Process: Sendable {
         /// An entropy coding method.
-        public
-        enum Coding:Sendable
-        {
+        public enum Coding: Sendable {
             /// Huffman entropy coding.
             case huffman
             /// Arithmetic entropy coding.
@@ -562,7 +487,7 @@ extension JPEG
         /// -   Parameter differential:
         ///     Indicates whether the image frame using this coding process is a
         ///     differential frame under the hierarchical mode of operations.
-        case extended(coding:Coding, differential:Bool)
+        case extended(coding: Coding, differential: Bool)
         /// The progressive coding process.
         ///
         /// This is a progressive coding process. It allows up to four simultaneously
@@ -576,7 +501,7 @@ extension JPEG
         /// -   Parameter differential:
         ///     Indicates whether the image frame using this coding process is a
         ///     differential frame under the hierarchical mode of operations.
-        case progressive(coding:Coding, differential:Bool)
+        case progressive(coding: Coding, differential: Bool)
         /// The lossless coding process.
         ///
         /// -   Parameter coding:
@@ -585,13 +510,11 @@ extension JPEG
         /// -   Parameter differential:
         ///     Indicates whether the image frame using this coding process is a
         ///     differential frame under the hierarchical mode of operations.
-        case lossless(coding:Coding, differential:Bool)
+        case lossless(coding: Coding, differential: Bool)
     }
 
     /// A marker type indicator.
-    public
-    enum Marker:Sendable
-    {
+    public enum Marker: Sendable {
         /// A start-of-image (SOI) marker.
         case start
         /// An end-of-image (EOI) marker.
@@ -630,10 +553,8 @@ extension JPEG
         case hierarchical
         case expandReferenceComponents
 
-        init?(code:UInt8)
-        {
-            switch code
-            {
+        init?(code: UInt8) {
+            switch code {
             case 0xc0:
                 self = .frame(.baseline)
             case 0xc1:
@@ -708,36 +629,28 @@ extension JPEG
     }
 }
 
-extension JPEG
-{
+extension JPEG {
     /// A namespace for header types.
     ///
     /// In general, the fields in these types can be assumed to be valid with
     /// respect to the other fields in the structure, but not necessarily with
     /// respect to the JPEG file as a whole.
-    public
-    enum Header
-    {
+    public enum Header {
         /// A height redefinition header.
         ///
         /// This structure is the parsed form of a ``JPEG.Marker/height``
         /// marker segment.
-        public
-        struct HeightRedefinition
-        {
+        public struct HeightRedefinition {
             /// The visible image height, in pixels.
             ///
             /// This value is always positive.
-            public
-            let height:Int
+            public let height: Int
             /// Creates a height redefinition header.
             ///
             /// -   Parameter height:
             ///     The visible image height, in pixels. Passing a negative value
             ///     will result in a precondition failure.
-            public
-            init(height:Int)
-            {
+            public init(height: Int) {
                 precondition(height > 0, "height must be positive")
                 self.height = height
             }
@@ -747,25 +660,23 @@ extension JPEG
         /// This structure is the parsed form of an ``JPEG.Marker/interval``
         /// marker segment. It can modify or clear the restart interval of an
         /// image.
-        public
-        struct RestartInterval
-        {
+        public struct RestartInterval {
             /// The restart interval, in minimum-coded units, or `nil` if the
             /// header is meant to disable restart markers.
             ///
             /// This value is always positive or `nil`.
-            public
-            let interval:Int?
+            public let interval: Int?
             /// Creates a restart interval definition header.
             ///
             /// -   Parameter interval:
             ///     The restart interval, in minimum-coded units, or `nil` to
             ///     disable restart markers. Passing a negative or zero value
             ///     will result in a precondition failure.
-            public
-            init(interval:Int?)
-            {
-                precondition(interval.map{ $0 > 0 } ?? true, "interval must be positive or `nil`")
+            public init(interval: Int?) {
+                precondition(
+                    interval.map{ $0 > 0 } ?? true,
+                    "interval must be positive or `nil`"
+                )
                 self.interval = interval
             }
         }
@@ -775,27 +686,21 @@ extension JPEG
         /// marker segment. In non-hierarchical mode images, it defines global
         /// image parameters. It contains some of the information needed to
         /// fully-define an image ``JPEG/Layout``.
-        public
-        struct Frame
-        {
+        public struct Frame {
             /// The coding process used by the image.
-            public
-            let process:Process
+            public let process: Process
             /// The bit precision of this image.
-            public
-            let precision:Int
+            public let precision: Int
             /// The visible size of this image, in pixels.
             ///
             /// The width is always positive. The height can be either positive
             /// or zero, if the height is to be defined later by a
             /// ``JPEG.Header/HeightRedefinition`` header.
-            public
-            let size:(x:Int, y:Int)
+            public let size: (x: Int, y: Int)
             /// The components in this image.
             ///
             /// This dictionary will always have at least one element.
-            public
-            let components:[Component.Key: Component]
+            public let components: [Component.Key: Component]
         }
         /// A scan header.
         ///
@@ -803,33 +708,26 @@ extension JPEG
         /// marker segment. It defines scan-level image parameters. The library
         /// validates these structures against the global image parameters to
         /// create the ``JPEG.Scan`` structures elsewhere in the library API.
-        public
-        struct Scan
-        {
+        public struct Scan {
             /// The frequency band encoded by this scan.
             ///
             /// This property specifies a range of zigzag-indexed frequency coefficients.
             /// It is always within the interval of 0 to 64.
-            public
-            let band:Range<Int>
+            public let band: Range<Int>
             /// The bit range encoded by this scan.
             ///
             /// This range is always non-negative.
-            public
-            let bits:Range<Int>
+            public let bits: Range<Int>
             /// The color components in this scan, in the order in which their
             /// data units are interleaved.
             ///
             /// This array always contains at least one element.
-            public
-            let components:[JPEG.Scan.Component]
+            public let components: [JPEG.Scan.Component]
         }
     }
 
     /// Functionality common to all table types.
-    public
-    protocol AnyTable
-    {
+    public protocol AnyTable {
         /// A type representing a table instance while it is bound to a table slot.
         associatedtype Delegate
         /// Four table slots.
@@ -842,110 +740,83 @@ extension JPEG
     }
 
     /// A namespace for table types.
-    public
-    enum Table
-    {
+    public enum Table {
         /// A DC huffman table.
-        public
-        typealias HuffmanDC = Huffman<Bitstream.Symbol.DC>
+        public typealias HuffmanDC = Huffman<Bitstream.Symbol.DC>
         /// An AC huffman table.
-        public
-        typealias HuffmanAC = Huffman<Bitstream.Symbol.AC>
+        public typealias HuffmanAC = Huffman<Bitstream.Symbol.AC>
         /// A huffman table.
-        public
-        struct Huffman<Symbol>:AnyTable where Symbol:Bitstream.AnySymbol
-        {
-            public
-            typealias Delegate = Self
+        public struct Huffman<Symbol>: AnyTable where Symbol: Bitstream.AnySymbol {
+            public typealias Delegate = Self
 
-            let symbols:[[Symbol]]
-            var target:Selector
+            let symbols: [[Symbol]]
+            var target: Selector
 
             // these are size parameters generated by the structural validator.
             // we store them here as proof of tree validity, so that the
             // constructor for the huffman Decoder type can just read it from here
-            let size:(n:Int, z:Int)
+            let size: (n: Int, z: Int)
         }
         /// A quantization table.
         ///
         /// Quantization tables store 64 coefficient quanta. The quantum values
         /// can be accessed using either a zigzag index with the ``Quantization/subscript(z:)``
         /// subscript, or grid indices with the ``Quantization/subscript(k:h:)`` subscript.
-        public
-        struct Quantization:AnyTable
-        {
+        public struct Quantization: AnyTable {
             /// A unique identifier assigned to each quantization table in an image.
             ///
             /// Quanta keys are numeric values ranging from ``Int.min``
             /// to ``Int.max``. In these reference pages, quanta keys
             /// in their numerical representation are written in **boldface**.
-            public
-            struct Key:Hashable, Comparable, Sendable
-            {
-                let value:Int
+            public struct Key: Hashable, Comparable, Sendable {
+                let value: Int
 
-                init<I>(_ value:I) where I:BinaryInteger
-                {
+                init<I>(_ value: I) where I: BinaryInteger {
                     self.value = .init(value)
                 }
 
-                public static
-                func < (lhs:Self, rhs:Self) -> Bool
-                {
+                public static func < (lhs: Self, rhs: Self) -> Bool {
                     lhs.value < rhs.value
                 }
             }
 
-            public
-            typealias Delegate = (q:Int, qi:Table.Quantization.Key)
+            public typealias Delegate = (q: Int, qi: Table.Quantization.Key)
             /// The integer width of the quantum values in this quantization table.
-            public
-            enum Precision:Sendable
-            {
+            public enum Precision: Sendable {
                 /// The quantum values are encoded as 8-bit unsigned integers.
                 case uint8
                 /// The quantum values are encoded as big endian 16-bit unsigned integers.
                 case uint16
             }
 
-            var storage:[UInt16],
-                target:Selector
-            let precision:Precision
+            var storage: [UInt16],
+            target: Selector
+            let precision: Precision
         }
     }
 }
 
 // layout
-extension JPEG
-{
+extension JPEG {
     /// A color channel in an image.
-    public
-    struct Component
-    {
+    public struct Component {
         /// The horizontal and vertical sampling factors for this component.
-        public
-        let factor:(x:Int, y:Int)
+        public let factor: (x: Int, y: Int)
         /// The table selector of the quantization table associated with this component.
-        public
-        let selector:Table.Quantization.Selector
+        public let selector: Table.Quantization.Selector
         /// A unique identifier assigned to each color component in an image.
         ///
         /// Component keys are numeric values ranging from 0 to 255. In
         /// these reference pages, component keys in their numerical
         /// representation are written in **boldface**.
-        public
-        struct Key:Hashable, Comparable, Sendable
-        {
-            let value:Int
+        public struct Key: Hashable, Comparable, Sendable {
+            let value: Int
 
-            init<I>(_ value:I) where I:BinaryInteger
-            {
+            init<I>(_ value: I) where I: BinaryInteger {
                 self.value = .init(value)
             }
 
-            public static
-            func < (lhs:Self, rhs:Self) -> Bool
-            {
+            public static func < (lhs: Self, rhs: Self) -> Bool {
                 lhs.value < rhs.value
             }
         }
@@ -959,16 +830,11 @@ extension JPEG
     /// This type contains essentially the same information as ``JPEG/Header.Scan``,
     /// but has been validated against the global image parameters and has its
     /// component keys pre-resolved to integer indices.
-    public
-    struct Scan
-    {
+    public struct Scan {
         /// A descriptor for a component encoded within a scan.
-        public
-        struct Component
-        {
+        public struct Component {
             /// The key specifying the image component referenced by this descriptor.
-            public
-            let ci:JPEG.Component.Key
+            public let ci: JPEG.Component.Key
             /// The table selectors for the huffman tables associated with this
             /// component in the context of this scan.
             ///
@@ -980,8 +846,7 @@ extension JPEG
             /// and bit range encoded by the image scan, one or both of the
             /// huffman table selectors may be unused, and therefore may not
             /// need to reference valid tables.
-            public
-            let selector:(dc:Table.HuffmanDC.Selector, ac:Table.HuffmanAC.Selector)
+            public let selector: (dc: Table.HuffmanDC.Selector, ac: Table.HuffmanAC.Selector)
         }
 
         /// The frequency band encoded by this scan.
@@ -990,8 +855,7 @@ extension JPEG
         /// It is always within the interval of 0 to 64. If the image coding
         /// process is not ``Process/progressive(coding:differential:)``,
         /// this value will be `0 ..< 64`.
-        public
-        let band:Range<Int>
+        public let band: Range<Int>
         /// The bit range encoded by this scan.
         ///
         /// This property specifies a range of bit indices, where bit zero is
@@ -999,20 +863,20 @@ extension JPEG
         /// infinity ``Int.max`` or one greater than the lower bound.
         /// If the image coding process is not ``Process/progressive(coding:differential:)``,
         /// this value will be `0 ..< .max`.
-        public
-        let bits:Range<Int>
+        public let bits: Range<Int>
         /// The color components in this scan, in the order in which their
         /// data units are interleaved.
         ///
         /// The component descriptors are paired with resolved component indices
         /// which are equivalent to the index of the image plane storing that
         /// color channel. This array will always have at least one element.
-        public
-        let components:[(c:Int, component:Component)]
+        public let components: [(c: Int, component: Component)]
         // restrict access for synthesized init
-        fileprivate
-        init(band:Range<Int>, bits:Range<Int>, components:[(c:Int, component:Component)])
-        {
+        fileprivate init(
+            band: Range<Int>,
+            bits: Range<Int>,
+            components: [(c: Int, component: Component)]
+        ) {
             self.band = band
             self.bits = bits
             self.components = components
@@ -1034,28 +898,21 @@ extension JPEG
     /// ``JPEG.Common`` color format will never accept any component declaration
     /// in a frame header that it does not also recognize. When encoding images to JPEG
     /// files, all declared resident components must also be recognized components.
-    public
-    struct Layout<Format> where Format:JPEG.Format
-    {
+    public struct Layout<Format> where Format: JPEG.Format {
         /// The color format of the image.
-        public
-        let format:Format
+        public let format: Format
         /// The coding process used by the image.
-        public
-        let process:Process
+        public let process: Process
 
         /// The set of color components declared (or to-be-declared) in the
         /// image frame header.
         ///
         /// The dictionary values are indices to be used with the ``planes`` property
         /// on this type.
-        public
-        let residents:[Component.Key: Int]
+        public let residents: [Component.Key: Int]
         /// The set of color components in the color format of this image.
         /// This set is always a subset of the resident components in the image.
-        public
-        var recognized:[Component.Key]
-        {
+        public var recognized: [Component.Key] {
             self.format.components
         }
         /// The descriptor array for the planes in the image.
@@ -1070,54 +927,45 @@ extension JPEG
         /// non-recognized resident components will occur at the end of this
         /// array, can can be indexed using the values of the ``residents``
         /// dictionary.
-        public internal(set)
-        var planes:[(component:Component, qi:Table.Quantization.Key)]
+        public internal(set) var planes: [(component: Component, qi: Table.Quantization.Key)]
         /// The sequence of scan and table definitions in the image file.
         ///
         /// The definitions in this property are given as alternating runs
         /// of quantization tables and image scans. (Image layouts do not specify
         /// huffman table definitions, as the library encodes them on a per-scan
         /// basis.)
-        public private(set)
-        var definitions:[(quanta:[Table.Quantization.Key], scans:[Scan])]
+        public private(set) var definitions: [(quanta: [Table.Quantization.Key], scans: [Scan])]
     }
 }
-extension JPEG.Layout
-{
-    private
-    init(format:Format,
-        process:JPEG.Process,
-        components combined:
-        [
-            JPEG.Component.Key: (component:JPEG.Component, qi:JPEG.Table.Quantization.Key)
-        ])
-    {
+extension JPEG.Layout {
+    private init(
+        format: Format,
+        process: JPEG.Process,
+        components combined: [
+            JPEG.Component.Key: (component: JPEG.Component, qi: JPEG.Table.Quantization.Key)
+        ]
+    ) {
         self.format     = format
         self.process    = process
 
-        var planes:[(component:JPEG.Component, qi:JPEG.Table.Quantization.Key)] =
-            format.components.map
-        {
-            guard let value:(component:JPEG.Component, qi:JPEG.Table.Quantization.Key) =
-                combined[$0]
-            else
-            {
-                preconditionFailure("missing definition for component \($0) in format '\(format)'")
+        var planes: [(component: JPEG.Component, qi: JPEG.Table.Quantization.Key)] =
+        format.components.map {
+            guard let value: (component: JPEG.Component, qi: JPEG.Table.Quantization.Key) =
+            combined[$0] else {
+                preconditionFailure(
+                    "missing definition for component \($0) in format '\(format)'"
+                )
             }
 
             return value
         }
 
-        var residents:[JPEG.Component.Key: Int] =
-            .init(uniqueKeysWithValues: zip(format.components, planes.indices))
-        for (ci, value):
-        (
-            JPEG.Component.Key, (component:JPEG.Component, qi:JPEG.Table.Quantization.Key)
-        ) in combined
-        {
-            guard residents[ci] == nil
-            else
-            {
+        var residents: [JPEG.Component.Key: Int] =
+        .init(uniqueKeysWithValues: zip(format.components, planes.indices))
+        for (ci, value): (
+                JPEG.Component.Key, (component: JPEG.Component, qi: JPEG.Table.Quantization.Key)
+            ) in combined {
+            guard residents[ci] == nil else {
                 continue
             }
 
@@ -1130,14 +978,16 @@ extension JPEG.Layout
         self.definitions = []
     }
 
-    init(format:Format,
-        process:JPEG.Process,
-        components:[JPEG.Component.Key: JPEG.Component])
-    {
-        self.init(format: format, process: process, components: components.mapValues
-        {
-            ($0, -1)
-        })
+    init(
+        format: Format,
+        process: JPEG.Process,
+        components: [JPEG.Component.Key: JPEG.Component]
+    ) {
+        self.init(
+            format: format, process: process, components: components.mapValues {
+                ($0, -1)
+            }
+        )
     }
     /// Creates an image layout given image parameters and a scan decomposition.
     ///
@@ -1180,25 +1030,21 @@ extension JPEG.Layout
     ///
     /// -   Parameter scans:
     ///     The scan progression of the image.
-    public
-    init(format:Format,
-        process:JPEG.Process,
-        components:[JPEG.Component.Key:
-            (factor:(x:Int, y:Int), qi:JPEG.Table.Quantization.Key)],
-        scans:[JPEG.Header.Scan])
-    {
+    public init(
+        format: Format,
+        process: JPEG.Process,
+        components: [JPEG.Component.Key:
+            (factor: (x: Int, y: Int), qi: JPEG.Table.Quantization.Key)],
+        scans: [JPEG.Header.Scan]
+    ) {
         // to assign quantization table selectors, we first need to determine
         // the first and last scans for each component, which then tells us
         // how long each quantization table needs to be activated
         // q -> lifetime
-        var lifetimes:[JPEG.Table.Quantization.Key: (start:Int, end:Int)] = [:]
-        for (i, descriptor):(Int, JPEG.Header.Scan) in zip(scans.indices, scans)
-        {
-            for component:JPEG.Scan.Component in descriptor.components
-            {
-                guard let qi:JPEG.Table.Quantization.Key = components[component.ci]?.qi
-                else
-                {
+        var lifetimes: [JPEG.Table.Quantization.Key: (start: Int, end: Int)] = [:]
+        for (i, descriptor): (Int, JPEG.Header.Scan) in zip(scans.indices, scans) {
+            for component: JPEG.Scan.Component in descriptor.components {
+                guard let qi: JPEG.Table.Quantization.Key = components[component.ci]?.qi else {
                     // this scan is referencing a component that’s not in the
                     // `components` dictionary. we strip out unrecognized
                     // scan components later on anyway, so we ignore it here
@@ -1209,9 +1055,8 @@ extension JPEG.Layout
             }
         }
 
-        var slots:[(selector:JPEG.Table.Quantization.Selector, time:Int)]
-        switch process
-        {
+        var slots: [(selector: JPEG.Table.Quantization.Selector, time: Int)]
+        switch process {
         case .baseline:
             slots = [(\.0, 0), (\.1, 0)]
         default:
@@ -1219,15 +1064,12 @@ extension JPEG.Layout
         }
 
         // q -> selector
-        let mappings:[JPEG.Table.Quantization.Key: JPEG.Table.Quantization.Selector] =
-            lifetimes.mapValues
-        {
-            (lifetime:(start:Int, end:Int)) in
+        let mappings: [JPEG.Table.Quantization.Key: JPEG.Table.Quantization.Selector] =
+        lifetimes.mapValues {
+            (lifetime: (start: Int, end: Int)) in
 
-            guard let free:Int =
-                slots.firstIndex(where: { lifetime.start >= $0.time })
-            else
-            {
+            guard let free: Int =
+            slots.firstIndex(where: { lifetime.start >= $0.time }) else {
                 fatalError("not enough free quantization table slots")
             }
 
@@ -1235,72 +1077,63 @@ extension JPEG.Layout
             return slots[free].selector
         }
 
-        self.init(format: format, process: process, components: components.mapValues
-        {
-            // if `q` is not in the mappings dictionary, that means that there
-            // were no scans, even ones with unrecognized components, that
-            // referenced it. (this is a problem, because all `q` values are associated
-            // with at least one component, and every component needs to be covered
-            // by the scan progression). for now, since it has a lifetime of 0, it does
-            // not matter which selector we assign to it
-            (.init(factor: $0.factor, selector: mappings[$0.qi] ?? \.0), $0.qi)
-        })
+        self.init(
+            format: format, process: process, components: components.mapValues {
+                // if `q` is not in the mappings dictionary, that means that there
+                // were no scans, even ones with unrecognized components, that
+                // referenced it. (this is a problem, because all `q` values are associated
+                // with at least one component, and every component needs to be covered
+                // by the scan progression). for now, since it has a lifetime of 0, it does
+                // not matter which selector we assign to it
+                (.init(factor: $0.factor, selector: mappings[$0.qi] ?? \.0), $0.qi)
+            }
+        )
 
         // store scan information
-        let intrusions:[(start:Int, quanta:[JPEG.Table.Quantization.Key])] =
-            Dictionary.init(grouping: lifetimes.map{ (start: $0.value.start, quanta: $0.key) })
-        {
+        let intrusions: [(start: Int, quanta: [JPEG.Table.Quantization.Key])] =
+        Dictionary.init(grouping: lifetimes.map{ (start: $0.value.start, quanta: $0.key) }) {
             $0.start
         }
-        .map
-        {
+        .map {
             (start: $0.key, quanta: $0.value.map(\.quanta))
         }
-        .sorted
-        {
+        .sorted {
             $0.start < $1.start
         }
 
-        var progression:Progression             = .init(format.components)
-        let recognized:Set<JPEG.Component.Key>  = .init(format.components)
+        var progression: Progression             = .init(format.components)
+        let recognized: Set<JPEG.Component.Key>  = .init(format.components)
 
-        self.definitions = zip(intrusions.indices, intrusions).map
-        {
-            let (g, (start, quanta)):(Int, (Int, [JPEG.Table.Quantization.Key])) = $0
+        self.definitions = zip(intrusions.indices, intrusions).map {
+            let (g, (start, quanta)): (Int, (Int, [JPEG.Table.Quantization.Key])) = $0
 
-            let end:Int = intrusions.dropFirst(g + 1).first?.start ?? scans.endIndex
-            let group:[JPEG.Scan] = scans[start ..< end].map
-            {
-                do
-                {
+            let end: Int = intrusions.dropFirst(g + 1).first?.start ?? scans.endIndex
+            let group: [JPEG.Scan] = scans[start ..< end].map {
+                do {
                     try progression.update($0)
 
                     // strip non-recognized components from the scan header. we
                     // also have to sort them so that their ordering matches the
                     // order in the generated frame header later on. this will
                     // also validate process-dependent constraints.
-                    return try self.push(scan: try .validate(process: process,
-                        band:       $0.band,
-                        bits:       $0.bits,
-                        components: $0.components.filter
-                        {
-                            recognized.contains($0.ci)
-                        }
-                        .sorted
-                        {
-                            $0.ci < $1.ci
-                        }))
-                }
-                catch let error as JPEG.ParsingError // validation error
-                {
+                    return try self.push(
+                        scan: try .validate(
+                            process: process,
+                            band: $0.band,
+                            bits: $0.bits,
+                            components: $0.components.filter {
+                                recognized.contains($0.ci)
+                            }
+                            .sorted {
+                                $0.ci < $1.ci
+                            }
+                        )
+                    )
+                } catch let error as JPEG.ParsingError /* validation error*/ {
                     preconditionFailure(error.message)
-                }
-                catch let error as JPEG.DecodingError // invalid progression
-                {
+                } catch let error as JPEG.DecodingError /* invalid progression*/ {
                     preconditionFailure(error.message)
-                }
-                catch
-                {
+                } catch {
                     fatalError("unreachable")
                 }
             }
@@ -1308,106 +1141,81 @@ extension JPEG.Layout
         }
     }
 
-    mutating
-    func push(scan header:JPEG.Header.Scan) throws -> JPEG.Scan
-    {
-        var volume:Int = 0
-        let components:[(c:Int, component:JPEG.Scan.Component)] =
-            try header.components.map
-        {
+    mutating func push(scan header: JPEG.Header.Scan) throws -> JPEG.Scan {
+        var volume: Int = 0
+        let components: [(c: Int, component: JPEG.Scan.Component)] =
+        try header.components.map {
             // validate sampling factor sum, and component residency
-            guard let c:Int = self.residents[$0.ci]
-            else
-            {
+            guard let c: Int = self.residents[$0.ci] else {
                 throw JPEG.DecodingError.undefinedScanComponentReference(
-                    $0.ci, .init(residents.keys))
+                    $0.ci, .init(residents.keys)
+                )
             }
 
-            let (x, y):(Int, Int) = self.planes[c].component.factor
+            let (x, y): (Int, Int) = self.planes[c].component.factor
             volume += x * y
 
             return (c, $0)
         }
 
-        guard 0 ... 10 ~= volume || components.count == 1
-        else
-        {
+        guard 0 ... 10 ~= volume || components.count == 1 else {
             throw JPEG.DecodingError.invalidScanSamplingVolume(volume)
         }
 
-        let passed:JPEG.Scan =
-            .init(band: header.band, bits: header.bits, components: components)
+        let passed: JPEG.Scan =
+        .init(band: header.band, bits: header.bits, components: components)
 
         // the ordering in the stored scan may be different since it has to match
         // the ordering in the frame header
-        let stored:JPEG.Scan =
-            .init(band: header.band, bits: header.bits, components: components.sorted
-        {
-            $0.component.ci < $1.component.ci
-        })
+        let stored: JPEG.Scan =
+        .init(
+            band: header.band, bits: header.bits, components: components.sorted {
+                $0.component.ci < $1.component.ci
+            }
+        )
 
-        if self.definitions.endIndex - 1 >= self.definitions.startIndex
-        {
+        if self.definitions.endIndex - 1 >= self.definitions.startIndex {
             self.definitions[self.definitions.endIndex - 1].scans.append(stored)
-        }
-        else
-        {
+        } else {
             // this shouldn’t happen, and will trigger an error later on when
             // the dequantize function runs
             self.definitions.append(([], [stored]))
         }
         return passed
     }
-    mutating
-    func push(qi:JPEG.Table.Quantization.Key)
-    {
-        if self.definitions.last?.scans.isEmpty ?? false
-        {
+    mutating func push(qi: JPEG.Table.Quantization.Key) {
+        if self.definitions.last?.scans.isEmpty ?? false {
             self.definitions[self.definitions.endIndex - 1].quanta.append(qi)
-        }
-        else
-        {
+        } else {
             self.definitions.append(([qi], []))
         }
     }
 
-    func index(ci:JPEG.Component.Key) -> Int?
-    {
-        guard let c:Int = self.residents[ci], self.recognized.indices ~= c
-        else
-        {
+    func index(ci: JPEG.Component.Key) -> Int? {
+        guard let c: Int = self.residents[ci], self.recognized.indices ~= c else {
             return nil
         }
         return c
     }
 }
 // high-level state handling
-extension JPEG.Layout
-{
-    struct Progression
-    {
-        private
-        var approximations:[JPEG.Component.Key: [Int]]
+extension JPEG.Layout {
+    struct Progression {
+        private var approximations: [JPEG.Component.Key: [Int]]
     }
 }
-extension JPEG.Layout.Progression
-{
-    init<S>(_ components:S) where S:Sequence, S.Element == JPEG.Component.Key
-    {
-        self.approximations = .init(uniqueKeysWithValues: components.map
-        {
-            ($0, .init(repeating: .max, count: 64))
-        })
+extension JPEG.Layout.Progression {
+    init<S>(_ components: S) where S: Sequence, S.Element == JPEG.Component.Key {
+        self.approximations = .init(
+            uniqueKeysWithValues: components.map {
+                ($0, .init(repeating: .max, count: 64))
+            }
+        )
     }
 
-    mutating
-    func update(_ scan:JPEG.Header.Scan) throws
-    {
-        for component:JPEG.Scan.Component in scan.components
-        {
-            guard var approximation:[Int] = self.approximations[component.ci]
-            else
-            {
+    mutating func update(_ scan: JPEG.Header.Scan) throws {
+        for component: JPEG.Scan.Component in scan.components {
+            guard var approximation: [Int] = self.approximations[component.ci] else {
                 continue
             }
 
@@ -1415,21 +1223,18 @@ extension JPEG.Layout.Progression
             self.approximations[component.ci] = nil
 
             // first scan must be a dc scan
-            guard approximation[0] < .max || scan.band.lowerBound == 0
-            else
-            {
+            guard approximation[0] < .max || scan.band.lowerBound == 0 else {
                 throw JPEG.DecodingError.invalidSpectralSelectionProgression(
-                    scan.band, component.ci)
+                    scan.band, component.ci
+                )
             }
             // we need to check this because even though the scan header
             // parser enforces bit-range constraints, it doesn’t enforce ordering
-            for (z, a):(Int, Int) in zip(scan.band, approximation[scan.band])
-            {
-                guard scan.bits.upperBound == a, scan.bits.lowerBound < a
-                else
-                {
+            for (z, a): (Int, Int) in zip(scan.band, approximation[scan.band]) {
+                guard scan.bits.upperBound == a, scan.bits.lowerBound < a else {
                     throw JPEG.DecodingError.invalidSuccessiveApproximationProgression(
-                        scan.bits, a, z: z, component.ci)
+                        scan.bits, a, z: z, component.ci
+                    )
                 }
 
                 approximation[z] = scan.bits.lowerBound
@@ -1442,8 +1247,7 @@ extension JPEG.Layout.Progression
 // this is an extremely boilerplatey api but i consider it necessary to avoid
 // having to provide huge amounts of (visually noisy) extraneous information
 // in the constructor (ie. huffman table selectors for refining dc scans)
-extension JPEG.Header.Scan
-{
+extension JPEG.Header.Scan {
     // these constructors bypass the validator. this is fine because the validator
     // runs when the scan headers get compiled into the layout struct.
     // it is possible for users to construct a process-inconsistent scan header
@@ -1466,30 +1270,30 @@ extension JPEG.Header.Scan
     ///
     /// -   Returns:
     ///     An unvalidated sequential scan header.
-    public static
-    func sequential(_ components:
-        [(
-            ci:JPEG.Component.Key,
-            dc:JPEG.Table.HuffmanDC.Selector,
-            ac:JPEG.Table.HuffmanAC.Selector
-        )]) -> Self
-    {
+    public static func sequential(
+        _ components: [(
+                ci: JPEG.Component.Key,
+                dc: JPEG.Table.HuffmanDC.Selector,
+                ac: JPEG.Table.HuffmanAC.Selector
+            )]
+    ) -> Self {
         precondition(!components.isEmpty, "components array cannot be empty")
-        return .init(band: 0 ..< 64, bits: 0 ..< .max,
-            components: components.map{ .init(ci: $0.ci, selector: ($0.dc, $0.ac))})
+        return .init(
+            band: 0 ..< 64, bits: 0 ..< .max,
+            components: components.map{ .init(ci: $0.ci, selector: ($0.dc, $0.ac))}
+        )
     }
     /// Creates a sequential scan descriptor.
     ///
     /// This function is variadic sugar for
     /// ``Scan/sequential(_:) ([(JPEG.Component.Key, JPEG.Table.HuffmanDC.Selector, JPEG.Table.HuffmanAC.Selector)])``.
-    public static
-    func sequential(_ components:
-        (
-            ci:JPEG.Component.Key,
-            dc:JPEG.Table.HuffmanDC.Selector,
-            ac:JPEG.Table.HuffmanAC.Selector
-        )...) -> Self
-    {
+    public static func sequential(
+        _ components: (
+            ci: JPEG.Component.Key,
+            dc: JPEG.Table.HuffmanDC.Selector,
+            ac: JPEG.Table.HuffmanAC.Selector
+        )...
+    ) -> Self {
         .sequential(components)
     }
     /// Creates a progressive initial DC scan descriptor.
@@ -1514,25 +1318,27 @@ extension JPEG.Header.Scan
     ///
     /// -   Returns:
     ///     An unvalidated initial DC scan header.
-    public static
-    func progressive(_
-        components:[(ci:JPEG.Component.Key, dc:JPEG.Table.HuffmanDC.Selector)],
-        bits:PartialRangeFrom<Int>) -> Self
-    {
+    public static func progressive(
+        _
+        components: [(ci: JPEG.Component.Key, dc: JPEG.Table.HuffmanDC.Selector)],
+        bits: PartialRangeFrom<Int>
+    ) -> Self {
         precondition(!components.isEmpty,  "components array cannot be empty")
         precondition(bits.lowerBound >= 0, "lower bound of bit range cannot be negative")
-        return .init(band: 0 ..< 1, bits: bits.lowerBound ..< .max,
-            components: components.map{ .init(ci: $0.ci, selector: ($0.dc, \.0))})
+        return .init(
+            band: 0 ..< 1, bits: bits.lowerBound ..< .max,
+            components: components.map{ .init(ci: $0.ci, selector: ($0.dc, \.0))}
+        )
     }
     /// Creates a progressive initial DC scan descriptor.
     ///
     /// This function is variadic sugar for
     /// ``Scan/progressive(_:bits:) ([(JPEG.Component.Key, JPEG.Table.HuffmanDC.Selector)], _)``.
-    public static
-    func progressive(_
-        components:(ci:JPEG.Component.Key, dc:JPEG.Table.HuffmanDC.Selector)...,
-        bits:PartialRangeFrom<Int>) -> Self
-    {
+    public static func progressive(
+        _
+        components: (ci: JPEG.Component.Key, dc: JPEG.Table.HuffmanDC.Selector)...,
+        bits: PartialRangeFrom<Int>
+    ) -> Self {
         .progressive(components, bits: bits)
     }
     /// Creates a progressive refining DC scan descriptor.
@@ -1555,25 +1361,27 @@ extension JPEG.Header.Scan
     ///
     /// -   Returns:
     ///     An unvalidated refining DC scan header.
-    public static
-    func progressive(_
-        components:[JPEG.Component.Key],
-        bit:Int) -> Self
-    {
+    public static func progressive(
+        _
+        components: [JPEG.Component.Key],
+        bit: Int
+    ) -> Self {
         precondition(!components.isEmpty, "components array cannot be empty")
         precondition(bit >= 0,            "bit index cannot be negative")
-        return .init(band: 0 ..< 1, bits: bit ..< bit + 1,
-            components: components.map{ .init(ci: $0, selector: (\.0, \.0))})
+        return .init(
+            band: 0 ..< 1, bits: bit ..< bit + 1,
+            components: components.map{ .init(ci: $0, selector: (\.0, \.0))}
+        )
     }
     /// Creates a progressive refining DC scan descriptor.
     ///
     /// This function is variadic sugar for
     /// ``Scan/progressive(_:bit:) ([JPEG.Component.Key], _)``.
-    public static
-    func progressive(_
-        components:JPEG.Component.Key...,
-        bit:Int) -> Self
-    {
+    public static func progressive(
+        _
+        components: JPEG.Component.Key...,
+        bit: Int
+    ) -> Self {
         .progressive(components, bit: bit)
     }
     /// Creates a progressive initial AC scan descriptor.
@@ -1600,14 +1408,16 @@ extension JPEG.Header.Scan
     ///
     /// -   Returns:
     ///     An unvalidated initial AC scan header.
-    public static
-    func progressive(_
-        component:(ci:JPEG.Component.Key, ac:JPEG.Table.HuffmanAC.Selector),
-        band:Range<Int>, bits:PartialRangeFrom<Int>) -> Self
-    {
+    public static func progressive(
+        _
+        component: (ci: JPEG.Component.Key, ac: JPEG.Table.HuffmanAC.Selector),
+        band: Range<Int>, bits: PartialRangeFrom<Int>
+    ) -> Self {
         precondition(bits.lowerBound >= 0, "lower bound of bit range cannot be negative")
-        return .init(band: band.clamped(to: 1 ..< 64), bits: bits.lowerBound ..< .max,
-            components: [.init(ci: component.ci, selector: (\.0, component.ac))])
+        return .init(
+            band: band.clamped(to: 1 ..< 64), bits: bits.lowerBound ..< .max,
+            components: [.init(ci: component.ci, selector: (\.0, component.ac))]
+        )
     }
     /// Creates a progressive refining AC scan descriptor.
     ///
@@ -1633,42 +1443,35 @@ extension JPEG.Header.Scan
     ///
     /// -   Returns:
     ///     An unvalidated refining AC scan header.
-    public static
-    func progressive(_
-        component:(ci:JPEG.Component.Key, ac:JPEG.Table.HuffmanAC.Selector),
-        band:Range<Int>, bit:Int) -> Self
-    {
+    public static func progressive(
+        _
+        component: (ci: JPEG.Component.Key, ac: JPEG.Table.HuffmanAC.Selector),
+        band: Range<Int>, bit: Int
+    ) -> Self {
         precondition(bit >= 0, "bit index cannot be negative")
-        return .init(band: band.clamped(to: 1 ..< 64), bits: bit ..< bit + 1,
-            components: [.init(ci: component.ci, selector: (\.0, component.ac))])
+        return .init(
+            band: band.clamped(to: 1 ..< 64), bits: bit ..< bit + 1,
+            components: [.init(ci: component.ci, selector: (\.0, component.ac))]
+        )
     }
 }
 
 // bitstream
-extension JPEG
-{
+extension JPEG {
     /// A padded bitstream.
-    public
-    struct Bitstream
-    {
-        private
-        var atoms:[UInt16]
-        @_spi(_Testable) public private(set)
-        var count:Int
+    public struct Bitstream {
+        private var atoms: [UInt16]
+        @_spi(_Testable) public private(set) var count: Int
     }
 }
-extension JPEG.Bitstream
-{
-    init(_ data:[UInt8])
-    {
+extension JPEG.Bitstream {
+    init(_ data: [UInt8]) {
         // convert byte array to big-endian UInt16 array
-        var atoms:[UInt16] = stride(from: 0, to: data.count - 1, by: 2).map
-        {
+        var atoms: [UInt16] = stride(from: 0, to: data.count - 1, by: 2).map {
             UInt16.init(data[$0]) << 8 | .init(data[$0 | 1])
         }
         // if odd number of bytes, pad out last atom
-        if data.count & 1 != 0
-        {
+        if data.count & 1 != 0 {
             atoms.append(.init(data[data.count - 1]) << 8 | 0x00ff)
         }
 
@@ -1680,20 +1483,17 @@ extension JPEG.Bitstream
     }
 
     // single bit (0 or 1)
-    subscript<I>(i:Int, as _:I.Type) -> I where I:BinaryInteger
-    {
-        let a:Int           = i >> 4,
-            b:Int           = i & 0x0f
-        let shift:Int       = UInt16.bitWidth &- 1 &- b
-        let single:UInt16   = (self.atoms[a] &>> shift) & 1
+    subscript<I>(i: Int, as _: I.Type) -> I where I: BinaryInteger {
+        let a: Int           = i >> 4,
+        b: Int           = i & 0x0f
+        let shift: Int       = UInt16.bitWidth &- 1 &- b
+        let single: UInt16   = (self.atoms[a] &>> shift) & 1
         return .init(single)
     }
 
-    @_spi(_Testable) public
-    subscript(i:Int, count c:Int) -> UInt16
-    {
-        let a:Int = i >> 4,
-            b:Int = i & 0x0f
+    @_spi(_Testable) public subscript(i: Int, count c: Int) -> UInt16 {
+        let a: Int = i >> 4,
+        b: Int = i & 0x0f
         // w.0             w.1
         //        |<-- c = 16 -->|
         //  [ : : :x:x:x:x:x|x:x:x: : : : : ]
@@ -1701,42 +1501,34 @@ extension JPEG.Bitstream
         //      b = 6
         //  [x:x:x:x:x|x:x:x]
         // must use >> and not &>> to correctly handle shift of 16
-        let front:UInt16 = self.atoms[a] &<< b | self.atoms[a &+ 1] >> (UInt16.bitWidth &- b)
+        let front: UInt16 = self.atoms[a] &<< b | self.atoms[a &+ 1] >> (UInt16.bitWidth &- b)
         return front &>> (UInt16.bitWidth - c)
     }
 
     // integer is 1 or 0 (ignoring higher bits), we avoid using `Bool` here
     // since this is not semantically a logic parameter
-    mutating
-    func append<I>(bit:I) where I:BinaryInteger
-    {
-        let a:Int           = self.count >> 4,
-            b:Int           = self.count & 0x0f
+    mutating func append<I>(bit: I) where I: BinaryInteger {
+        let a: Int           = self.count >> 4,
+        b: Int           = self.count & 0x0f
 
-        guard a < self.atoms.count
-        else
-        {
+        guard a < self.atoms.count else {
             self.atoms.append(0xffff)
             self.append(bit: bit)
             return
         }
 
-        let shift:Int       = UInt16.bitWidth &- 1 &- b
-        let inverted:UInt16 = ~(.init(~bit & 1) &<< shift)
+        let shift: Int       = UInt16.bitWidth &- 1 &- b
+        let inverted: UInt16 = ~(.init(~bit & 1) &<< shift)
         // all bits at and beyond bit index `self.count` should be `1`-bits
         self.atoms[a]      &= inverted
         self.count         += 1
     }
     // relevant bits in the least significant positions
-    @_spi(_Testable) public mutating
-    func append(_ bits:UInt16, count:Int)
-    {
-        let a:Int           = self.count >> 4,
-            b:Int           = self.count & 0x0f
+    @_spi(_Testable) public mutating func append(_ bits: UInt16, count: Int) {
+        let a: Int           = self.count >> 4,
+        b: Int           = self.count & 0x0f
 
-        guard a + 1 < self.atoms.count
-        else
-        {
+        guard a + 1 < self.atoms.count else {
             self.atoms.append(0xffff)
             self.append(bits, count: count)
             return
@@ -1752,9 +1544,8 @@ extension JPEG.Bitstream
         // invert bits because we use `1`-bits as the “background”, and shift
         // operator will only extend with `0`-bits
         // must use >> and << and not &>> and &<< to correctly handle shift of 16
-        let trimmed:UInt16 = bits &<< (UInt16.bitWidth &- count) | .max >> count
-        let inverted:(UInt16, UInt16) =
-        (
+        let trimmed: UInt16 = bits &<< (UInt16.bitWidth &- count) | .max >> count
+        let inverted: (UInt16, UInt16) = (
             ~trimmed &>>                     b,
             ~trimmed  << (UInt16.bitWidth &- b)
         )
@@ -1764,12 +1555,9 @@ extension JPEG.Bitstream
         self.count        += count
     }
 
-    func bytes(escaping escaped:UInt8, with sequence:(UInt8, UInt8)) -> [UInt8]
-    {
-        let unescaped:[UInt8] = .init(unsafeUninitializedCapacity: 2 * self.atoms.count)
-        {
-            for (i, atom):(Int, UInt16) in self.atoms.enumerated()
-            {
+    func bytes(escaping escaped: UInt8, with sequence: (UInt8, UInt8)) -> [UInt8] {
+        let unescaped: [UInt8] = .init(unsafeUninitializedCapacity: 2 * self.atoms.count) {
+            for (i, atom): (Int, UInt16) in self.atoms.enumerated() {
                 $0[i << 1    ] = .init(atom >> 8)
                 $0[i << 1 | 1] = .init(atom & 0xff)
             }
@@ -1777,18 +1565,14 @@ extension JPEG.Bitstream
             $1 = 2 * self.atoms.count
         }
         // figure out which of the bytes are actually part of the bitstream
-        let count:Int = self.count >> 3 + (self.count & 0x07 != 0 ? 1 : 0)
-        var bytes:[UInt8] = []
-            bytes.reserveCapacity(count)
-        for byte:UInt8 in unescaped.prefix(count)
-        {
-            if byte == escaped
-            {
+        let count: Int = self.count >> 3 + (self.count & 0x07 != 0 ? 1 : 0)
+        var bytes: [UInt8] = []
+        bytes.reserveCapacity(count)
+        for byte: UInt8 in unescaped.prefix(count) {
+            if byte == escaped {
                 bytes.append(sequence.0)
                 bytes.append(sequence.1)
-            }
-            else
-            {
+            } else {
                 bytes.append(byte)
             }
         }
@@ -1796,8 +1580,7 @@ extension JPEG.Bitstream
         return bytes
     }
 }
-extension JPEG.Bitstream:ExpressibleByArrayLiteral
-{
+extension JPEG.Bitstream: ExpressibleByArrayLiteral {
     /// Creates a bitstream from the given array literal.
     ///
     /// This type stores the bitstream in 16-bit atoms. If the array literal
@@ -1809,9 +1592,7 @@ extension JPEG.Bitstream:ExpressibleByArrayLiteral
     ///     each byte come first in the bitstream. If the bitstream does not
     ///     correspond to a whole number of bytes, the least significant bits
     ///     in the last byte should be padded with 1-bits.
-    public
-    init(arrayLiteral:UInt8...)
-    {
+    public init(arrayLiteral: UInt8...) {
         self.init(arrayLiteral)
     }
 }
