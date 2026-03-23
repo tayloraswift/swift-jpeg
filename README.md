@@ -75,7 +75,7 @@ import JPEG
 func encode(
     jpeg path: String,
     size: (x:Int, y:Int),
-    pixels: [JPEG.RGB],
+    pixels rgb: [JPEG.RGB],
     compression: Double, // 0.0 = highest quality
 ) throws {
     let layout: JPEG.Layout<JPEG.Common> = .init(
