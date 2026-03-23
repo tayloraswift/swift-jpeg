@@ -2,34 +2,25 @@
 License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-extension JPEG
-{
+extension JPEG {
     /// Functionality common to all library error types.
-    public
-    protocol Error:Swift.Error
-    {
+    public protocol Error: Swift.Error {
         /// The human-readable namespace for errors of this type.
-        static
-        var namespace:String
-        {
+        static var namespace: String {
             get
         }
         /// A basic description of this error instance.
-        var message:String
-        {
+        var message: String {
             get
         }
         /// A detailed description of this error instance, if available.
-        var details:String?
-        {
+        var details: String? {
             get
         }
     }
 
     /// A lexing error.
-    public
-    enum LexingError:JPEG.Error
-    {
+    public enum LexingError: JPEG.Error {
         /// The lexer encountered end-of-stream while lexing a marker
         /// segment type indicator.
         case truncatedMarkerSegmentType
@@ -41,7 +32,7 @@ extension JPEG
         ///
         /// -   Parameter expected:
         ///     The number of bytes the lexer was expecting to read.
-        case truncatedMarkerSegmentBody(expected:Int)
+        case truncatedMarkerSegmentBody(expected: Int)
         /// The lexer encountered end-of-stream while lexing an entropy-coded
         /// segment, usually because it was expecting a subsequent marker segment.
         case truncatedEntropyCodedSegment
@@ -64,17 +55,12 @@ extension JPEG
         ///     The invalid type indicator code encountered by the lexer.
         case invalidMarkerSegmentType(UInt8)
         /// Returns the string `"lexing error"`.
-        public static
-        var namespace:String
-        {
+        public static var namespace: String {
             "lexing error"
         }
         /// Returns a basic description of this lexing error.
-        public
-        var message:String
-        {
-            switch self
-            {
+        public var message: String {
+            switch self {
             case .truncatedMarkerSegmentType:
                 return "truncated marker segment type"
             case .truncatedMarkerSegmentHeader:
@@ -93,33 +79,40 @@ extension JPEG
             }
         }
         /// Returns a detailed description of this lexing error, if available.
-        public
-        var details:String?
-        {
-            switch self
-            {
+        public var details: String? {
+            switch self {
             case .truncatedMarkerSegmentType:
                 return "unexpected end-of-stream while lexing marker segment type field"
             case .truncatedMarkerSegmentHeader:
                 return "unexpected end-of-stream while lexing marker segment length field"
             case .truncatedMarkerSegmentBody(expected: let expected):
-                return "unexpected end-of-stream while lexing marker segment body (expected \(expected) bytes)"
+                return """
+                unexpected end-of-stream while lexing marker segment body (expected \(
+                    expected
+                ) bytes)
+                """
             case .truncatedEntropyCodedSegment:
                 return "unexpected end-of-stream while lexing entropy coded segment"
 
             case .invalidMarkerSegmentLength(let length):
                 return "value of marker segment length field (\(length)) cannot be less than 2"
             case .invalidMarkerSegmentPrefix(let byte):
-                return "padding byte (0x\(String.init(byte, radix: 16))) preceeding marker segment must be 0xff"
+                return """
+                padding byte (0x\(
+                    String.init(byte, radix: 16)
+                )) preceeding marker segment must be 0xff
+                """
             case .invalidMarkerSegmentType(let code):
-                return "marker segment type code (0x\(String.init(code, radix: 16))) is a reserved marker code"
+                return """
+                marker segment type code (0x\(
+                    String.init(code, radix: 16)
+                )) is a reserved marker code
+                """
             }
         }
     }
     /// A parsing error.
-    public
-    enum ParsingError:JPEG.Error
-    {
+    public enum ParsingError: JPEG.Error {
         /// A marker segment contained less than the expected amount of data.
         ///
         /// -   Parameter type:
@@ -130,7 +123,7 @@ extension JPEG
         ///
         /// -   Parameter expected:
         ///     The range of marker segment sizes that was expected, in bytes.
-        case truncatedMarkerSegmentBody(Marker, Int, expected:ClosedRange<Int>)
+        case truncatedMarkerSegmentBody(Marker, Int, expected: ClosedRange<Int>)
         /// A marker segment contained more than the expected amount of data.
         ///
         /// -   Parameter type:
@@ -141,7 +134,7 @@ extension JPEG
         ///
         /// -   Parameter expected:
         ///     The amount of data that was expected, in bytes.
-        case extraneousMarkerSegmentData(Marker, Int, expected:Int)
+        case extraneousMarkerSegmentData(Marker, Int, expected: Int)
         /// A JFIF segment had an invalid signature.
         ///
         /// -   Parameter _:
@@ -151,7 +144,7 @@ extension JPEG
         ///
         /// -   Parameter _:
         ///     The version code read from the segment.
-        case invalidJFIFVersionCode((major:UInt8, minor:UInt8))
+        case invalidJFIFVersionCode((major: UInt8, minor: UInt8))
         /// A JFIF segment had an invalid density unit code.
         ///
         /// -   Parameter _:
@@ -213,7 +206,7 @@ extension JPEG
         ///
         /// -   Parameter key:
         ///     The component key.
-        case invalidFrameComponentSamplingFactor((x:Int, y:Int), Component.Key)
+        case invalidFrameComponentSamplingFactor((x: Int, y: Int), Component.Key)
         /// The same component key occurred more than once in the same frame header.
         ///
         /// -   Parameter _:
@@ -264,7 +257,7 @@ extension JPEG
         ///
         /// -   Parameter process:
         ///     The coding process used by the image.
-        case invalidScanProgressiveSubset(band:(Int, Int), bits:(Int, Int), Process)
+        case invalidScanProgressiveSubset(band: (Int, Int), bits: (Int, Int), Process)
 
         /// A huffman table definition had an invalid huffman table
         /// selector code.
@@ -292,35 +285,27 @@ extension JPEG
         ///     The precision indicator code read from the segment.
         case invalidQuantizationPrecisionCode(UInt8)
 
-        static
-        func mismatched(marker:Marker, count:Int, minimum:Int) -> Self
-        {
+        static func mismatched(marker: Marker, count: Int, minimum: Int) -> Self {
             .truncatedMarkerSegmentBody(marker, count, expected: minimum ... .max)
         }
-        static
-        func mismatched(marker:Marker, count:Int, expected:Int) -> Self
-        {
-            if count < expected
-            {
-                return .truncatedMarkerSegmentBody(marker, count, expected: expected ... expected)
-            }
-            else
-            {
+        static func mismatched(marker: Marker, count: Int, expected: Int) -> Self {
+            if count < expected {
+                return .truncatedMarkerSegmentBody(
+                    marker,
+                    count,
+                    expected: expected ... expected
+                )
+            } else {
                 return .extraneousMarkerSegmentData(marker, count, expected: expected)
             }
         }
         /// Returns the string `"parsing error"`.
-        public static
-        var namespace:String
-        {
+        public static var namespace: String {
             "parsing error"
         }
         /// Returns a basic description of this parsing error.
-        public
-        var message:String
-        {
-            switch self
-            {
+        public var message: String {
+            switch self {
             case .truncatedMarkerSegmentBody:
                 return "truncated marker segment body"
             case .extraneousMarkerSegmentData:
@@ -378,93 +363,155 @@ extension JPEG
             }
         }
         /// Returns a detailed description of this parsing error, if available.
-        public
-        var details:String?
-        {
-            switch self
-            {
+        public var details: String? {
+            switch self {
             case .truncatedMarkerSegmentBody(let marker, let count, expected: let expected):
-                if expected.count == 1
-                {
-                    return "\(marker) segment (\(count) bytes) must be exactly \(expected.lowerBound) bytes long"
-                }
-                else
-                {
-                    return "\(marker) segment (\(count) bytes) must be at least \(expected.lowerBound) bytes long"
+                if expected.count == 1 {
+                    return """
+                    \(marker) segment (\(count) bytes) must be exactly \(
+                        expected.lowerBound
+                    ) bytes long
+                    """
+                } else {
+                    return """
+                    \(marker) segment (\(count) bytes) must be at least \(
+                        expected.lowerBound
+                    ) bytes long
+                    """
                 }
             case .extraneousMarkerSegmentData(let marker, let count, expected: let expected):
-                return "\(marker) segment (\(count) bytes) must be exactly \(expected) bytes long"
+                return """
+                \(marker) segment (\(count) bytes) must be exactly \(expected) bytes long
+                """
 
             case .invalidJFIFSignature(let string):
-                return "string (\(string.map{ "0x\(String.init($0, radix: 16))" }.joined(separator: ", "))) is not a valid JFIF signature"
+                return """
+                string (\(
+                    string.map{ "0x\(String.init($0, radix: 16))" }.joined(separator: ", ")
+                )) is not a valid JFIF signature
+                """
             case .invalidJFIFVersionCode(let (major, minor)):
                 return "version (\(major).\(minor)) must be within 1.0 ... 1.2"
             case .invalidJFIFDensityUnitCode(let code):
                 return "density code (\(code)) does not correspond to a valid density unit"
 
             case .invalidEXIFSignature(let string):
-                return "string (\(string.map{ "0x\(String.init($0, radix: 16))" }.joined(separator: ", "))) is not a valid EXIF signature"
+                return """
+                string (\(
+                    string.map{ "0x\(String.init($0, radix: 16))" }.joined(separator: ", ")
+                )) is not a valid EXIF signature
+                """
             case .invalidEXIFEndiannessCode(let code):
-                return "endianness code (\(code.0), \(code.1), \(code.2), \(code.3)) does not correspond to a valid EXIF endianness"
+                return """
+                endianness code (\(code.0), \(code.1), \(code.2), \(
+                    code.3
+                )) does not correspond to a valid EXIF endianness
+                """
 
             case .invalidFrameWidth(let width):
                 return "frame cannot have width \(width)"
             case .invalidFramePrecision(let precision, let process):
-                return "precision (\(precision)) is not allowed for frame coding process '\(process)'"
+                return """
+                precision (\(precision)) is not allowed for frame coding process '\(process)'
+                """
             case .invalidFrameComponentCount(let count, let process):
-                if count == 0
-                {
+                if count == 0 {
                     return "frame must have at least one component"
-                }
-                else
-                {
-                    return "frame (\(count) components) with coding process '\(process)' has disallowed component count"
+                } else {
+                    return """
+                    frame (\(count) components) with coding process '\(
+                        process
+                    )' has disallowed component count
+                    """
                 }
             case .invalidFrameQuantizationSelectorCode(let code):
                 return "quantization table selector code (\(code)) must be within 0 ... 3"
             case .invalidFrameQuantizationSelector(let selector, let process):
-                return "quantization table selector (\(String.init(selector: selector))) is not allowed for coding process '\(process)'"
+                return """
+                quantization table selector (\(
+                    String.init(selector: selector)
+                )) is not allowed for coding process '\(
+                    process
+                )'
+                """
             case .invalidFrameComponentSamplingFactor(let factor, let ci):
-                return "both sampling factors (\(factor.x), \(factor.y)) for component index \(ci) must be within 1 ... 4"
+                return """
+                both sampling factors (\(factor.x), \(factor.y)) for component index \(
+                    ci
+                ) must be within 1 ... 4
+                """
             case .duplicateFrameComponentIndex(let ci):
                 return "component index (\(ci)) conflicts with previously defined component"
 
             case .invalidScanHuffmanSelectorCode(let code):
-                return "huffman table selector pair code (\(code)) must be within 0 ... 3 or 16 ... 19"
+                return """
+                huffman table selector pair code (\(code)) must be within 0 ... 3 or 16 ... 19
+                """
             case .invalidScanHuffmanDCSelector(let selector, let process):
-                return "dc huffman table selector (\(String.init(selector: selector))) is not allowed for coding process '\(process)'"
+                return """
+                dc huffman table selector (\(
+                    String.init(selector: selector)
+                )) is not allowed for coding process '\(
+                    process
+                )'
+                """
             case .invalidScanHuffmanACSelector(let selector, let process):
-                return "ac huffman table selector (\(String.init(selector: selector))) is not allowed for coding process '\(process)'"
+                return """
+                ac huffman table selector (\(
+                    String.init(selector: selector)
+                )) is not allowed for coding process '\(
+                    process
+                )'
+                """
             case .invalidScanComponentCount(let count, let process):
-                if count == 0
-                {
+                if count == 0 {
                     return "scan must contain at least one component"
-                }
-                else
-                {
-                    return "scan component count (\(count)) is not allowed for coding process '\(process)'"
+                } else {
+                    return """
+                    scan component count (\(count)) is not allowed for coding process '\(
+                        process
+                    )'
+                    """
                 }
             case .invalidScanProgressiveSubset(band: let band, bits: let bits, let process):
-                return "scan cannot define spectral selection (\(band.0) ..< \(band.1)) with successive approximation (\(bits.0) ..< \(bits.1)) for coding process '\(process)'"
+                return """
+                scan cannot define spectral selection (\(band.0) ..< \(
+                    band.1
+                )) with successive approximation (\(
+                    bits.0
+                ) ..< \(
+                    bits.1
+                )) for coding process '\(
+                    process
+                )'
+                """
 
             case .invalidHuffmanTargetCode(let code):
-                return "selector code (0x\(String.init(code, radix: 16))) does not correspond to a valid huffman table destination"
+                return """
+                selector code (0x\(
+                    String.init(code, radix: 16)
+                )) does not correspond to a valid huffman table destination
+                """
             case .invalidHuffmanTypeCode(let code):
                 return "code (\(code)) does not correspond to a valid huffman table type"
             case .invalidHuffmanTable:
                 return nil
 
             case .invalidQuantizationTargetCode(let code):
-                return "selector code (0x\(String.init(code, radix: 16))) does not correspond to a valid quantization table destination"
+                return """
+                selector code (0x\(
+                    String.init(code, radix: 16)
+                )) does not correspond to a valid quantization table destination
+                """
             case .invalidQuantizationPrecisionCode(let code):
-                return "code (\(code)) does not correspond to a valid quantization table precision"
+                return """
+                code (\(code)) does not correspond to a valid quantization table precision
+                """
             }
         }
     }
     /// A decoding error.
-    public
-    enum DecodingError:JPEG.Error
-    {
+    public enum DecodingError: JPEG.Error {
         /// An entropy-coded segment contained less than the expected amount of data.
         case truncatedEntropyCodedSegment
 
@@ -479,7 +526,7 @@ extension JPEG
         ///     The expected phase, which is one greater than the phase of the
         ///     last-encountered restart marker (modulo 8), or 0 if this is the
         ///     first restart marker in the entropy-coded segment.
-        case invalidRestartPhase(Int, expected:Int)
+        case invalidRestartPhase(Int, expected: Int)
         /// A restart marker appeared, but no restart interval was ever defined,
         /// or restart markers were disabled.
         case missingRestartIntervalSegment
@@ -511,7 +558,7 @@ extension JPEG
         ///
         /// -   Parameter key:
         ///     The component key of the invalidated color channel.
-        case invalidSuccessiveApproximationProgression(Range<Int>, Int, z:Int, Component.Key)
+        case invalidSuccessiveApproximationProgression(Range<Int>, Int, z: Int, Component.Key)
 
         /// The decoder decoded an out-of-range composite value.
         ///
@@ -524,7 +571,7 @@ extension JPEG
         ///
         /// -   Parameter expected:
         ///     The expected range for the composite value.
-        case invalidCompositeValue(Int16, expected:ClosedRange<Int>)
+        case invalidCompositeValue(Int16, expected: ClosedRange<Int>)
         /// The decoder decoded an out-of-range end-of-band/end-of-block run count.
         ///
         /// This error occurs when a sequential scan tries to encode an end-of-band
@@ -536,7 +583,7 @@ extension JPEG
         ///
         /// -   Parameter expected:
         ///     The expected range for the end-of-band/end-of-block run count.
-        case invalidCompositeBlockRun(Int, expected:ClosedRange<Int>)
+        case invalidCompositeBlockRun(Int, expected: ClosedRange<Int>)
 
         /// A scan encoded a component with a key that was not one of the
         /// resident components declared in the frame header.
@@ -638,17 +685,12 @@ extension JPEG
         case unrecognizedColorFormat(Set<Component.Key>, Int, Any.Type)
 
         /// Returns the string `"decoding error"`.
-        public static
-        var namespace:String
-        {
+        public static var namespace: String {
             "decoding error"
         }
         /// Returns a basic description of this decoding error.
-        public
-        var message:String
-        {
-            switch self
-            {
+        public var message: String {
+            switch self {
             case .truncatedEntropyCodedSegment:
                 return "truncated entropy coded segment bitstream"
 
@@ -706,39 +748,80 @@ extension JPEG
             }
         }
         /// Returns a detailed description of this decoding error, if available.
-        public
-        var details:String?
-        {
-            switch self
-            {
+        public var details: String? {
+            switch self {
             case .truncatedEntropyCodedSegment:
                 return "not enough data in entropy coded segment bitstream"
 
             case .invalidRestartPhase(let phase, expected: let expected):
-                return "decoded restart phase (\(phase)) is not the expected phase (\(expected))"
+                return """
+                decoded restart phase (\(phase)) is not the expected phase (\(expected))
+                """
             case .missingRestartIntervalSegment:
                 return "encountered restart segments, but no restart interval has been defined"
 
             case .invalidSpectralSelectionProgression(let band, let ci):
-                return "frequency band \(band.lowerBound) ..< \(band.upperBound) for component \(ci) is not allowed"
+                return """
+                frequency band \(band.lowerBound) ..< \(band.upperBound) for component \(
+                    ci
+                ) is not allowed
+                """
             case .invalidSuccessiveApproximationProgression(let bits, let a, z: let z, let ci):
-                return "bits \(bits.lowerBound)\(bits.upperBound == .max ? "..." : " \(bits.upperBound)") for component \(ci) cannot refine bit \(a) of coefficient \(z)"
+                return """
+                bits \(bits.lowerBound)\(
+                    bits.upperBound == .max ? "..." : " \(bits.upperBound)"
+                ) for component \(
+                    ci
+                ) cannot refine bit \(
+                    a
+                ) of coefficient \(
+                    z
+                )
+                """
 
             case .invalidCompositeValue(let value, expected: let expected):
-                return "magnitude-tail encoded value (\(value)) must be within \(expected.lowerBound) ... \(expected.upperBound)"
+                return """
+                magnitude-tail encoded value (\(value)) must be within \(
+                    expected.lowerBound
+                ) ... \(
+                    expected.upperBound
+                )
+                """
             case .invalidCompositeBlockRun(let value, expected: let expected):
-                return "magnitude-tail encoded end-of-band run length (\(value)) must be within \(expected.lowerBound) ... \(expected.upperBound)"
+                return """
+                magnitude-tail encoded end-of-band run length (\(value)) must be within \(
+                    expected.lowerBound
+                ) ... \(
+                    expected.upperBound
+                )
+                """
 
             case .undefinedScanComponentReference(let ci, let defined):
-                return "component with index (\(ci)) is not one of the components \(defined.sorted()) defined in frame header"
+                return """
+                component with index (\(ci)) is not one of the components \(
+                    defined.sorted()
+                ) defined in frame header
+                """
             case .invalidScanSamplingVolume(let volume):
                 return "scan mcu sample volume (\(volume)) can be at most 10"
             case .undefinedScanHuffmanDCReference(let selector):
-                return "no dc huffman table has been installed at the location <\(String.init(selector: selector))>"
+                return """
+                no dc huffman table has been installed at the location <\(
+                    String.init(selector: selector)
+                )>
+                """
             case .undefinedScanHuffmanACReference(let selector):
-                return "no ac huffman table has been installed at the location <\(String.init(selector: selector))>"
+                return """
+                no ac huffman table has been installed at the location <\(
+                    String.init(selector: selector)
+                )>
+                """
             case .undefinedScanQuantizationReference(let selector):
-                return "no quantization table has been installed at the location <\(String.init(selector: selector))>"
+                return """
+                no quantization table has been installed at the location <\(
+                    String.init(selector: selector)
+                )>
+                """
             case .invalidScanQuantizationPrecision(let precision):
                 return "quantization table has invalid integer type (\(precision))"
 
@@ -762,42 +845,37 @@ extension JPEG
             case .unsupportedFrameCodingProcess(let process):
                 return "frame coding process (\(process)) is not supported"
             case .unrecognizedColorFormat(let components, let precision, let type):
-                return "color format type (\(type)) could not match component identifier set \(components.sorted()) with precision \(precision) to a known value"
+                return """
+                color format type (\(type)) could not match component identifier set \(
+                    components.sorted()
+                ) with precision \(
+                    precision
+                ) to a known value
+                """
             }
         }
     }
 }
 
-extension JPEG
-{
+extension JPEG {
     /// A formatting error.
-    public
-    enum FormattingError:JPEG.Error
-    {
+    public enum FormattingError: JPEG.Error {
         /// The formatter could not write data to its destination stream.
         case invalidDestination
         /// Returns the string `"formatting error"`.
-        public static
-        var namespace:String
-        {
+        public static var namespace: String {
             "formatting error"
         }
         /// Returns a basic description of this formatting error.
-        public
-        var message:String
-        {
-            switch self
-            {
+        public var message: String {
+            switch self {
             case .invalidDestination:
                 return "failed to write to destination"
             }
         }
         /// Returns a detailed description of this formatting error, if available.
-        public
-        var details:String?
-        {
-            switch self
-            {
+        public var details: String? {
+            switch self {
             case .invalidDestination:
                 return nil
             }
@@ -806,58 +884,38 @@ extension JPEG
     /// A serializing error.
     ///
     /// This enumeration currently has no cases.
-    public
-    enum SerializingError:JPEG.Error
-    {
+    public enum SerializingError: JPEG.Error {
         /// Returns the string `"serializing error"`.
-        public static
-        var namespace:String
-        {
+        public static var namespace: String {
             "serializing error"
         }
         /// Returns a basic description of this serializing error.
-        public
-        var message:String
-        {
-            switch self
-            {
+        public var message: String {
+            switch self {
             }
         }
         /// Returns a detailed description of this serializing error, if available.
-        public
-        var details:String?
-        {
-            switch self
-            {
+        public var details: String? {
+            switch self {
             }
         }
     }
     /// An encoding error.
     ///
     /// This enumeration currently has no cases.
-    public
-    enum EncodingError:JPEG.Error
-    {
+    public enum EncodingError: JPEG.Error {
         /// Returns the string `"encoding error"`.
-        public static
-        var namespace:String
-        {
+        public static var namespace: String {
             "encoding error"
         }
         /// Returns a basic description of this encoding error.
-        public
-        var message:String
-        {
-            switch self
-            {
+        public var message: String {
+            switch self {
             }
         }
         /// Returns a detailed description of this encoding error, if available.
-        public
-        var details:String?
-        {
-            switch self
-            {
+        public var details: String? {
+            switch self {
             }
         }
     }

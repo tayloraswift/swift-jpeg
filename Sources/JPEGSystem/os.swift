@@ -5,15 +5,19 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 import JPEG
 
 #if os(macOS)
-    import Darwin
+import Darwin
 #elseif canImport(Glibc)
-    import Glibc
+import Glibc
 #elseif canImport(Musl)
-    import Musl
+import Musl
 #elseif os(Android)
-    import Android
+import Android
 #else
-    #warning("unsupported or untested platform (please open an issue at https://github.com/tayloraswift/swift-jpeg/issues)")
+#warning(
+    """
+    unsupported or untested platform (please open an issue at https://github.com/tayloraswift/swift-jpeg/issues)
+    """
+)
 #endif
 
 #if os(macOS) || os(Linux) || os(Android)
@@ -22,13 +26,9 @@ import JPEG
 ///
 /// These APIs are only available on MacOS and Linux. However, the rest of the
 /// framework is pure Swift and should support all Swift platforms.
-public
-enum System
-{
+public enum System {
     /// A namespace for file IO functionality.
-    public
-    enum File
-    {
+    public enum File {
         #if os(Android)
         typealias Descriptor = OpaquePointer
         #else
@@ -36,24 +36,17 @@ enum System
         #endif
 
         /// A type for reading data from files on disk.
-        public
-        struct Source
-        {
-            private
-            let descriptor:Descriptor
+        public struct Source {
+            private let descriptor: Descriptor
         }
 
         /// A type for writing data to files on disk.
-        public
-        struct Destination
-        {
-            private
-            let descriptor:Descriptor
+        public struct Destination {
+            private let descriptor: Descriptor
         }
     }
 }
-extension System.File.Source
-{
+extension System.File.Source {
     /// Calls a closure with an interface for reading from the specified file.
     ///
     /// This method automatically closes the file when its closure argument returns.
@@ -73,19 +66,13 @@ extension System.File.Source
     /// -   Returns:
     ///     The return value of the closure argument, or `nil` if the specified
     ///     file could not be opened.
-    public static
-    func open<R>(path:String, _ body:(inout Self) throws -> R)
-        rethrows -> R?
-    {
-        guard let descriptor:System.File.Descriptor = fopen(path, "rb")
-        else
-        {
+    public static func open<R>(path: String, _ body: (inout Self) throws -> R) rethrows -> R? {
+        guard let descriptor: System.File.Descriptor = fopen(path, "rb") else {
             return nil
         }
 
-        var file:Self = .init(descriptor: descriptor)
-        defer
-        {
+        var file: Self = .init(descriptor: descriptor)
+        defer {
             fclose(file.descriptor)
         }
 
@@ -103,25 +90,22 @@ extension System.File.Source
     /// -   Returns:
     ///     An array containing the read data, or `nil` if the specified
     ///     number of bytes could not be read.
-    public
-    func read(count capacity:Int) -> [UInt8]?
-    {
-        let buffer:[UInt8] = .init(unsafeUninitializedCapacity: capacity)
-        {
-            (buffer:inout UnsafeMutableBufferPointer<UInt8>, count:inout Int) in
+    public func read(count capacity: Int) -> [UInt8]? {
+        let buffer: [UInt8] = .init(unsafeUninitializedCapacity: capacity) {
+            (buffer: inout UnsafeMutableBufferPointer<UInt8>, count: inout Int) in
 
             #if os(Android)
             let baseAddress = buffer.baseAddress!
             #else
             let baseAddress = buffer.baseAddress
             #endif
-            count = fread(baseAddress, MemoryLayout<UInt8>.stride,
-                capacity, self.descriptor)
+            count = fread(
+                baseAddress, MemoryLayout<UInt8>.stride,
+                capacity, self.descriptor
+            )
         }
 
-        guard buffer.count == capacity
-        else
-        {
+        guard buffer.count == capacity else {
             return nil
         }
 
@@ -131,33 +115,25 @@ extension System.File.Source
     /// file or a link to a file.
     ///
     /// This property queries the file size using `stat`.
-    public
-    var count:Int?
-    {
-        let descriptor:Int32 = fileno(self.descriptor)
-        guard descriptor != -1
-        else
-        {
+    public var count: Int? {
+        let descriptor: Int32 = fileno(self.descriptor)
+        guard descriptor != -1 else {
             return nil
         }
 
-        guard let status:stat =
-        ({
-            var status:stat = .init()
-            guard fstat(descriptor, &status) == 0
-            else
+        guard let status: stat = (
             {
-                return nil
-            }
-            return status
-        }())
-        else
-        {
+                var status: stat = .init()
+                guard fstat(descriptor, &status) == 0 else {
+                    return nil
+                }
+                return status
+            }()
+        ) else {
             return nil
         }
 
-        switch status.st_mode & S_IFMT
-        {
+        switch status.st_mode & S_IFMT {
         case S_IFREG, S_IFLNK:
             break
         default:
@@ -167,8 +143,7 @@ extension System.File.Source
         return Int.init(status.st_size)
     }
 }
-extension System.File.Destination
-{
+extension System.File.Destination {
     /// Calls a closure with an interface for writing to the specified file.
     ///
     /// This method automatically closes the file when its closure argument returns.
@@ -188,19 +163,13 @@ extension System.File.Destination
     /// -   Returns:
     ///     The return value of the closure argument, or `nil` if the specified
     ///     file could not be opened.
-    public static
-    func open<R>(path:String, _ body:(inout Self) throws -> R)
-        rethrows -> R?
-    {
-        guard let descriptor:System.File.Descriptor = fopen(path, "wb")
-        else
-        {
+    public static func open<R>(path: String, _ body: (inout Self) throws -> R) rethrows -> R? {
+        guard let descriptor: System.File.Descriptor = fopen(path, "wb") else {
             return nil
         }
 
-        var file:Self = .init(descriptor: descriptor)
-        defer
-        {
+        var file: Self = .init(descriptor: descriptor)
+        defer {
             fclose(file.descriptor)
         }
 
@@ -218,23 +187,20 @@ extension System.File.Destination
     /// -   Returns:
     ///     A ``Void`` tuple if the entire array argument could be written,
     ///     or `nil` otherwise.
-    public
-    func write(_ buffer:[UInt8]) -> Void?
-    {
-        let count:Int = buffer.withUnsafeBufferPointer
-        {
+    public func write(_ buffer: [UInt8]) -> Void? {
+        let count: Int = buffer.withUnsafeBufferPointer {
             #if os(Android)
             let baseAddress = $0.baseAddress!
             #else
             let baseAddress = $0.baseAddress
             #endif
-            return fwrite(baseAddress, MemoryLayout<UInt8>.stride,
-                $0.count, self.descriptor)
+            return fwrite(
+                baseAddress, MemoryLayout<UInt8>.stride,
+                $0.count, self.descriptor
+            )
         }
 
-        guard count == buffer.count
-        else
-        {
+        guard count == buffer.count else {
             return nil
         }
 
@@ -243,15 +209,12 @@ extension System.File.Destination
 }
 
 // declare conformance (as a formality)
-extension System.File.Source:JPEG.Bytestream.Source
-{
+extension System.File.Source: JPEG.Bytestream.Source {
 }
-extension System.File.Destination:JPEG.Bytestream.Destination
-{
+extension System.File.Destination: JPEG.Bytestream.Destination {
 }
 // file-based encoding and decoding apis
-extension JPEG.Data.Spectral
-{
+extension JPEG.Data.Spectral {
     /// Decompresses a spectral image from the given file path.
     ///
     /// Calling this function is equivalent to calling ``System.File.Source.open(path:_:)``
@@ -265,9 +228,7 @@ extension JPEG.Data.Spectral
     /// -   Returns:
     ///     The decompressed image, or `nil` if the file could not be opened at
     ///     the given file path.
-    public static
-    func decompress(path:String) throws -> Self?
-    {
+    public static func decompress(path: String) throws -> Self? {
         return try System.File.Source.open(path: path, Self.decompress(stream:))
     }
     /// Compresses a spectral image to the given file path.
@@ -286,14 +247,11 @@ extension JPEG.Data.Spectral
     /// -   Returns:
     ///     A ``Void`` tuple, or `nil` if the file could not be opened at
     ///     the given file path.
-    public
-    func compress(path:String) throws -> Void?
-    {
+    public func compress(path: String) throws -> Void? {
         return try System.File.Destination.open(path: path, self.compress(stream:))
     }
 }
-extension JPEG.Data.Planar
-{
+extension JPEG.Data.Planar {
     /// Decompresses a planar image from the given file path.
     ///
     /// This function is a convenience function which calls ``Spectral.decompress(path:)``
@@ -308,12 +266,8 @@ extension JPEG.Data.Planar
     /// -   Returns:
     ///     The decompressed image, or `nil` if the file could not be opened at
     ///     the given file path.
-    public static
-    func decompress(path:String) throws -> Self?
-    {
-        guard let spectral:JPEG.Data.Spectral<Format> = try .decompress(path: path)
-        else
-        {
+    public static func decompress(path: String) throws -> Self? {
+        guard let spectral: JPEG.Data.Spectral<Format> = try .decompress(path: path) else {
             return nil
         }
         return spectral.idct()
@@ -343,15 +297,12 @@ extension JPEG.Data.Planar
     /// -   Returns:
     ///     A ``Void`` tuple, or `nil` if the file could not be opened at
     ///     the given file path.
-    public
-    func compress(path:String, quanta:[JPEG.Table.Quantization.Key: [UInt16]]) throws
-        -> Void?
-    {
+    public func compress(path: String, quanta: [JPEG.Table.Quantization.Key: [UInt16]]) throws
+    -> Void? {
         return try self.fdct(quanta: quanta).compress(path: path)
     }
 }
-extension JPEG.Data.Rectangular
-{
+extension JPEG.Data.Rectangular {
     /// Decompresses a rectangular image from the given file path.
     ///
     /// This function is a convenience function which calls ``Planar.decompress(path:)``
@@ -372,12 +323,8 @@ extension JPEG.Data.Rectangular
     /// -   Returns:
     ///     The decompressed image, or `nil` if the file could not be opened at
     ///     the given file path.
-    public static
-    func decompress(path:String, cosite cosited:Bool = false) throws -> Self?
-    {
-        guard let planar:JPEG.Data.Planar<Format> = try .decompress(path: path)
-        else
-        {
+    public static func decompress(path: String, cosite cosited: Bool = false) throws -> Self? {
+        guard let planar: JPEG.Data.Planar<Format> = try .decompress(path: path) else {
             return nil
         }
 
@@ -408,10 +355,8 @@ extension JPEG.Data.Rectangular
     /// -   Returns:
     ///     A ``Void`` tuple, or `nil` if the file could not be opened at
     ///     the given file path.
-    public
-    func compress(path:String, quanta:[JPEG.Table.Quantization.Key: [UInt16]]) throws
-        -> Void?
-    {
+    public func compress(path: String, quanta: [JPEG.Table.Quantization.Key: [UInt16]]) throws
+    -> Void? {
         try self.decomposed().compress(path: path, quanta: quanta)
     }
 }

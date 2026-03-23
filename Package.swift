@@ -1,23 +1,27 @@
-// swift-tools-version:5.10
+// swift-tools-version:6.0
 import PackageDescription
 
 let package = Package(
     name: "swift-jpeg",
-    products:
-    [
+    products: [
         .library(name: "JPEG", targets: ["JPEG"]),
         .library(name: "JPEGSystem", targets: ["JPEGSystem"]),
     ],
-    targets:
-    [
+    dependencies: [
+        .package(url: "https://github.com/ordo-one/dollup", from: "1.0.1"),
+    ],
+    targets: [
         .target(name: "JPEG"),
 
-        .target(name: "JPEGSystem",
-            dependencies: ["JPEG"]),
+        .target(
+            name: "JPEGSystem",
+            dependencies: ["JPEG"]
+        ),
 
         .target(name: "JPEGInspection"),
 
-        .executableTarget(name: "JPEGFuzzer",
+        .executableTarget(
+            name: "JPEGFuzzer",
             dependencies: ["JPEG", "JPEGInspection", "JPEGSystem"],
             path: "tests/fuzz",
             exclude: [
@@ -25,28 +29,45 @@ let package = Package(
             ]
         ),
 
-        .executableTarget(name: "JPEGComparator",
+        .executableTarget(
+            name: "JPEGComparator",
             dependencies: ["JPEG", "JPEGInspection", "JPEGSystem"],
-            path: "tests/compare"),
+            path: "tests/compare"
+        ),
 
-        .executableTarget(name: "JPEGUnitTests",
+        .executableTarget(
+            name: "JPEGUnitTests",
             dependencies: ["JPEG", "JPEGInspection", "JPEGSystem"],
-            path: "tests/unit"),
+            path: "tests/unit"
+        ),
 
-        .executableTarget(name: "JPEGRegressionTests",
+        .executableTarget(
+            name: "JPEGRegressionTests",
             dependencies: ["JPEG", "JPEGInspection", "JPEGSystem"],
             path: "tests/regression",
             exclude: [
                 "gold/",
-            ]),
+            ]
+        ),
 
-        .executableTarget(name: "JPEGIntegrationTests",
+        .executableTarget(
+            name: "JPEGIntegrationTests",
             dependencies: ["JPEG", "JPEGInspection", "JPEGSystem"],
             path: "tests/integration",
             exclude: [
                 "decode/",
                 "encode/",
-            ]),
+            ]
+        ),
     ],
-    swiftLanguageVersions: [.v4_2, .v5]
 )
+for target: Target in package.targets {
+    {
+        var settings: [SwiftSetting] = $0 ?? []
+
+        settings.append(.enableUpcomingFeature("ExistentialAny"))
+        settings.append(.enableExperimentalFeature("StrictConcurrency"))
+
+        $0 = settings
+    } (&target.swiftSettings)
+}

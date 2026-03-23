@@ -3,230 +3,157 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 /// A namespace for general functionality.
-public
-enum General
-{
+public enum General {
 }
 
-extension General
-{
+extension General {
     /// A property wrapper providing an immutable ``Int`` interface backed
     /// by a different integer type.
-    @propertyWrapper
-    public
-    struct Storage<I> where I:FixedWidthInteger & BinaryInteger
-    {
-        private
-        var storage:I
+    @propertyWrapper public struct Storage<I> where I: FixedWidthInteger & BinaryInteger {
+        private var storage: I
         /// Creates an instance of this property wrapper, with the given value
         /// truncated to the width of the storage type `I`.
         ///
         /// -   Parameter wrappedValue:
         ///     The value to wrap.
-        public
-        init(wrappedValue:Int)
-        {
+        public init(wrappedValue: Int) {
             self.storage = .init(truncatingIfNeeded: wrappedValue)
         }
         /// The value wrapped by this property wrapper, expanded to an ``Int``.
-        public
-        var wrappedValue:Int
-        {
+        public var wrappedValue: Int {
             .init(self.storage)
         }
     }
     /// A property wrapper providing an immutable `(```Int```, ```Int```)`
     /// interface backed by a different integer type.
-    @propertyWrapper
-    public
-    struct Storage2<I> where I:FixedWidthInteger & BinaryInteger
-    {
-        private
-        var storage:(x:I, y:I)
+    @propertyWrapper public struct Storage2<I> where I: FixedWidthInteger & BinaryInteger {
+        private var storage: (x: I, y: I)
         /// Creates an instance of this property wrapper, with the given values
         /// truncated to the width of the storage type `I`.
         ///
         /// -   Parameter wrappedValue:
         ///     The values to wrap.
-        public
-        init(wrappedValue:(x:Int, y:Int))
-        {
-            self.storage =
-            (
+        public init(wrappedValue: (x: Int, y: Int)) {
+            self.storage = (
                 .init(truncatingIfNeeded: wrappedValue.x),
                 .init(truncatingIfNeeded: wrappedValue.y)
             )
         }
         /// The values wrapped by this property wrapper, expanded to an
         /// `(```Int```, ```Int```)` tuple.
-        public
-        var wrappedValue:(x:Int, y:Int)
-        {
+        public var wrappedValue: (x: Int, y: Int) {
             (.init(self.storage.x), .init(self.storage.y))
         }
     }
     /// A property wrapper providing a mutable ``Int`` interface backed
     /// by a different integer type.
-    @propertyWrapper
-    public
-    struct MutableStorage<I> where I:FixedWidthInteger & BinaryInteger
-    {
-        private
-        var storage:I
+    @propertyWrapper public struct MutableStorage<
+        I
+    > where I: FixedWidthInteger & BinaryInteger {
+        private var storage: I
         /// Creates an instance of this property wrapper, with the given value
         /// truncated to the width of the storage type `I`.
         ///
         /// -   Parameter wrappedValue:
         ///     The value to wrap.
-        public
-        init(wrappedValue:Int)
-        {
+        public init(wrappedValue: Int) {
             self.storage = .init(truncatingIfNeeded: wrappedValue)
         }
         /// The value wrapped by this property wrapper, expanded to an ``Int``.
-        public
-        var wrappedValue:Int
-        {
-            get
-            {
+        public var wrappedValue: Int {
+            get {
                 .init(self.storage)
             }
-            set(value)
-            {
+            set(value) {
                 self.storage = .init(value)
             }
         }
     }
 }
 
-extension General
-{
-    struct Heap<Key, Value> where Key:Comparable
-    {
-        private
-        var storage:[(Key, Value)]
+extension General {
+    struct Heap<Key, Value> where Key: Comparable {
+        private var storage: [(Key, Value)]
 
         // support 1-based indexing
-        private
-        subscript(index:Int) -> (key:Key, value:Value)
-        {
-            get
-            {
+        private subscript(index: Int) -> (key: Key, value: Value) {
+            get {
                 self.storage[index - 1]
             }
-            set(item)
-            {
+            set(item) {
                 self.storage[index - 1] = item
             }
         }
 
-        var count:Int
-        {
+        var count: Int {
             self.storage.count
         }
-        var first:(key:Key, value:Value)?
-        {
+        var first: (key: Key, value: Value)? {
             self.storage.first
         }
-        var isEmpty:Bool
-        {
+        var isEmpty: Bool {
             self.storage.isEmpty
         }
 
-        private
-        var startIndex:Int
-        {
+        private var startIndex: Int {
             1
         }
-        private
-        var endIndex:Int
-        {
+        private var endIndex: Int {
             1 + self.count
         }
     }
 }
-extension General.Heap
-{
-    @inline(__always)
-    private static
-    func left(index:Int) -> Int
-    {
+extension General.Heap {
+    @inline(__always) private static func left(index: Int) -> Int {
         return index << 1
     }
-    @inline(__always)
-    private static
-    func right(index:Int) -> Int
-    {
+    @inline(__always) private static func right(index: Int) -> Int {
         return index << 1 + 1
     }
-    @inline(__always)
-    private static
-    func parent(index:Int) -> Int
-    {
+    @inline(__always) private static func parent(index: Int) -> Int {
         return index >> 1
     }
 
-    private
-    func highest(above child:Int) -> Int?
-    {
-        let p:Int = Self.parent(index: child)
+    private func highest(above child: Int) -> Int? {
+        let p: Int = Self.parent(index: child)
         // make sure it’s not the root
-        guard p >= self.startIndex
-        else
-        {
+        guard p >= self.startIndex else {
             return nil
         }
 
         // and the element is higher than the parent
         return self[child].key < self[p].key ? p : nil
     }
-    private
-    func lowest(below parent:Int) -> Int?
-    {
-        let r:Int = Self.right(index: parent),
-            l:Int = Self.left (index: parent)
+    private func lowest(below parent: Int) -> Int? {
+        let r: Int = Self.right(index: parent),
+        l: Int = Self.left (index: parent)
 
-        guard l < self.endIndex
-        else
-        {
+        guard l < self.endIndex else {
             return nil
         }
 
-        guard r < self.endIndex
-        else
-        {
+        guard r < self.endIndex else {
             return  self[l].key < self[parent].key ? l : nil
         }
 
-        let c:Int = self[r].key < self[l].key      ? r : l
+        let c: Int = self[r].key < self[l].key      ? r : l
         return      self[c].key < self[parent].key ? c : nil
     }
 
 
-    @inline(__always)
-    private mutating
-    func swapAt(_ i:Int, _ j:Int)
-    {
+    @inline(__always) private mutating func swapAt(_ i: Int, _ j: Int) {
         self.storage.swapAt(i - 1, j - 1)
     }
-    private mutating
-    func siftUp(index:Int)
-    {
-        guard let parent:Int = self.highest(above: index)
-        else
-        {
+    private mutating func siftUp(index: Int) {
+        guard let parent: Int = self.highest(above: index) else {
             return
         }
 
         self.swapAt(index, parent)
         self.siftUp(index: parent)
     }
-    private mutating
-    func siftDown(index:Int)
-    {
-        guard let child:Int = self.lowest(below: index)
-        else
-        {
+    private mutating func siftDown(index: Int) {
+        guard let child: Int = self.lowest(below: index) else {
             return
         }
 
@@ -234,65 +161,57 @@ extension General.Heap
         self.siftDown(index: child)
     }
 
-    mutating
-    func enqueue(key:Key, value:Value)
-    {
+    mutating func enqueue(key: Key, value: Value) {
         self.storage.append((key, value))
         self.siftUp(index: self.endIndex - 1)
     }
 
-    mutating
-    func dequeue() -> (key:Key, value:Value)?
-    {
-        switch self.count
-        {
+    mutating func dequeue() -> (key: Key, value: Value)? {
+        switch self.count {
         case 0:
             return nil
         case 1:
             return self.storage.removeLast()
         default:
             self.swapAt(self.startIndex, self.endIndex - 1)
-            defer
-            {
+            defer {
                 self.siftDown(index: self.startIndex)
             }
             return self.storage.removeLast()
         }
     }
 
-    init<S>(_ sequence:S) where S:Sequence, S.Element == (Key, Value)
-    {
+    init<S>(_ sequence: S) where S: Sequence, S.Element == (Key, Value) {
         self.storage    = .init(sequence)
         // heapify
-        let halfway:Int = Self.parent(index: self.endIndex - 1) + 1
-        for i:Int in (self.startIndex ..< halfway).reversed()
-        {
+        let halfway: Int = Self.parent(index: self.endIndex - 1) + 1
+        for i: Int in (self.startIndex ..< halfway).reversed() {
             self.siftDown(index: i)
         }
     }
 }
-extension General.Heap:ExpressibleByArrayLiteral
-{
-    init(arrayLiteral:(key:Key, value:Value)...)
-    {
+extension General.Heap: ExpressibleByArrayLiteral {
+    init(arrayLiteral: (key: Key, value: Value)...) {
         self.init(arrayLiteral)
     }
 }
 
 // 2d iterators
-extension General
-{
+extension General {
     /// A two-dimensional open range.
-    public
-    struct Range2<Bound> where Bound:Comparable
-    {
-        let lowerBound:(x:Bound, y:Bound)
-        let upperBound:(x:Bound, y:Bound)
+    public struct Range2<Bound> where Bound: Comparable {
+        let lowerBound: (x: Bound, y: Bound)
+        let upperBound: (x: Bound, y: Bound)
 
-        init(lowerBound:(x:Bound, y:Bound), upperBound:(x:Bound, y:Bound))
-        {
-            precondition(lowerBound.x <= upperBound.x, "x lower bound cannot be greater than upper bound")
-            precondition(lowerBound.y <= upperBound.y, "y lower bound cannot be greater than upper bound")
+        init(lowerBound: (x: Bound, y: Bound), upperBound: (x: Bound, y: Bound)) {
+            precondition(
+                lowerBound.x <= upperBound.x,
+                "x lower bound cannot be greater than upper bound"
+            )
+            precondition(
+                lowerBound.y <= upperBound.y,
+                "y lower bound cannot be greater than upper bound"
+            )
 
             self.lowerBound = lowerBound
             self.upperBound = upperBound
@@ -300,24 +219,19 @@ extension General
     }
 
 }
-func ..< <Bound>(lhs:(x:Bound, y:Bound), rhs:(x:Bound, y:Bound)) -> General.Range2<Bound>
-    where Bound:Comparable
-{
+func ..< <Bound>(lhs: (x: Bound, y: Bound), rhs: (x: Bound, y: Bound)) -> General.Range2<Bound>
+    where Bound: Comparable {
     return .init(lowerBound: lhs, upperBound: rhs)
 }
 
-extension General.Range2:Sequence where Bound:Strideable, Bound.Stride:SignedInteger
-{
-    public
-    typealias Element = (x:Bound, y:Bound)
+extension General.Range2: Sequence where Bound: Strideable, Bound.Stride: SignedInteger {
+    public typealias Element = (x: Bound, y: Bound)
 
     /// A two-dimensional range iterator.
-    public
-    struct Iterator
-    {
-        var x:Bound,
-            y:Bound
-        let bound:(x:(Bound, Bound), y:Bound)
+    public struct Iterator {
+        var x: Bound,
+        y: Bound
+        let bound: (x: (Bound, Bound), y: Bound)
     }
 
     /// Creates an iterator for this range instance.
@@ -326,15 +240,14 @@ extension General.Range2:Sequence where Bound:Strideable, Bound.Stride:SignedInt
     /// example, if the bounds are `(x: 0, y: 0)` and `(x: 2, y: 2)`, the iterator
     /// will yield the elements `(x: 0, y: 0)`, `(x: 1, y: 0)`, `(x: 0, y: 1)`,
     /// and `(x: 1, y: 1)`, in that order.
-    public
-    func makeIterator() -> Iterator
-    {
-        .init(x: self.lowerBound.x, y: self.lowerBound.y,
-            bound: ((self.lowerBound.x, self.upperBound.x), self.upperBound.y))
+    public func makeIterator() -> Iterator {
+        .init(
+            x: self.lowerBound.x, y: self.lowerBound.y,
+            bound: ((self.lowerBound.x, self.upperBound.x), self.upperBound.y)
+        )
     }
 }
-extension General.Range2.Iterator:IteratorProtocol
-{
+extension General.Range2.Iterator: IteratorProtocol {
     /// Advances to the next element and returns it, or `nil` if no next element exists.
     ///
     /// -   Returns:
@@ -342,29 +255,20 @@ extension General.Range2.Iterator:IteratorProtocol
     ///     otherwise `nil`. If advancing the `x` index would cause it to reach its
     ///     upper bound, this iterator will advance to the next `y` index and reset
     ///     the `x` index to its lower bound.
-    public mutating
-    func next() -> (x:Bound, y:Bound)?
-    {
-        if self.x < self.bound.x.1
-        {
-            defer
-            {
+    public mutating func next() -> (x: Bound, y: Bound)? {
+        if self.x < self.bound.x.1 {
+            defer {
                 self.x = self.x.advanced(by: 1)
             }
 
             return (self.x, self.y)
-        }
-        else
-        {
+        } else {
             self.y = self.y.advanced(by: 1)
 
-            if self.y < self.bound.y
-            {
+            if self.y < self.bound.y {
                 self.x = self.bound.x.0
                 return self.next()
-            }
-            else
-            {
+            } else {
                 return nil
             }
         }
@@ -372,31 +276,29 @@ extension General.Range2.Iterator:IteratorProtocol
 }
 
 // raw buffer utilities
-extension ArraySlice where Element == UInt8
-{
+extension ArraySlice where Element == UInt8 {
     /// Loads this array slice as a misaligned big-endian integer value,
     /// and casts it to a desired format.
     /// - Parameters:
     ///     - bigEndian: The size and type to interpret this array slice as.
     ///     - type: The type to cast the read integer value to.
     /// - Returns: The read integer value, cast to `U`.
-    func load<T, U>(bigEndian:T.Type, as type:U.Type) -> U
-        where T:FixedWidthInteger, U:BinaryInteger
-    {
-        return self.withUnsafeBufferPointer
-        {
-            (buffer:UnsafeBufferPointer<UInt8>) in
+    func load<T, U>(bigEndian: T.Type, as type: U.Type) -> U
+        where T: FixedWidthInteger, U: BinaryInteger {
+        return self.withUnsafeBufferPointer {
+            (buffer: UnsafeBufferPointer<UInt8>) in
 
-            assert(buffer.count >= MemoryLayout<T>.size,
-                "attempt to load \(T.self) from slice of size \(buffer.count)")
+            assert(
+                buffer.count >= MemoryLayout<T>.size,
+                "attempt to load \(T.self) from slice of size \(buffer.count)"
+            )
 
-            var storage:T = .init()
-            let value:T   = withUnsafeMutablePointer(to: &storage)
-            {
+            var storage: T = .init()
+            let value: T   = withUnsafeMutablePointer(to: &storage) {
                 $0.deinitialize(count: 1)
 
-                let source:UnsafeRawPointer     = .init(buffer.baseAddress!),
-                    raw:UnsafeMutableRawPointer = .init($0)
+                let source: UnsafeRawPointer     = .init(buffer.baseAddress!),
+                raw: UnsafeMutableRawPointer = .init($0)
 
                 raw.copyMemory(from: source, byteCount: MemoryLayout<T>.size)
 
@@ -407,8 +309,7 @@ extension ArraySlice where Element == UInt8
         }
     }
 }
-extension Array where Element == UInt8
-{
+extension Array where Element == UInt8 {
     /// Loads a misaligned big-endian integer value from the given byte offset
     /// and casts it to a desired format.
     /// - Parameters:
@@ -416,33 +317,27 @@ extension Array where Element == UInt8
     ///     - type: The type to cast the read integer value to.
     ///     - byte: The byte offset to load the big-endian integer from.
     /// - Returns: The read integer value, cast to `U`.
-    func load<T, U>(bigEndian:T.Type, as type:U.Type, at byte:Int) -> U
-        where T:FixedWidthInteger, U:BinaryInteger
-    {
+    func load<T, U>(bigEndian: T.Type, as type: U.Type, at byte: Int) -> U
+        where T: FixedWidthInteger, U: BinaryInteger {
         return self[byte ..< byte + MemoryLayout<T>.size].load(bigEndian: T.self, as: U.self)
     }
 }
 
-extension Array where Element == UInt8
-{
+extension Array where Element == UInt8 {
     /// Decomposes the given integer value into its constituent bytes, in big-endian order.
     /// - Parameters:
     ///     - value: The integer value to decompose.
     ///     - type: The big-endian format `T` to store the given `value` as. The given
     ///             `value` is truncated to fit in a `T`.
     /// - Returns: An array containing the bytes of the given `value`, in big-endian order.
-    static
-    func store<U, T>(_ value:U, asBigEndian type:T.Type) -> [UInt8]
-        where U:BinaryInteger, T:FixedWidthInteger
-    {
-        return .init(unsafeUninitializedCapacity: MemoryLayout<T>.size)
-        {
-            (buffer:inout UnsafeMutableBufferPointer<UInt8>, count:inout Int) in
+    static func store<U, T>(_ value: U, asBigEndian type: T.Type) -> [UInt8]
+        where U: BinaryInteger, T: FixedWidthInteger {
+        return .init(unsafeUninitializedCapacity: MemoryLayout<T>.size) {
+            (buffer: inout UnsafeMutableBufferPointer<UInt8>, count: inout Int) in
 
-            let bigEndian:T = T.init(truncatingIfNeeded: value).bigEndian,
-                destination:UnsafeMutableRawBufferPointer = .init(buffer)
-            Swift.withUnsafeBytes(of: bigEndian)
-            {
+            let bigEndian: T = T.init(truncatingIfNeeded: value).bigEndian,
+            destination: UnsafeMutableRawBufferPointer = .init(buffer)
+            Swift.withUnsafeBytes(of: bigEndian) {
                 destination.copyMemory(from: $0)
                 count = $0.count
             }
