@@ -130,6 +130,9 @@ jobs:
 
             -   name: 💖 Run tests 💖
                 uses: skiptools/swift-android-action@v2
+                with:
+                    # cannot run android tests, as they have not been ported to Swift Testing
+                    run-tests: false
 
             -   name: 💖 Update badge 💖
                 uses: rarestype/rarestbadge@v1
