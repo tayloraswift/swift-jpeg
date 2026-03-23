@@ -1,62 +1,136 @@
-name: tests
+name: Tests
 
+permissions:
+    contents: write
 on:
     push:
-        branches: [master]
+        branches: [ master ]
     pull_request:
-        branches: [master]
+        branches: [ master ]
 
 jobs:
-    linux:
+    changes:
+        runs-on: ubuntu-latest
+        name: Assess changes
+        steps:
+            -   name: 💖 Checkout repository 💖
+                uses: actions/checkout@v6
+
+            -   name: 💖 Decide checks 💖
+                uses: tj-actions/changed-files@v47
+                id: changes
+                with:
+                    files_ignore: |
+                        README.md
+                        LICENSE
+                        NOTICE
+                        .mailmap
+                        .gitignore
+                        .github/FUNDING.yml
+        outputs:
+            code_changed: ${{ steps.changes.outputs.any_changed }}
+
+    Linux:
         runs-on: ubuntu-24.04
         name: Ubuntu 24.04
+        needs: changes
+        if: ${{ needs.changes.outputs.code_changed == 'true' }}
         steps:
-            - name: Install Swift
-              uses: tayloraswift/swift-install-action@master
-              with:
-                  swift-prefix: "swift-6.0.3-release/ubuntu2404/swift-6.0.3-RELEASE"
-                  swift-id: "swift-6.0.3-RELEASE-ubuntu24.04"
+            -   name: 💖 Install Swift 💖
+                uses: rarestype/swift-install-action@master
+                with:
+                    swift-prefix: "swift-6.2.4-release/ubuntu2404/swift-6.2.4-RELEASE"
+                    swift-id: "swift-6.2.4-RELEASE-ubuntu24.04"
 
-            - name: Checkout repository
-              uses: actions/checkout@v3
+            -   name: 💖 Checkout repository 💖
+                uses: actions/checkout@v6
 
-            - name: Install imagemagick
-              run: sudo apt install -y imagemagick
+            -   name: 💖 Install imagemagick 💖
+                run: sudo apt install -y imagemagick
 
-            - name: Run tests
-              run: Scripts/TestAll
+            -   name: 💖 Run tests 💖
+                run: Scripts/TestAll
 
-    linux-musl:
+            -   name: 💖 Update badge 💖
+                uses: rarestype/rarestbadge@v1
+                if: always()
+
+    Linux-musl:
         runs-on: ubuntu-24.04
         name: Ubuntu 24.04
+        needs: changes
+        if: ${{ needs.changes.outputs.code_changed == 'true' }}
         steps:
-            - name: Install Swift
-              uses: tayloraswift/swift-install-action@master
-              with:
-                  swift-prefix: "swift-6.0.3-release/ubuntu2404/swift-6.0.3-RELEASE"
-                  swift-id: "swift-6.0.3-RELEASE-ubuntu24.04"
+            -   name: 💖 Install Swift 💖
+                uses: rarestype/swift-install-action@master
+                with:
+                    swift-prefix: "swift-6.2.4-release/ubuntu2404/swift-6.2.4-RELEASE"
+                    swift-id: "swift-6.2.4-RELEASE-ubuntu24.04"
 
-            - name: Checkout repository
-              uses: actions/checkout@v3
+            -   name: 💖 Checkout repository 💖
+                uses: actions/checkout@v6
 
-            - name: Install imagemagick
-              run: sudo apt install -y imagemagick
+            -   name: 💖 Install imagemagick 💖
+                run: sudo apt install -y imagemagick
 
-            - name: Install linux SDK
-              run: swift sdk install https://download.swift.org/swift-6.0.3-release/static-sdk/swift-6.0.3-RELEASE/swift-6.0.3-RELEASE_static-linux-0.0.1.artifactbundle.tar.gz --checksum 67f765e0030e661a7450f7e4877cfe008db4f57f177d5a08a6e26fd661cdd0bd
+            -   name: 💖 Install Linux SDK 💖
+                run: |
+                    swift sdk install \
+                        https://download.swift.org/swift-6.2.4-release/static-sdk/swift-6.2.4-RELEASE/swift-6.2.4-RELEASE_static-linux-0.1.0.artifactbundle.tar.gz \
+                        --checksum 24bdf84495dd31a6de2eb679647c1982b747bfbfe1a2060c779d84dcecd902a4
 
-            - name: Run tests
-              run: Scripts/TestAll -b "--swift-sdk x86_64-swift-linux-musl"
+            -   name: 💖 Run tests 💖
+                run: Scripts/TestAll -b "--swift-sdk x86_64-swift-linux-musl"
 
-    macos:
-        runs-on: macos-15
-        name: macOS
+            -   name: 💖 Update badge 💖
+                uses: rarestype/rarestbadge@v1
+                if: always()
+
+    macOS:
+        runs-on: macos-26
+        needs: changes
+        if: ${{ needs.changes.outputs.code_changed == 'true' }}
         steps:
-            - name: Checkout repository
-              uses: actions/checkout@v3
+            -   name: 💖 Checkout repository 💖
+                uses: actions/checkout@v6
 
-            - name: Install imagemagick
-              run: brew install imagemagick
+            -   name: 💖 Select Xcode 26.3 💖
+                run: sudo xcode-select -s /Applications/Xcode_26.3.app/Contents/Developer
 
-            - name: Run tests
-              run: Scripts/TestAll
+            -   name: 💖 Install imagemagick 💖
+                run: brew install imagemagick
+
+            -   name: 💖 Run tests 💖
+                run: Scripts/TestAll
+
+            -   name: 💖 Update badge 💖
+                uses: rarestype/rarestbadge@v1
+                if: always()
+
+    macOS-devices:
+        strategy:
+            matrix:
+                destination: [iOS, tvOS, visionOS, watchOS]
+        needs: changes
+        if: ${{ needs.changes.outputs.code_changed == 'true' }}
+        name: ${{ matrix.destination }}
+        uses: rarestype/swift-device-action/.github/workflows/build.yml@v1
+        with:
+            xcode-scheme: 'JPEG'
+            destination: ${{ matrix.destination }}
+            badge-namespace: ${{ github.workflow }}
+
+    Android:
+        needs: changes
+        if: ${{ needs.changes.outputs.code_changed == 'true' }}
+        runs-on: ubuntu-latest
+        steps:
+            -   name: 💖 Checkout repository 💖
+                uses: actions/checkout@v6
+
+            -   name: 💖 Run tests 💖
+                uses: skiptools/swift-android-action@v2
+
+            -   name: 💖 Update badge 💖
+                uses: rarestype/rarestbadge@v1
+                if: always()
