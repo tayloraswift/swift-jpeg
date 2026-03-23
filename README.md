@@ -14,7 +14,7 @@ a cross-platform pure Swift framework for decoding, inspecting, editing, and enc
 
 The core framework has no external dependencies, including *Foundation*, and should compile and provide consistent behavior on *all* Swift platforms. The framework supports additional features, such as file system support, on Linux and MacOS.
 
-The swift-jpeg library requires Swift 5.10 or later.
+The swift-jpeg library requires Swift 6.0 or later.
 
 <!-- DO NOT EDIT BELOW! AUTOSYNC CONTENT [STATUS TABLE] -->
 | Platform | Status |

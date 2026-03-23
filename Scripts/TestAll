@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 swift --version
 
 DEFAULT_BUILD_FLAGS=""
@@ -24,6 +24,9 @@ while [ "$1" != "" ] ; do
     esac
     shift
 done
+
+swift package dollup --allow-writing-to-package-directory
+git diff --exit-code
 
 utils/tests -b "$build_flags"
 utils/examples -c release -b "$build_flags"
