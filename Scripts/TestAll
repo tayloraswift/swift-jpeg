@@ -12,7 +12,7 @@ usage()
 
 build_flags=$DEFAULT_BUILD_FLAGS
 
-while [ "$1" != "" ] ; do
+while (( $# > 0 )); do
     case $1 in
     -b | --build-flags )
         shift
