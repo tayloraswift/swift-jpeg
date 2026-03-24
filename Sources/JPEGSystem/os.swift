@@ -133,7 +133,7 @@ extension System.File.Source {
             return nil
         }
 
-        switch status.st_mode & S_IFMT {
+        switch mode_t(status.st_mode) & S_IFMT {
         case S_IFREG, S_IFLNK:
             break
         default:
