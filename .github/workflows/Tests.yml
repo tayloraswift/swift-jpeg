@@ -36,14 +36,14 @@ jobs:
         needs: changes
         if: ${{ needs.changes.outputs.code_changed == 'true' }}
         steps:
+            -   name: 💖 Checkout repository 💖
+                uses: actions/checkout@v6
+
             -   name: 💖 Install Swift 💖
                 uses: rarestype/swift-install-action@master
                 with:
                     swift-prefix: "swift-6.2.4-release/ubuntu2404/swift-6.2.4-RELEASE"
                     swift-id: "swift-6.2.4-RELEASE-ubuntu24.04"
-
-            -   name: 💖 Checkout repository 💖
-                uses: actions/checkout@v6
 
             -   name: 💖 Install imagemagick 💖
                 run: sudo apt install -y imagemagick
@@ -61,23 +61,21 @@ jobs:
         needs: changes
         if: ${{ needs.changes.outputs.code_changed == 'true' }}
         steps:
+            -   name: 💖 Checkout repository 💖
+                uses: actions/checkout@v6
+
             -   name: 💖 Install Swift 💖
                 uses: rarestype/swift-install-action@master
                 with:
                     swift-prefix: "swift-6.2.4-release/ubuntu2404/swift-6.2.4-RELEASE"
                     swift-id: "swift-6.2.4-RELEASE-ubuntu24.04"
 
-            -   name: 💖 Checkout repository 💖
-                uses: actions/checkout@v6
+            -   name: 💖 Install Swift SDK 💖
+                uses: ./.github/actions/install-swift-sdk-musl
 
             -   name: 💖 Install imagemagick 💖
                 run: sudo apt install -y imagemagick
 
-            -   name: 💖 Install Linux SDK 💖
-                run: |
-                    swift sdk install \
-                        https://download.swift.org/swift-6.2.4-release/static-sdk/swift-6.2.4-RELEASE/swift-6.2.4-RELEASE_static-linux-0.1.0.artifactbundle.tar.gz \
-                        --checksum 24bdf84495dd31a6de2eb679647c1982b747bfbfe1a2060c779d84dcecd902a4
 
             -   name: 💖 Run tests 💖
                 run: Scripts/TestAll -b "--swift-sdk x86_64-swift-linux-musl"
