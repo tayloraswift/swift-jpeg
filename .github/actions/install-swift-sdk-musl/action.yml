@@ -1,0 +1,17 @@
+name: "Install Swift Musl SDK"
+description: "Install Swift SDK for Musl"
+
+runs:
+    using: composite
+    steps:
+        -   name: Install Swift Musl SDK
+            shell: bash
+            env:
+                SWIFT_VERSION: 6.2.4
+                SWIFT_CHECKSUM: 24bdf84495dd31a6de2eb679647c1982b747bfbfe1a2060c779d84dcecd902a4
+            run: |
+                SWIFT_SDK_URL="https://download.swift.org/\
+                swift-${SWIFT_VERSION}-release/static-sdk/swift-${SWIFT_VERSION}-RELEASE/\
+                swift-${SWIFT_VERSION}-RELEASE_static-linux-0.1.0.artifactbundle.tar.gz"
+
+                swift sdk install "$SWIFT_SDK_URL" --checksum "$SWIFT_CHECKSUM"
