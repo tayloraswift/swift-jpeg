@@ -1,3 +1,5 @@
+#  ❣❣❣  DO NOT EDIT  ❣  THIS FILE IS AUTOMATICALLY SYNCED  ❣  DO NOT EDIT  ❣❣❣
+
 name: "Install Swift Musl SDK"
 description: "Install Swift SDK for Musl"
 
@@ -7,8 +9,8 @@ runs:
         -   name: Install Swift Musl SDK
             shell: bash
             env:
-                SWIFT_VERSION: 6.2.4
-                SWIFT_CHECKSUM: 24bdf84495dd31a6de2eb679647c1982b747bfbfe1a2060c779d84dcecd902a4
+                SWIFT_VERSION: 6.3
+                SWIFT_CHECKSUM: d2078b69bdeb5c31202c10e9d8a11d6f66f82938b51a4b75f032ccb35c4c286c
             run: |
                 SWIFT_SDK_URL="https://download.swift.org/\
                 swift-${SWIFT_VERSION}-release/static-sdk/swift-${SWIFT_VERSION}-RELEASE/\

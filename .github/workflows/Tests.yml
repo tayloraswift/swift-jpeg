@@ -40,10 +40,10 @@ jobs:
                 uses: actions/checkout@v6
 
             -   name: 💖 Install Swift 💖
-                uses: rarestype/swift-install-action@master
+                uses: rarestype/swift-install-action@v1
                 with:
-                    swift-prefix: "swift-6.2.4-release/ubuntu2404/swift-6.2.4-RELEASE"
-                    swift-id: "swift-6.2.4-RELEASE-ubuntu24.04"
+                    swift-prefix: "swift-6.3-release/ubuntu2404/swift-6.3-RELEASE"
+                    swift-id: "swift-6.3-RELEASE-ubuntu24.04"
 
             -   name: 💖 Install imagemagick 💖
                 run: sudo apt install -y imagemagick
@@ -65,10 +65,10 @@ jobs:
                 uses: actions/checkout@v6
 
             -   name: 💖 Install Swift 💖
-                uses: rarestype/swift-install-action@master
+                uses: rarestype/swift-install-action@v1
                 with:
-                    swift-prefix: "swift-6.2.4-release/ubuntu2404/swift-6.2.4-RELEASE"
-                    swift-id: "swift-6.2.4-RELEASE-ubuntu24.04"
+                    swift-prefix: "swift-6.3-release/ubuntu2404/swift-6.3-RELEASE"
+                    swift-id: "swift-6.3-RELEASE-ubuntu24.04"
 
             -   name: 💖 Install Swift SDK 💖
                 uses: ./.github/actions/install-swift-sdk-musl
@@ -93,8 +93,8 @@ jobs:
             -   name: 💖 Checkout repository 💖
                 uses: actions/checkout@v6
 
-            -   name: 💖 Select Xcode 26.3 💖
-                run: sudo xcode-select -s /Applications/Xcode_26.3.app/Contents/Developer
+            -   name: 💖 Select Xcode 26.4 💖
+                run: sudo xcode-select -s /Applications/Xcode_26.4.app/Contents/Developer
 
             -   name: 💖 Install imagemagick 💖
                 run: brew install imagemagick
