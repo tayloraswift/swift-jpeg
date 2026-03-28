@@ -76,7 +76,6 @@ jobs:
             -   name: 💖 Install imagemagick 💖
                 run: sudo apt install -y imagemagick
 
-
             -   name: 💖 Run tests 💖
                 run: Scripts/TestAll -b "--swift-sdk x86_64-swift-linux-musl"
 
