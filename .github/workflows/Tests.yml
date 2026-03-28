@@ -57,7 +57,7 @@ jobs:
 
     Linux-musl:
         runs-on: ubuntu-24.04
-        name: Ubuntu 24.04
+        name: Ubuntu 24.04 (musl)
         needs: changes
         if: ${{ needs.changes.outputs.code_changed == 'true' }}
         steps:
