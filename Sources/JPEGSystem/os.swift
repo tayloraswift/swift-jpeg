@@ -133,7 +133,8 @@ extension System.File.Source {
             return nil
         }
 
-        switch status.st_mode & S_IFMT {
+        // on android-armv7, `mode_t` is `UInt16`
+        switch mode_t.init(status.st_mode) & S_IFMT {
         case S_IFREG, S_IFLNK:
             break
         default:
