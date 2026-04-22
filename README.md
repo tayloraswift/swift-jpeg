@@ -18,7 +18,7 @@ The swift-jpeg library requires Swift 6.0 or later.
 
 <!-- DO NOT EDIT BELOW! AUTOSYNC CONTENT [STATUS TABLE] -->
 | Platform | Status |
-| -------- | ------|
+| -------- | ------ |
 | 💬 Documentation | [![Status](https://raw.githubusercontent.com/tayloraswift/swift-jpeg/refs/badges/ci/Documentation/_all/status.svg)](https://github.com/tayloraswift/swift-jpeg/actions/workflows/Documentation.yml) |
 | 🐧 Linux | [![Status](https://raw.githubusercontent.com/tayloraswift/swift-jpeg/refs/badges/ci/Tests/Linux/status.svg)](https://github.com/tayloraswift/swift-jpeg/actions/workflows/Tests.yml) |
 | 🐧 Linux (musl) | [![Status](https://raw.githubusercontent.com/tayloraswift/swift-jpeg/refs/badges/ci/Tests/Linux-musl/status.svg)](https://github.com/tayloraswift/swift-jpeg/actions/workflows/Tests.yml) |
