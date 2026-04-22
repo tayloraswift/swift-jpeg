@@ -42,8 +42,8 @@ jobs:
             -   name: 💖 Install Swift 💖
                 uses: rarestype/swift-install-action@v1
                 with:
-                    swift-prefix: "swift-6.3-release/ubuntu2404/swift-6.3-RELEASE"
-                    swift-id: "swift-6.3-RELEASE-ubuntu24.04"
+                    swift-prefix: "swift-6.3.1-release/ubuntu2404/swift-6.3.1-RELEASE"
+                    swift-id: "swift-6.3.1-RELEASE-ubuntu24.04"
 
             -   name: 💖 Install imagemagick 💖
                 run: sudo apt install -y imagemagick
@@ -67,8 +67,8 @@ jobs:
             -   name: 💖 Install Swift 💖
                 uses: rarestype/swift-install-action@v1
                 with:
-                    swift-prefix: "swift-6.3-release/ubuntu2404/swift-6.3-RELEASE"
-                    swift-id: "swift-6.3-RELEASE-ubuntu24.04"
+                    swift-prefix: "swift-6.3.1-release/ubuntu2404/swift-6.3.1-RELEASE"
+                    swift-id: "swift-6.3.1-RELEASE-ubuntu24.04"
 
             -   name: 💖 Install Swift SDK 💖
                 uses: ./.github/actions/install-swift-sdk-musl
