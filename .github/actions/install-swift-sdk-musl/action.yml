@@ -9,8 +9,8 @@ runs:
         -   name: Install Swift Musl SDK
             shell: bash
             env:
-                SWIFT_VERSION: 6.3.3
-                SWIFT_CHECKSUM: 87c3eaf908e67c0e13a84367119e12273cec1d2cd3d81f7d74bb36722d6b607b
+                SWIFT_VERSION: 6.4.1
+                SWIFT_CHECKSUM: cef5592d7430ed3c5ae1ddda479849c6f5252bd94a5723db1559f984caf38a7c
             run: |
                 SWIFT_SDK_URL="https://download.swift.org/\
                 swift-${SWIFT_VERSION}-release/static-sdk/swift-${SWIFT_VERSION}-RELEASE/\
