@@ -3,8 +3,7 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 /// A namespace for general functionality.
-public enum General {
-}
+public enum General {}
 
 extension General {
     /// A property wrapper providing an immutable ``Int`` interface backed
@@ -285,8 +284,7 @@ extension ArraySlice where Element == UInt8 {
     /// - Returns: The read integer value, cast to `U`.
     func load<T, U>(bigEndian: T.Type, as type: U.Type) -> U
         where T: FixedWidthInteger, U: BinaryInteger {
-        return self.withUnsafeBufferPointer {
-            (buffer: UnsafeBufferPointer<UInt8>) in
+        return self.withUnsafeBufferPointer { (buffer: UnsafeBufferPointer<UInt8>) in
 
             assert(
                 buffer.count >= MemoryLayout<T>.size,
@@ -332,8 +330,9 @@ extension Array where Element == UInt8 {
     /// - Returns: An array containing the bytes of the given `value`, in big-endian order.
     static func store<U, T>(_ value: U, asBigEndian type: T.Type) -> [UInt8]
         where U: BinaryInteger, T: FixedWidthInteger {
-        return .init(unsafeUninitializedCapacity: MemoryLayout<T>.size) {
-            (buffer: inout UnsafeMutableBufferPointer<UInt8>, count: inout Int) in
+        return .init(
+            unsafeUninitializedCapacity: MemoryLayout<T>.size
+        ) { (buffer: inout UnsafeMutableBufferPointer<UInt8>, count: inout Int) in
 
             let bigEndian: T = T.init(truncatingIfNeeded: value).bigEndian,
             destination: UnsafeMutableRawBufferPointer = .init(buffer)

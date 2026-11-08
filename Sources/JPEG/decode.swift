@@ -1173,8 +1173,7 @@ extension JPEG.Table.Quantization {
 // intermediate forms
 extension JPEG {
     /// A namespace for image representation types.
-    public enum Data {
-    }
+    public enum Data {}
 }
 extension JPEG.Data {
     private static func units(_ size: Int, stride: Int) -> Int {
@@ -2156,8 +2155,7 @@ extension JPEG.Data.Planar {
         self.metadata   = metadata
 
         let scale: (x: Int, y: Int)    = layout.scale
-        self.planes                 = try layout.recognized.indices.map {
-            (p: Int) -> Plane in
+        self.planes                 = try layout.recognized.indices.map { (p: Int) -> Plane in
 
             let factor: (x: Int, y: Int) = layout.planes[p].component.factor
             let units: (x: Int, y: Int)  = (

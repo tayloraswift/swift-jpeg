@@ -9,8 +9,7 @@ guard let rgb: [JPEG.RGB] = (
             fatalError("failed to read from file '\(path).rgb'")
         }
 
-        return (0 ..< size.x * size.y).map {
-            (i: Int) -> JPEG.RGB in
+        return (0 ..< size.x * size.y).map { (i: Int) -> JPEG.RGB in
             .init(data[3 * i], data[3 * i + 1], data[3 * i + 2])
         }
     }
@@ -43,7 +42,8 @@ for factor: (luminance: (Int, Int), chrominance: (Int, Int), name: String) in [
 
     for level: Double in [0.0, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0] {
         try image.compress(
-            path: "\(path)-\(factor.name)-\(level).jpg", quanta: [
+            path: "\(path)-\(factor.name)-\(level).jpg",
+            quanta: [
                 0: JPEG.CompressionLevel.luminance(  level).quanta,
                 1: JPEG.CompressionLevel.chrominance(level).quanta
             ]

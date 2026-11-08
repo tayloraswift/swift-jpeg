@@ -76,7 +76,8 @@ extension JPEG.Data.Planar.Plane {
     -> JPEG.Data.Spectral<Format>.Plane.Block8x8<Float> {
         @inline(__always) func row(_ h: Int) -> SIMD8<Float> {
             pointwiseMin(
-                limit, .init(
+                limit,
+                .init(
                     .init(
                         self[x: 8 * x + 0, y: 8 * y + h],
                         self[x: 8 * x + 1, y: 8 * y + h],
@@ -616,8 +617,14 @@ extension JPEG.Table.Huffman {
 
         // sort non-zero symbols by (decreasing) frequency
         // this is nlog(n), but so is the heap stuff later on
-        let sorted: [(frequency: Int, symbol: Symbol)] = (UInt8.min ... UInt8.max).compactMap {
-            (value: UInt8) -> (Int, Symbol)? in
+        let sorted: [(frequency: Int, symbol: Symbol)] = (
+            UInt8.min ... UInt8.max
+        ).compactMap { (
+                value: UInt8
+            ) -> (
+                Int,
+                Symbol
+            )? in
 
             let frequency: Int = frequencies[.init(value)]
             guard frequency > 0 else {

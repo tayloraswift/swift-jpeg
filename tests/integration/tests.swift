@@ -94,8 +94,7 @@ extension Test {
 
     private static func print(image rgb: [JPEG.RGB], size: (x: Int, y: Int)) {
         for i: Int in stride(from: 0, to: size.y, by: 8) {
-            let line: String = stride(from: 0, to: size.x, by: 8).map {
-                (j: Int) in
+            let line: String = stride(from: 0, to: size.x, by: 8).map { (j: Int) in
 
                 // downsampling
                 var r: Int = 0,
@@ -181,12 +180,14 @@ extension Test {
                 case .application(let a, data: let data):
                     Swift.print("metadata (application \(a), \(data.count) bytes)")
                 case .comment(data: let data):
-                    Swift.print("""
+                    Swift.print(
+                        """
                         comment
                         {
                             '\(String.init(decoding: data, as: Unicode.UTF8.self))'
                         }
-                        """)
+                        """
+                    )
                 }
             }
 
@@ -323,8 +324,7 @@ extension Test {
                         throw Failure.init(message: "failed to read from file '\(path).rgb'")
                     }
 
-                    return (0 ..< size.x * size.y).map {
-                        (i: Int) -> JPEG.RGB in
+                    return (0 ..< size.x * size.y).map { (i: Int) -> JPEG.RGB in
                         .init(data[i * 3], data[i * 3 + 1], data[i * 3 + 2])
                     }
                 }

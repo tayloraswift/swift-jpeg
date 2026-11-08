@@ -91,8 +91,9 @@ extension System.File.Source {
     ///     An array containing the read data, or `nil` if the specified
     ///     number of bytes could not be read.
     public func read(count capacity: Int) -> [UInt8]? {
-        let buffer: [UInt8] = .init(unsafeUninitializedCapacity: capacity) {
-            (buffer: inout UnsafeMutableBufferPointer<UInt8>, count: inout Int) in
+        let buffer: [UInt8] = .init(
+            unsafeUninitializedCapacity: capacity
+        ) { (buffer: inout UnsafeMutableBufferPointer<UInt8>, count: inout Int) in
 
             #if os(Android)
             let baseAddress = buffer.baseAddress!
@@ -210,10 +211,8 @@ extension System.File.Destination {
 }
 
 // declare conformance (as a formality)
-extension System.File.Source: JPEG.Bytestream.Source {
-}
-extension System.File.Destination: JPEG.Bytestream.Destination {
-}
+extension System.File.Source: JPEG.Bytestream.Source {}
+extension System.File.Destination: JPEG.Bytestream.Destination {}
 // file-based encoding and decoding apis
 extension JPEG.Data.Spectral {
     /// Decompresses a spectral image from the given file path.

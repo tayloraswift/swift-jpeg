@@ -35,20 +35,17 @@ func discrepancy(jpeg: String, reference: String) throws -> (average: Double, ma
             (0.8 * (x - 0.4), 0, x)
         }
 
-        let line1: String = (0 ..< rectangular.size.x).map {
-            (j: Int) in
+        let line1: String = (0 ..< rectangular.size.x).map { (j: Int) in
 
             let c: JPEG.RGB = output[j + i * rectangular.size.x].rgb
             return Highlight.square((c.r, c.g, c.b))
         }.joined(separator: "")
-        let line2: String = (0 ..< rectangular.size.x).map {
-            (j: Int) in
+        let line2: String = (0 ..< rectangular.size.x).map { (j: Int) in
 
             let c: JPEG.RGB = expected[j + i * rectangular.size.x].rgb
             return Highlight.square((c.r, c.g, c.b))
         }.joined(separator: "")
-        let line3: String = (0 ..< rectangular.size.x).map {
-            (j: Int) in
+        let line3: String = (0 ..< rectangular.size.x).map { (j: Int) in
 
             let y: (UInt8, UInt8) = (
                 output[j + i * rectangular.size.x].y,

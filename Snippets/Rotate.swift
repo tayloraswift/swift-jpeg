@@ -12,19 +12,15 @@ enum Block {
     typealias Coefficient = (z: Int, multiplier: Int16)
 
     static func transpose(_ input: [Coefficient]) -> [Coefficient] {
-        (0 ..< 8).flatMap {
-            (y: Int) in
-            (0 ..< 8).map {
-                (x: Int) in
+        (0 ..< 8).flatMap { (y: Int) in
+            (0 ..< 8).map { (x: Int) in
                 input[8 * x + y]
             }
         }
     }
     static func reflectVertical(_ input: [Coefficient]) -> [Coefficient] {
-        (0 ..< 8).flatMap {
-            (y: Int) -> [Coefficient] in
-            (0 ..< 8).map {
-                (x: Int) -> Coefficient in
+        (0 ..< 8).flatMap { (y: Int) -> [Coefficient] in
+            (0 ..< 8).map { (x: Int) -> Coefficient in
                 (
                     input[8 * y + x].z,
                     input[8 * y + x].multiplier * (1 - 2 * (.init(y) & 1))
@@ -33,10 +29,8 @@ enum Block {
         }
     }
     static func reflectHorizontal(_ input: [Coefficient]) -> [Coefficient] {
-        (0 ..< 8).flatMap {
-            (y: Int) -> [Coefficient] in
-            (0 ..< 8).map {
-                (x: Int) -> Coefficient in
+        (0 ..< 8).flatMap { (y: Int) -> [Coefficient] in
+            (0 ..< 8).map { (x: Int) -> Coefficient in
                 (
                     input[8 * y + x].z,
                     input[8 * y + x].multiplier * (1 - 2 * (.init(x) & 1))
@@ -46,10 +40,8 @@ enum Block {
     }
 
     static func transform(_ body: ([Coefficient]) -> [Coefficient]) -> [Coefficient] {
-        let blank: [Coefficient] = (0 ..< 8).flatMap {
-            (y: Int) -> [Coefficient] in
-            (0 ..< 8).map {
-                (x: Int) in
+        let blank: [Coefficient] = (0 ..< 8).flatMap { (y: Int) -> [Coefficient] in
+            (0 ..< 8).map { (x: Int) in
                 (JPEG.Table.Quantization.z(k: x, h: y), 1)
             }
         }
@@ -116,8 +108,7 @@ func rotate(_ rotation: Rotation, input: String, output: String) throws {
         size: size,
         layout: original.layout,
         metadata: original.metadata,
-        quanta: original.quanta.mapValues {
-            (old: [UInt16]) in
+        quanta: original.quanta.mapValues { (old: [UInt16]) in
             .init(unsafeUninitializedCapacity: 64) {
                 for z: Int in 0 ..< 64 {
                     $0[z] = old[mapping[z].z]

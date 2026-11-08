@@ -55,8 +55,9 @@ extension JPEG.RGB12: JPEG.Color {
     static func unpack(_ interleaved: [UInt16], of format: JPEG.Deep) -> [Self] {
         switch format {
         case .rgba12:
-            return stride(from: interleaved.startIndex, to: interleaved.endIndex, by: 4).map {
-                (base: Int) -> Self in
+            return stride(from: interleaved.startIndex, to: interleaved.endIndex, by: 4).map { (
+                    base: Int
+                ) -> Self in
                 .init(
                     interleaved[base    ],
                     interleaved[base + 1],
@@ -78,8 +79,9 @@ extension JPEG.RGBA12: JPEG.Color {
     static func unpack(_ interleaved: [UInt16], of format: JPEG.Deep) -> [Self] {
         switch format {
         case .rgba12:
-            return stride(from: interleaved.startIndex, to: interleaved.endIndex, by: 4).map {
-                (base: Int) -> Self in
+            return stride(from: interleaved.startIndex, to: interleaved.endIndex, by: 4).map { (
+                    base: Int
+                ) -> Self in
                 .init(
                     interleaved[base    ],
                     interleaved[base + 1],
@@ -103,8 +105,9 @@ extension JPEG.RGBA12: JPEG.Color {
 func sin(_ x: Double) -> UInt16 {
     .init(0x0fff * (_sin(2.0 * .pi * x) * 0.5 + 0.5))
 }
-let gradient: [JPEG.RGBA12] = stride(from: 0.0, to: 1.0, by: 0.005).flatMap {
-    (phase: Double) -> [JPEG.RGBA12] in
+let gradient: [JPEG.RGBA12] = stride(from: 0.0, to: 1.0, by: 0.005).flatMap { (
+        phase: Double
+    ) -> [JPEG.RGBA12] in
     stride(from: 0.0, to: 1.0, by: 0.001).map {
         .init(sin(phase + $0 - 0.15), sin(phase + $0), sin(phase + $0 + 0.15), 0x0fff)
     }
@@ -145,7 +148,8 @@ let path: String                             = "examples/custom-color/output.jpg
 let image: JPEG.Data.Rectangular<JPEG.Deep>  =
 .pack(size: (1000, 200), layout: layout, metadata: [], pixels: gradient)
 try image.compress(
-    path: path, quanta: [
+    path: path,
+    quanta: [
         0: [1, 2, 2, 3, 3, 3] + .init(repeating: 10, count: 58),
         1: [1]                + .init(repeating: 100, count: 63),
     ]

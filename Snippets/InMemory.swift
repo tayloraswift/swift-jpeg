@@ -33,8 +33,7 @@ extension System.Blob: JPEG.Bytestream.Source, JPEG.Bytestream.Destination {
 
 let path: String         = "examples/in-memory/karlie-2011.jpg"
 guard let data: [UInt8]  = (
-    System.File.Source.open(path: path) {
-        (source: inout System.File.Source) -> [UInt8]? in
+    System.File.Source.open(path: path) { (source: inout System.File.Source) -> [UInt8]? in
 
         guard let count: Int = source.count else {
             return nil

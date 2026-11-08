@@ -120,8 +120,7 @@ func generate(count: Int, prefix: String) throws {
         print(path)
         let image: [JPEG.RGB] = rectangular.unpack(as: JPEG.RGB.self)
         for i: Int in 0 ..< rectangular.size.y {
-            let line: String = (0 ..< rectangular.size.x).map {
-                (j: Int) in
+            let line: String = (0 ..< rectangular.size.x).map { (j: Int) in
 
                 let c: JPEG.RGB = image[j + i * rectangular.size.x]
                 return Highlight.square((c.r, c.g, c.b))

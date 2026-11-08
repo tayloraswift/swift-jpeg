@@ -439,8 +439,7 @@ extension JPEG.RGB: JPEG.Color {
             return pixels.map{ .init($0.ycc.y) }
 
         case .ycc8, .nonconforming3x8:
-            return pixels.flatMap {
-                (rgb: JPEG.RGB) -> [UInt16] in
+            return pixels.flatMap { (rgb: JPEG.RGB) -> [UInt16] in
                 let ycc: JPEG.YCbCr = rgb.ycc
                 return [ .init(ycc.y), .init(ycc.cb), .init(ycc.cr) ]
             } as [UInt16]
@@ -984,7 +983,8 @@ extension JPEG.Layout {
         components: [JPEG.Component.Key: JPEG.Component]
     ) {
         self.init(
-            format: format, process: process, components: components.mapValues {
+            format: format, process: process,
+            components: components.mapValues {
                 ($0, -1)
             }
         )
@@ -1065,8 +1065,7 @@ extension JPEG.Layout {
 
         // q -> selector
         let mappings: [JPEG.Table.Quantization.Key: JPEG.Table.Quantization.Selector] =
-        lifetimes.mapValues {
-            (lifetime: (start: Int, end: Int)) in
+        lifetimes.mapValues { (lifetime: (start: Int, end: Int)) in
 
             guard let free: Int =
             slots.firstIndex(where: { lifetime.start >= $0.time }) else {
@@ -1078,7 +1077,8 @@ extension JPEG.Layout {
         }
 
         self.init(
-            format: format, process: process, components: components.mapValues {
+            format: format, process: process,
+            components: components.mapValues {
                 // if `q` is not in the mappings dictionary, that means that there
                 // were no scans, even ones with unrecognized components, that
                 // referenced it. (this is a problem, because all `q` values are associated
@@ -1169,7 +1169,8 @@ extension JPEG.Layout {
         // the ordering in the frame header
         let stored: JPEG.Scan =
         .init(
-            band: header.band, bits: header.bits, components: components.sorted {
+            band: header.band, bits: header.bits,
+            components: components.sorted {
                 $0.component.ci < $1.component.ci
             }
         )

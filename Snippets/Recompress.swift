@@ -36,8 +36,9 @@ var recompressed: JPEG.Data.Spectral<JPEG.Common> = .init(
 )
 
 for ci: JPEG.Component.Key in recompressed.layout.recognized {
-    original.read(ci: ci) {
-        (plane: JPEG.Data.Spectral<JPEG.Common>.Plane, quanta: JPEG.Table.Quantization) in
+    original.read(
+        ci: ci
+    ) { (plane: JPEG.Data.Spectral<JPEG.Common>.Plane, quanta: JPEG.Table.Quantization) in
 
         recompressed.with(ci: ci) {
             for b: ((x: Int, y: Int), (x: Int, y: Int)) in zip(plane.indices, $0.indices) {
