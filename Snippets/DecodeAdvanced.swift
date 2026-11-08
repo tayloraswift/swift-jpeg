@@ -45,12 +45,14 @@ for metadata: JPEG.Metadata in spectral.metadata {
     case .application(let a, data: let data):
         Swift.print("metadata (application \(a), \(data.count) bytes)")
     case .comment(data: let data):
-        Swift.print("""
+        Swift.print(
+            """
             comment
             {
                 '\(String.init(decoding: data, as: Unicode.UTF8.self))'
             }
-            """)
+            """
+        )
     case .jfif(let jfif):
         Swift.print(jfif)
     case .exif(let exif):
@@ -60,7 +62,8 @@ for metadata: JPEG.Metadata in spectral.metadata {
             let artist: String = .init(
                 decoding: (0 ..< count).map {
                     exif[box.asOffset + $0, as: UInt8.self]
-                }, as: Unicode.ASCII.self
+                },
+                as: Unicode.ASCII.self
             )
             print("artist: \(artist)")
         }
@@ -75,11 +78,9 @@ for qi: JPEG.Table.Quantization.Key in keys.sorted() {
     print(
         """
         ┌ \(String.init(repeating: " ", count: 4 * 8)) ┐
-        \((0 ..< 8).map {
-                (h: Int) in
+        \((0 ..< 8).map { (h: Int) in
                 """
-                │ \((0 ..< 8).map {
-                        (k: Int) in
+                │ \((0 ..< 8).map { (k: Int) in
                         String.pad(
                             "\(table[z: JPEG.Table.Quantization.z(k: k, h: h)]) ",
                             left: 4
@@ -95,15 +96,16 @@ for qi: JPEG.Table.Quantization.Key in keys.sorted() {
 
 let planar: JPEG.Data.Planar<JPEG.Common> = spectral.idct()
 for (p, plane): (Int, JPEG.Data.Planar<JPEG.Common>.Plane) in planar.enumerated() {
-    print("""
+    print(
+        """
         plane \(p)
         {
             size: (\(plane.size.x), \(plane.size.y))
         }
-        """)
+        """
+    )
 
-    let samples: [UInt8] = plane.indices.map {
-        (i: (x: Int, y: Int)) in
+    let samples: [UInt8] = plane.indices.map { (i: (x: Int, y: Int)) in
         .init(clamping: plane[x: i.x, y: i.y])
     }
 

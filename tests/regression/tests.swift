@@ -67,8 +67,7 @@ extension Test {
                         throw Failure.init(message: "failed to read from file '\(path).ycc'")
                     }
 
-                    return (0 ..< output.ycc.count).map {
-                        (i: Int) -> JPEG.YCbCr in
+                    return (0 ..< output.ycc.count).map { (i: Int) -> JPEG.YCbCr in
                         .init(y: data[i * 3], cb: data[i * 3 + 1], cr: data[i * 3 + 2])
                     }
                 }
@@ -79,8 +78,7 @@ extension Test {
                         throw Failure.init(message: "failed to read from file '\(path).rgb'")
                     }
 
-                    return (0 ..< output.rgb.count).map {
-                        (i: Int) -> JPEG.RGB in
+                    return (0 ..< output.rgb.count).map { (i: Int) -> JPEG.RGB in
                         .init(data[i * 3], data[i * 3 + 1], data[i * 3 + 2])
                     }
                 }

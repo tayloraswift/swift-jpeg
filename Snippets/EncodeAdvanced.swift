@@ -9,8 +9,7 @@ guard let rgb: [JPEG.RGB] = (
             fatalError("failed to read from file '\(path)'")
         }
 
-        return (0 ..< size.x * size.y).map {
-            (i: Int) -> JPEG.RGB in
+        return (0 ..< size.x * size.y).map { (i: Int) -> JPEG.RGB in
             .init(data[3 * i], data[3 * i + 1], data[3 * i + 2])
         }
     }
@@ -52,29 +51,35 @@ let layout: JPEG.Layout<JPEG.Common> = .init(
 )
 
 for (tables, scans): ([JPEG.Table.Quantization.Key], [JPEG.Scan]) in layout.definitions {
-    print("""
+    print(
+        """
         define quantization tables:
         [
             \(tables.map(String.init(describing:)).joined(separator: "\n    "))
         ]
-        """)
-    print("""
+        """
+    )
+    print(
+        """
         scans: \(scans.count) scans
-        """)
+        """
+    )
 }
 
 for (c, (component, qi)): (
         Int,
         (component: JPEG.Component, qi: JPEG.Table.Quantization.Key)
     ) in layout.planes.enumerated() {
-    print("""
+    print(
+        """
         plane \(c)
         {
             sampling factor         : (\(component.factor.x), \(component.factor.y))
             quantization table      : \(qi)
             quantization selector   : \\.\(String.init(selector: component.selector))
         }
-        """)
+        """
+    )
 }
 
 let comment: [UInt8] = .init("the way u say ‘important’ is important".utf8)

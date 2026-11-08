@@ -37,8 +37,7 @@ extension Stream: JPEG.Bytestream.Source {
 
 let path: String         = "examples/decode-online/karlie-oscars-2017.jpg"
 guard let data: [UInt8]  = (
-    System.File.Source.open(path: path) {
-        (source: inout System.File.Source) -> [UInt8]? in
+    System.File.Source.open(path: path) { (source: inout System.File.Source) -> [UInt8]? in
 
         guard let count: Int = source.count else {
             return nil

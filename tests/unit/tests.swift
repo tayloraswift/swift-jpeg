@@ -610,7 +610,8 @@ extension Test {
         var blob: Blob = .init()
         do {
             try image.compress(
-                stream: &blob, quanta: [
+                stream: &blob,
+                quanta: [
                     0: JPEG.CompressionLevel.luminance(  1.0).quanta,
                     1: JPEG.CompressionLevel.chrominance(1.0).quanta,
                 ]
