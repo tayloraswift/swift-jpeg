@@ -142,8 +142,7 @@ extension Test {
                     components  :
                     [
                         \(image.layout.residents.sorted(by: { $0.key < $1.key }).map {
-                        let (x, y): (Int, Int) =
-                        image.layout.planes[$0.value].component.factor
+                        let (x, y): (Int, Int) = image.layout.planes[$0.value].component.factor
                         return "\($0.key): (\(x), \(y))"
                     }.joined(separator: "\n        "))
                     ]
@@ -371,8 +370,7 @@ extension Test {
             }
 
             // terminal output
-            let rectangular: JPEG.Data.Rectangular<JPEG.Common> =
-            spectral.idct().interleaved()
+            let rectangular: JPEG.Data.Rectangular<JPEG.Common> = spectral.idct().interleaved()
             Self.print(image: rectangular.unpack(as: JPEG.RGB.self), size: size)
         } catch {
             if let error: JPEG.Error = error as? JPEG.Error {

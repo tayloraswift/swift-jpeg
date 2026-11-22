@@ -25,8 +25,10 @@ print(
         components  :
         [
             \(spectral.layout.residents.sorted(by: { $0.key < $1.key }).map {
-            let (component, qi): (JPEG.Component, JPEG.Table.Quantization.Key) =
-            spectral.layout.planes[$0.value]
+            let (component, qi): (
+                JPEG.Component,
+                JPEG.Table.Quantization.Key
+            ) = spectral.layout.planes[$0.value]
             return "\($0.key): (\(component.factor.x), \(component.factor.y), qi: \(qi))"
         }.joined(separator: "\n        "))
         ]

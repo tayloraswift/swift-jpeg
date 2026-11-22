@@ -83,8 +83,12 @@ for (c, (component, qi)): (
 }
 
 let comment: [UInt8] = .init("the way u say ‘important’ is important".utf8)
-let rectangular: JPEG.Data.Rectangular<JPEG.Common>  =
-.pack(size: size, layout: layout, metadata: [.comment(data: comment)], pixels: rgb)
+let rectangular: JPEG.Data.Rectangular<JPEG.Common>  = .pack(
+    size: size,
+    layout: layout,
+    metadata: [.comment(data: comment)],
+    pixels: rgb
+)
 
 let planar: JPEG.Data.Planar<JPEG.Common>            = rectangular.decomposed()
 let spectral: JPEG.Data.Spectral<JPEG.Common>        = planar.fdct(

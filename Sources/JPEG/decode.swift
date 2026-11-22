@@ -396,8 +396,11 @@ extension JPEG.Table {
                     break
                 }
 
-                guard let table: HuffmanDC =
-                HuffmanDC.init(counts: leaf.counts, values: leaf.values, target: target) else {
+                guard let table: HuffmanDC = HuffmanDC.init(
+                    counts: leaf.counts,
+                    values: leaf.values,
+                    target: target
+                ) else {
                     throw JPEG.ParsingError.invalidHuffmanTable
                 }
 
@@ -411,8 +414,11 @@ extension JPEG.Table {
                     break
                 }
 
-                guard let table: HuffmanAC =
-                HuffmanAC.init(counts: leaf.counts, values: leaf.values, target: target) else {
+                guard let table: HuffmanAC = HuffmanAC.init(
+                    counts: leaf.counts,
+                    values: leaf.values,
+                    target: target
+                ) else {
                     throw JPEG.ParsingError.invalidHuffmanTable
                 }
 
@@ -675,8 +681,9 @@ extension JPEG.Header.Frame {
             let factor: (x: Int, y: Int)  = (.init(byte.1 >> 4), .init(byte.1 & 0x0f))
             let ci: JPEG.Component.Key  =  .init(byte.0)
 
-            guard let selector: JPEG.Table.Quantization.Selector =
-            JPEG.Table.Quantization.parse(selector: byte.2) else {
+            guard let selector: JPEG.Table.Quantization.Selector = JPEG.Table.Quantization.parse(
+                selector: byte.2
+            ) else {
                 throw JPEG.ParsingError.invalidFrameQuantizationSelectorCode(byte.2)
             }
 
@@ -827,10 +834,12 @@ extension JPEG.Header.Scan {
             let byte: (UInt8, UInt8) = (data[base], data[base + 1])
 
             let ci: JPEG.Component.Key = .init(byte.0)
-            guard   let dc: JPEG.Table.HuffmanDC.Selector =
-            JPEG.Table.HuffmanDC.parse(selector: byte.1 >> 4),
-            let ac: JPEG.Table.HuffmanAC.Selector =
-            JPEG.Table.HuffmanAC.parse(selector: byte.1 & 0xf) else {
+            guard   let dc: JPEG.Table.HuffmanDC.Selector = JPEG.Table.HuffmanDC.parse(
+                selector: byte.1 >> 4
+            ),
+            let ac: JPEG.Table.HuffmanAC.Selector = JPEG.Table.HuffmanAC.parse(
+                selector: byte.1 & 0xf
+            ) else {
                 throw JPEG.ParsingError.invalidScanHuffmanSelectorCode(byte.1)
             }
 
@@ -1939,15 +1948,20 @@ extension JPEG.Data.Spectral {
         }
 
         // recognize format
-        guard let format: Format =
-        .recognize(.init(frame.components.keys), precision: frame.precision) else {
+        guard let format: Format = .recognize(
+            .init(frame.components.keys),
+            precision: frame.precision
+        ) else {
             throw JPEG.DecodingError.unrecognizedColorFormat(
                 .init(frame.components.keys), frame.precision, Format.self
             )
         }
 
-        let layout: JPEG.Layout<Format> =
-        .init(format: format, process: frame.process, components: frame.components)
+        let layout: JPEG.Layout<Format> = .init(
+            format: format,
+            process: frame.process,
+            components: frame.components
+        )
 
         var spectral: Self = .init(layout: layout)
         spectral.set(width: frame.size.x)
@@ -2507,8 +2521,9 @@ extension JPEG.Data.Spectral.Plane {
     }
 
     mutating func decode(_ data: [UInt8], blocks: Range<Int>, bit a: Int) throws {
-        let rows: Range<Int>     = blocks.lowerBound / self.units.x ..<
-        Swift.min(blocks.upperBound / self.units.x, self.units.y)
+        let rows: Range<Int>     =
+            blocks.lowerBound / self.units.x ..<
+            Swift.min(blocks.upperBound / self.units.x, self.units.y)
         let bits: JPEG.Bitstream = .init(data)
         var b: Int               = 0
         for (x, y): (x: Int, y: Int) in (0, rows.lowerBound) ..< (
@@ -2529,8 +2544,9 @@ extension JPEG.Data.Spectral.Plane {
             throw JPEG.DecodingError.undefinedScanHuffmanACReference(component.selector.ac)
         }
 
-        let rows: Range<Int>     = blocks.lowerBound / self.units.x ..<
-        Swift.min(blocks.upperBound / self.units.x, self.units.y)
+        let rows: Range<Int>     =
+            blocks.lowerBound / self.units.x ..<
+            Swift.min(blocks.upperBound / self.units.x, self.units.y)
         let bits: JPEG.Bitstream = .init(data)
         var b: Int               = 0,
         skip: Int            = 0
@@ -2574,8 +2590,9 @@ extension JPEG.Data.Spectral.Plane {
             throw JPEG.DecodingError.undefinedScanHuffmanACReference(component.selector.ac)
         }
 
-        let rows: Range<Int>     = blocks.lowerBound / self.units.x ..<
-        Swift.min(blocks.upperBound / self.units.x, self.units.y)
+        let rows: Range<Int>     =
+            blocks.lowerBound / self.units.x ..<
+            Swift.min(blocks.upperBound / self.units.x, self.units.y)
         let bits: JPEG.Bitstream = .init(data)
         var b: Int               = 0,
         skip: Int            = 0
@@ -2718,8 +2735,10 @@ extension JPEG.Data.Spectral {
                     end: (x: Int, y: Int)   = (start.x + factor.x, start.y + factor.y)
                     for (x, y): (x: Int, y: Int) in start ..< end {
                         // dc
-                        let composite: JPEG.Bitstream.Composite.DC =
-                        try bits.composite(&b, table: table.dc)
+                        let composite: JPEG.Bitstream.Composite.DC = try bits.composite(
+                            &b,
+                            table: table.dc
+                        )
 
                         if let p: Int = p {
                             predecessor[c]            &+= composite.difference
@@ -2837,8 +2856,10 @@ extension JPEG.Data.Spectral {
                     let start: (x: Int, y: Int) = (     mx * factor.x,      my * factor.y),
                     end: (x: Int, y: Int)   = (start.x + factor.x, start.y + factor.y)
                     for (x, y): (x: Int, y: Int) in start ..< end {
-                        let composite: JPEG.Bitstream.Composite.DC =
-                        try bits.composite(&b, table: table)
+                        let composite: JPEG.Bitstream.Composite.DC = try bits.composite(
+                            &b,
+                            table: table
+                        )
 
                         guard let p: Int = p else {
                             continue
@@ -2874,8 +2895,9 @@ extension JPEG.Data.Spectral {
             return (self.indices ~= $0.c ? $0.c : nil, factor)
         }
 
-        let rows: Range<Int>     = blocks.lowerBound / self.blocks.x ..<
-        Swift.min(blocks.upperBound / self.blocks.x, self.blocks.y)
+        let rows: Range<Int>     =
+            blocks.lowerBound / self.blocks.x ..<
+            Swift.min(blocks.upperBound / self.blocks.x, self.blocks.y)
         let bits: JPEG.Bitstream = .init(data)
         var b: Int               = 0
         for (mx, my): (x: Int, y: Int) in (0, rows.lowerBound) ..< (
@@ -3203,13 +3225,18 @@ extension JPEG.Context {
                 break definitions
 
             case .quantization:
-                let parsed: [JPEG.Table.Quantization] =
-                try JPEG.Table.parse(quantization: marker.data)
+                let parsed: [JPEG.Table.Quantization] = try JPEG.Table.parse(
+                    quantization: marker.data
+                )
                 quanta.append(contentsOf: parsed)
 
             case .huffman:
-                let parsed: (dc: [JPEG.Table.HuffmanDC], ac: [JPEG.Table.HuffmanAC]) =
-                try JPEG.Table.parse(huffman: marker.data)
+                let parsed: (
+                    dc: [JPEG.Table.HuffmanDC],
+                    ac: [JPEG.Table.HuffmanAC]
+                ) = try JPEG.Table.parse(
+                    huffman: marker.data
+                )
                 dc.append(contentsOf: parsed.dc)
                 ac.append(contentsOf: parsed.ac)
 
@@ -3279,8 +3306,12 @@ extension JPEG.Context {
                 }
 
             case .huffman:
-                let parsed: (dc: [JPEG.Table.HuffmanDC], ac: [JPEG.Table.HuffmanAC]) =
-                try JPEG.Table.parse(huffman: marker.data)
+                let parsed: (
+                    dc: [JPEG.Table.HuffmanDC],
+                    ac: [JPEG.Table.HuffmanAC]
+                ) = try JPEG.Table.parse(
+                    huffman: marker.data
+                )
                 for table: JPEG.Table.HuffmanDC in parsed.dc {
                     context.push(dc: table)
                 }
@@ -3502,8 +3533,9 @@ extension JPEG.Data.Spectral.Plane {
                 g: Block8x8<Float> = Self.idct8x8(h, shift: level)
                 for (i, t): (offset: Int, element: SIMD8<Float>) in
                     [g.0, g.1, g.2, g.3, g.4, g.5, g.6, g.7].enumerated() {
-                    let u: SIMD8<UInt16> =
-                    .init(t.clamped(lowerBound: .zero, upperBound: limit))
+                    let u: SIMD8<UInt16> = .init(
+                        t.clamped(lowerBound: .zero, upperBound: limit)
+                    )
                     for j: Int in 0 ..< 8 {
                         $0[(8 * y + i) * stride + 8 * x + j] = u[j]
                     }

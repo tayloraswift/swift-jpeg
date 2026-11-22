@@ -3,8 +3,9 @@ import JPEGInspection
 import JPEGSystem
 
 func discrepancy(jpeg: String, reference: String) throws -> (average: Double, max: Double) {
-    guard let rectangular: JPEG.Data.Rectangular<JPEG.Common> =
-    try .decompress(path: jpeg) else {
+    guard let rectangular: JPEG.Data.Rectangular<JPEG.Common> = try .decompress(
+        path: jpeg
+    ) else {
         fatalError("failed to open file '\(jpeg)'")
     }
 
@@ -88,8 +89,9 @@ func discrepancy(jpeg: String, reference: String) throws -> (average: Double, ma
 }
 
 func bin(_ value: Double, into histogram: inout [Int], range: Range<Int>) {
-    let u: Double  = (value - .init(range.lowerBound)) /
-    .init(range.count) * .init(histogram.count)
+    let u: Double  =
+        (value - .init(range.lowerBound)) /
+        .init(range.count) * .init(histogram.count)
     let b: Int     = max(histogram.startIndex, min(.init(u), histogram.endIndex - 1))
     histogram[b] += 1
 }
@@ -135,8 +137,10 @@ var histogram: (average: [Int], max: [Int]) = (
     .init(repeating: 0, count: 32)
 )
 for argument: String in CommandLine.arguments.dropFirst() {
-    let (average, max): (Double, Double) =
-    try discrepancy(jpeg: argument, reference: "\(argument).ycc")
+    let (average, max): (Double, Double) = try discrepancy(
+        jpeg: argument,
+        reference: "\(argument).ycc"
+    )
     bin(average, into: &histogram.average, range: range.average)
     bin(max,     into: &histogram.max,     range: range.max)
 }
