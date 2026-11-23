@@ -118,13 +118,18 @@ func decodeOnline(
             break definitions
 
         case .quantization:
-            let parsed: [JPEG.Table.Quantization] =
-            try JPEG.Table.parse(quantization: marker.data)
+            let parsed: [JPEG.Table.Quantization] = try JPEG.Table.parse(
+                quantization: marker.data
+            )
             quanta.append(contentsOf: parsed)
 
         case .huffman:
-            let parsed: (dc: [JPEG.Table.HuffmanDC], ac: [JPEG.Table.HuffmanAC]) =
-            try JPEG.Table.parse(huffman: marker.data)
+            let parsed: (
+                dc: [JPEG.Table.HuffmanDC],
+                ac: [JPEG.Table.HuffmanAC]
+            ) = try JPEG.Table.parse(
+                huffman: marker.data
+            )
             dc.append(contentsOf: parsed.dc)
             ac.append(contentsOf: parsed.ac)
 
@@ -183,8 +188,12 @@ func decodeOnline(
             }
 
         case .huffman:
-            let parsed: (dc: [JPEG.Table.HuffmanDC], ac: [JPEG.Table.HuffmanAC]) =
-            try JPEG.Table.parse(huffman: marker.data)
+            let parsed: (
+                dc: [JPEG.Table.HuffmanDC],
+                ac: [JPEG.Table.HuffmanAC]
+            ) = try JPEG.Table.parse(
+                huffman: marker.data
+            )
             for table: JPEG.Table.HuffmanDC in parsed.dc {
                 context.push(dc: table)
             }
@@ -252,8 +261,10 @@ var last: [JPEG.RGB] = []
 try decodeOnline(stream: &stream) {
     let image: JPEG.Data.Rectangular<JPEG.Common>    = $0.idct().interleaved()
     let rgb: [JPEG.RGB]                              = image.unpack(as: JPEG.RGB.self)
-    let difference: [JPEG.RGB] =
-    zip(last + .init(repeating: .init(0, 0, 0), count: rgb.count - last.count), rgb).map {
+    let difference: [JPEG.RGB] = zip(
+        last + .init(repeating: .init(0, 0, 0), count: rgb.count - last.count),
+        rgb
+    ).map {
         let d: (r: Int, g: Int, b: Int) = (
             abs(.init($1.r) - .init($0.r)),
             abs(.init($1.g) - .init($0.g)),

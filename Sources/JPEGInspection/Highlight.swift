@@ -44,8 +44,15 @@ public enum Highlight {
         _ string: String,
         _ bg: (r: UInt8, g: UInt8, b: UInt8)
     ) -> String {
-        let fg: (r: UInt8, g: UInt8, b: UInt8) =
-        (bg.r / 3 + bg.g / 3 + bg.b / 3) < 128 ? (.max, .max, .max) : (0, 0, 0)
+        let fg: (r: UInt8, g: UInt8, b: UInt8) = (bg.r / 3 + bg.g / 3 + bg.b / 3) < 128 ? (
+            .max,
+            .max,
+            .max
+        ) : (
+            0,
+            0,
+            0
+        )
 
         return "\(Self.bg(bg))\(Self.fg(fg))\(string)\(Self.fg(nil))\(Self.bg(nil))"
     }

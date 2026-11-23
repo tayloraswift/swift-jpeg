@@ -37,8 +37,12 @@ for factor: (luminance: (Int, Int), chrominance: (Int, Int), name: String) in [
         ]
     )
     let jfif: JPEG.JFIF = .init(version: .v1_2, density: (1, 1, .centimeters))
-    let image: JPEG.Data.Rectangular<JPEG.Common> =
-    .pack(size: size, layout: layout, metadata: [.jfif(jfif)], pixels: rgb)
+    let image: JPEG.Data.Rectangular<JPEG.Common> = .pack(
+        size: size,
+        layout: layout,
+        metadata: [.jfif(jfif)],
+        pixels: rgb
+    )
 
     for level: Double in [0.0, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0] {
         try image.compress(

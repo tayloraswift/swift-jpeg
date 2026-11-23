@@ -314,9 +314,10 @@ extension JPEG.YCbCr {
             .init( 0.00000, -0.34414,  1.77200),
             .init( 1.40200, -0.71414,  0.00000)
         )
-        let x: SIMD3<Float> = (.init(self.y)         as       Float ) +
-        (matrix.cb *     (.init(self.cb) - 128) as SIMD3<Float>) +
-        (matrix.cr *     (.init(self.cr) - 128) as SIMD3<Float>)
+        let x: SIMD3<Float> =
+            (.init(self.y)         as       Float ) +
+            (matrix.cb *     (.init(self.cb) - 128) as SIMD3<Float>) +
+            (matrix.cr *     (.init(self.cr) - 128) as SIMD3<Float>)
         let c: SIMD3<UInt8> = JPEG.Common.clamp(x, to: UInt8.self)
         return .init(c.x, c.y, c.z)
     }
@@ -333,10 +334,11 @@ extension JPEG.RGB {
             .init( 0.5870, -0.3313, -0.4187),
             .init( 0.1140,  0.5000, -0.0813)
         )
-        let x: SIMD3<Float> = matrix.0                  +
-        (matrix.r * .init(self.r) as SIMD3<Float>) +
-        (matrix.g * .init(self.g) as SIMD3<Float>) +
-        (matrix.b * .init(self.b) as SIMD3<Float>)
+        let x: SIMD3<Float> =
+            matrix.0                  +
+            (matrix.r * .init(self.r) as SIMD3<Float>) +
+            (matrix.g * .init(self.g) as SIMD3<Float>) +
+            (matrix.b * .init(self.b) as SIMD3<Float>)
         let c: SIMD3<UInt8> = JPEG.Common.clamp(x, to: UInt8.self)
         return .init(y: c.x, cb: c.y, cr: c.z)
     }
@@ -947,10 +949,13 @@ extension JPEG.Layout {
         self.format     = format
         self.process    = process
 
-        var planes: [(component: JPEG.Component, qi: JPEG.Table.Quantization.Key)] =
-        format.components.map {
-            guard let value: (component: JPEG.Component, qi: JPEG.Table.Quantization.Key) =
-            combined[$0] else {
+        var planes: [
+            (component: JPEG.Component, qi: JPEG.Table.Quantization.Key)
+        ] = format.components.map {
+            guard let value: (
+                component: JPEG.Component,
+                qi: JPEG.Table.Quantization.Key
+            ) = combined[$0] else {
                 preconditionFailure(
                     "missing definition for component \($0) in format '\(format)'"
                 )
@@ -959,8 +964,9 @@ extension JPEG.Layout {
             return value
         }
 
-        var residents: [JPEG.Component.Key: Int] =
-        .init(uniqueKeysWithValues: zip(format.components, planes.indices))
+        var residents: [JPEG.Component.Key: Int] = .init(
+            uniqueKeysWithValues: zip(format.components, planes.indices)
+        )
         for (ci, value): (
                 JPEG.Component.Key, (component: JPEG.Component, qi: JPEG.Table.Quantization.Key)
             ) in combined {
@@ -1033,8 +1039,10 @@ extension JPEG.Layout {
     public init(
         format: Format,
         process: JPEG.Process,
-        components: [JPEG.Component.Key:
-            (factor: (x: Int, y: Int), qi: JPEG.Table.Quantization.Key)],
+        components: [
+            JPEG.Component.Key:
+            (factor: (x: Int, y: Int), qi: JPEG.Table.Quantization.Key)
+        ],
         scans: [JPEG.Header.Scan]
     ) {
         // to assign quantization table selectors, we first need to determine
@@ -1064,11 +1072,13 @@ extension JPEG.Layout {
         }
 
         // q -> selector
-        let mappings: [JPEG.Table.Quantization.Key: JPEG.Table.Quantization.Selector] =
-        lifetimes.mapValues { (lifetime: (start: Int, end: Int)) in
+        let mappings: [
+            JPEG.Table.Quantization.Key: JPEG.Table.Quantization.Selector
+        ] = lifetimes.mapValues { (
+                lifetime: (start: Int, end: Int)
+            ) in
 
-            guard let free: Int =
-            slots.firstIndex(where: { lifetime.start >= $0.time }) else {
+            guard let free: Int = slots.firstIndex(where: { lifetime.start >= $0.time }) else {
                 fatalError("not enough free quantization table slots")
             }
 
@@ -1143,8 +1153,7 @@ extension JPEG.Layout {
 
     mutating func push(scan header: JPEG.Header.Scan) throws -> JPEG.Scan {
         var volume: Int = 0
-        let components: [(c: Int, component: JPEG.Scan.Component)] =
-        try header.components.map {
+        let components: [(c: Int, component: JPEG.Scan.Component)] = try header.components.map {
             // validate sampling factor sum, and component residency
             guard let c: Int = self.residents[$0.ci] else {
                 throw JPEG.DecodingError.undefinedScanComponentReference(
@@ -1162,13 +1171,15 @@ extension JPEG.Layout {
             throw JPEG.DecodingError.invalidScanSamplingVolume(volume)
         }
 
-        let passed: JPEG.Scan =
-        .init(band: header.band, bits: header.bits, components: components)
+        let passed: JPEG.Scan = .init(
+            band: header.band,
+            bits: header.bits,
+            components: components
+        )
 
         // the ordering in the stored scan may be different since it has to match
         // the ordering in the frame header
-        let stored: JPEG.Scan =
-        .init(
+        let stored: JPEG.Scan = .init(
             band: header.band, bits: header.bits,
             components: components.sorted {
                 $0.component.ci < $1.component.ci
@@ -1272,11 +1283,13 @@ extension JPEG.Header.Scan {
     /// -   Returns:
     ///     An unvalidated sequential scan header.
     public static func sequential(
-        _ components: [(
+        _ components: [
+            (
                 ci: JPEG.Component.Key,
                 dc: JPEG.Table.HuffmanDC.Selector,
                 ac: JPEG.Table.HuffmanAC.Selector
-            )]
+            )
+        ]
     ) -> Self {
         precondition(!components.isEmpty, "components array cannot be empty")
         return .init(

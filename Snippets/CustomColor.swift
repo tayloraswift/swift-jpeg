@@ -145,8 +145,12 @@ let layout: JPEG.Layout<JPEG.Deep> = .init(
 )
 
 let path: String                             = "examples/custom-color/output.jpg"
-let image: JPEG.Data.Rectangular<JPEG.Deep>  =
-.pack(size: (1000, 200), layout: layout, metadata: [], pixels: gradient)
+let image: JPEG.Data.Rectangular<JPEG.Deep>  = .pack(
+    size: (1000, 200),
+    layout: layout,
+    metadata: [],
+    pixels: gradient
+)
 try image.compress(
     path: path,
     quanta: [

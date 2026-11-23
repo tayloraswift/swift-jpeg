@@ -105,8 +105,9 @@ func generate(count: Int, prefix: String) throws {
         let path: String = "\(prefix)/\(i).jpg"
         try fuzz(rng: &rng, path: path)
 
-        guard let rectangular: JPEG.Data.Rectangular<JPEG.Common> =
-        try .decompress(path: path) else {
+        guard let rectangular: JPEG.Data.Rectangular<JPEG.Common> = try .decompress(
+            path: path
+        ) else {
             fatalError("failed to open file '\(path)'")
         }
 

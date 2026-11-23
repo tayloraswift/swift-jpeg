@@ -164,8 +164,11 @@ extension Test {
             0xF9, 0xFA
         ]
 
-        guard let table: JPEG.Table.HuffmanAC =
-        JPEG.Table.HuffmanAC.init(counts: counts, values: values, target: \.0) else {
+        guard let table: JPEG.Table.HuffmanAC = JPEG.Table.HuffmanAC.init(
+            counts: counts,
+            values: values,
+            target: \.0
+        ) else {
             return .failure(.init(message: "failed to initialize huffman table"))
         }
 
@@ -427,8 +430,10 @@ extension Test {
         ]
         for (symbols, (encoded, expected)):
             ([[JPEG.Bitstream.Symbol.DC]], (JPEG.Bitstream, [UInt8])) in zip(trees, pairs) {
-            guard let table: JPEG.Table.HuffmanDC =
-            JPEG.Table.HuffmanDC.init(symbols, target: \.0) else {
+            guard let table: JPEG.Table.HuffmanDC = JPEG.Table.HuffmanDC.init(
+                symbols,
+                target: \.0
+            ) else {
                 return .failure(.init(message: "failed to initialize huffman table"))
             }
 
